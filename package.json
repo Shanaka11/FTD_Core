@@ -1,0 +1,23 @@
+{
+  "name": "@five12days/core",
+  "version": "0.0.11",
+  "description": "Core modules for FTD Application development framework",
+  "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node index.ts",
+    "build": "tsc"
+  },
+  "bin": {
+    "generate": "./dist/index.js"
+  },
+  "author": "Shanaka Abeysinghe",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  }
+}
