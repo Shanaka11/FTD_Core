@@ -1,4 +1,5 @@
 # FTD Core
+
 Core Package to help Generate Code fot FTD Application Development framework.
 This will use a defined schema to generate core functionality
 
@@ -17,19 +18,19 @@ This will use a defined schema to generate core functionality
     - Or you can manually setup FTDCore by using the following steps
       - run
         """
-        npm install @five12days/core         
+        npm install @five12days/core
         """
       - add "ftd:init" : "frd_core --init" to the scripts in package.json
       - add "ftd:generate" : 'ftd_core --generate" to the scripts in package.json
       - run
         """
         npm run ftd:init
-        """ 
+        """
     - Define the schema files according to the definitions
     - Once the definitions are done run the following command
       """
       npm run ftd:generate
-      """ 
+      """
 
 ## Schema definition
 
@@ -47,6 +48,6 @@ This will use a defined schema to generate core functionality
       - Generate model types from ZOD schema
       - Generate validate methods
     - Phase 4
-      - Generate stubs to wrap core use cases to add business logic  
-    - Phase 5 
+      - Generate stubs to wrap core use cases to add business logic
+    - Phase 5
       - Create a GUI to generate the GUI
