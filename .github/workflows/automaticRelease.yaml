@@ -18,7 +18,9 @@ jobs:
           id: release
           with:
             release-type: node
-            package-name: release-please-action            
+            package-name: release-please-action
+            label: release-please
+            release-please.exclude_check: ci
         # The logic below handles the npm publication:
         - uses: actions/checkout@v2
           # these if statements ensure that a publication only occurs when
