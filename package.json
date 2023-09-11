@@ -1,6 +1,6 @@
 {
   "name": "@five12days/core",
-  "version": "0.0.11",
+  "version": "1.0.0",
   "description": "Core modules for FTD Application development framework",
   "main": "./dist/index.js",
   "files": [
