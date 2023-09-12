@@ -1,29 +1,24 @@
-#!/usr/bin/env node
-// import { loadConfig } from "./lib/loadConfig";
-
-// loadConfig();
 import { Command } from "commander";
+
+import { createDefaultConfig } from "./lib/createDefaultConfig.js";
+import { generateCoreFiles } from "./lib/generateCoreFiles.js";
+import { getCurrentPackageVersion } from "./lib/getPackageVersion.js";
 
 const program = new Command();
 
 program
-  .version("1.0.0")
+  .version(getCurrentPackageVersion())
   .description("An example CLI for managing a directory")
-  .option("-l, --ls  [value]", "List directory contents")
-  .option("-m, --mkdir <value>", "Create a directory")
-  .option("-t, --touch <value>", "Create a file")
+  .option("-gen, --generate  [value]", "Generate core code from schema")
+  .option("-init, --init", "Create the default ftdConfig.json file")
   .parse(process.argv);
 
 const options = program.opts();
 
-if (options.ls) {
-  console.log("LS");
+if (options.generate) {
+  generateCoreFiles();
 }
 
-if (options.mkdir) {
-  console.log("MKDIR");
-}
-
-if (options.t) {
-  console.log("T");
+if (options.init) {
+  createDefaultConfig();
 }
