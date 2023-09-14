@@ -1,4 +1,7 @@
+import path from "path";
+
 import { execCommand } from "../lib/mockCommandInvoke";
+import { readFile } from "../lib/readFile";
 
 // Before running tests remove generated files
 
@@ -35,7 +38,9 @@ describe("Code Generation Prerequisits", () => {
     expect(trimmedStdout[4]).toBe("Create Default Config");
 
     // Check if the file is created
-    // Check the config file content
+    const data = readFile(path.join(process.cwd(), "ftd_config.json"));
+
+    expect(data).not.toBe("File Read Error");
   });
 });
 

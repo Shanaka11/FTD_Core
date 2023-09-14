@@ -15,7 +15,7 @@ export const createDefaultConfig = () => {
       "templates",
       "ftd_config.json",
     );
-    const destinationPath = path.join(process.cwd(), "ftd_config2.json");
+    const destinationPath = path.join(process.cwd(), "ftd_config.json");
     fs.copyFileSync(sourcePath, destinationPath, fs.constants.COPYFILE_EXCL);
   } catch (err) {
     console.error(err);
