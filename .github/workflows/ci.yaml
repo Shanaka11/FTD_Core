@@ -20,4 +20,4 @@ jobs:
         run: npm run format:check
 
       - name: Build, lint, test, and typecheck
-        run: npm run build && npm run lint && npm install --prefix demo && npm run test
+        run: npm run build && npm run lint && npm install --prefix demo && npm run ftd-core:init --prefix demo && npm run test
