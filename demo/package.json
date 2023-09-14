@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "ftd-core:init": "ftd-core -init",
     "generate": "ftd-core -gen"
   },
   "dependencies": {
