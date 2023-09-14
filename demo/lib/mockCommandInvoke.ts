@@ -5,7 +5,9 @@ export const execCommand = async (
   params?: string[],
 ): Promise<{ stdout: string; stderr: string; code: number }> => {
   return new Promise((resolve, reject) => {
-    const childProcess = spawn(command, params);
+    const childProcess = spawn(command, params, {
+      shell: true,
+    });
 
     let stdout = "";
     childProcess.stdout.on("data", (data) => {

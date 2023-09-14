@@ -17,7 +17,7 @@
     "prepare:pr": "npm run format && npm run lint"
   },
   "bin": {
-    "generate": "./dist/index.js"
+    "ftd-core": "./dist/index.js"
   },
   "author": "Shanaka Abeysinghe",
   "license": "ISC",

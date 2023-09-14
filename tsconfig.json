@@ -12,5 +12,6 @@
     "skipLibCheck": true,
     "moduleResolution": "Node",
     "resolveJsonModule": true
-  }
+  },
+  "exclude": ["node_modules", "demo/"]
 }

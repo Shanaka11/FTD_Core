@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "ftdcoreGenerate": "generate"
+    "generate": "ftd-core -gen"
   },
   "dependencies": {
     "@five12days/core": "file:..",

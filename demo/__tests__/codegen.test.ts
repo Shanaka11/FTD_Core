@@ -6,11 +6,12 @@ describe("CodeGenerationTests", () => {
   // After it ran successfully check the generated file contents and paths are correct
 
   it("Should run codegen command", async () => {
-    const cmdExec = execCommand("echo", ["test"]);
+    const cmdExec = execCommand("npm run generate");
     const { stdout, stderr, code } = await cmdExec;
 
-    console.log(stdout);
-    expect(stdout).toBe("test\n");
+    const trimmedStdout = stdout.split("\n");
+
+    expect(trimmedStdout[4]).toBe("Generate Core files");
     expect(stderr).toBe("");
     expect(code).toBe(0);
   });
