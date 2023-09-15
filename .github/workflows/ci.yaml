@@ -18,9 +18,6 @@ jobs:
 
       - name: Check formatting
         run: npm run format:check
-        
-      - name: Check directory
-        run: ls
     
       - name: Build, lint, test, and typecheck
-        run: npm run build && npm run lint && npm install --prefix demo && npm run ftd-core:init --prefix demo && npm run test
+        run: ls && npm run build && npm run lint && npm install --prefix demo && npm run ftd-core:init --prefix demo && npm run test
