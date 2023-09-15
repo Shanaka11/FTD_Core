@@ -8,16 +8,19 @@
     "dist"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node index.ts",
-    "build": "tsc",
+    "test": "npm --prefix ./demo run test",
+    "dev": "ts-node-esm index.ts -gen",
+    "clean": "rm -rf ./dist",
+    "copy-temps": "mkdir -p dist/templates && cp -r ./templates ./dist",
+    "dev:init": "ts-node-esm index.ts -init",
+    "build": "npm run clean && npm run copy-temps && tsc",
     "format:check": "prettier --check . ",
     "format": "prettier --write . --list-different",
     "lint": "eslint .",
     "prepare:pr": "npm run format && npm run lint"
   },
   "bin": {
-    "generate": "./dist/index.js"
+    "ftd-core": "./dist/index.js"
   },
   "author": "Shanaka Abeysinghe",
   "license": "ISC",
