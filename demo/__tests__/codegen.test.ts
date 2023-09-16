@@ -73,7 +73,7 @@ describe("Code Generation Checks", () => {
   });
 
   it("Generate Code for all files in the give folder", async () => {
-    const cmdExec = execCommand("npm run ftd-core -- -gen --/Order");
+    const cmdExec = execCommand("npm run ftd-core -- -gen ./Order");
     const { stderr } = await cmdExec;
 
     // No errors were thrown
@@ -81,8 +81,17 @@ describe("Code Generation Checks", () => {
 
     // Check if the files are generated
     // Files should only be generated in the src/order/ folder and other folders should not be changed
+    // Check if Order and Order Line files are generated
+    // Check src/Order/order/order.gen.ts
+    compareFileSet(path.join(process.cwd(), "src/Order/order"));
+    // Check src/Order/orderLine/orderLine.gen.ts
+    compareFileSet(path.join(process.cwd(), "src/Order/orderLine"));
+    // Check if profile is not generated
+    compareFileSetNotExist(path.join(process.cwd(), "src/User/profile"));
 
     // remove the generated files
+    removeFileSet(path.join(process.cwd(), "src/Order/order"));
+    removeFileSet(path.join(process.cwd(), "src/Order/orderLine"));
   });
 });
 
@@ -102,6 +111,12 @@ const compareFiles = (genPath: string, templateFilename: string) => {
   expect(genFile).not.toBe(incorrectTemplateFile);
 };
 
+const compareFileNotExist = (genPath: string) => {
+  const data = readFile(genPath);
+
+  expect(data).toBe("File Read Error");
+};
+
 const compareFileSet = (filePath: string) => {
   // When given a path like src/User/profile
   // Check all the files that should be generated
@@ -114,6 +129,12 @@ const compareFileSet = (filePath: string) => {
 
   // useCase files - createOrderLine.gen.ts / readOrderLine.gen.ts / updateOrderLine.gen.ts / deleteOrderLine.gen.ts
   // useCase stubs -  createOrderLine.ts / readOrderLine.ts / updateOrderLine.ts / deleteOrderLine.ts
+};
+
+const compareFileSetNotExist = (filePath: string) => {
+  const domainModal = filePath.replace(/^.*[\\\/]/, "");
+  const modelFileName = domainModal + ".gen.ts";
+  compareFileNotExist(path.join(filePath, modelFileName));
 };
 
 const removeFileSet = (filePath: string) => {
