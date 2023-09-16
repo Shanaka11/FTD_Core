@@ -1,5 +1,6 @@
 import path from "path";
 
+import { deleteFile } from "../lib/deleteFile";
 import { execCommand } from "../lib/mockCommandInvoke";
 import { readFile } from "../lib/readFile";
 
@@ -56,21 +57,19 @@ describe("Code Generation Checks", () => {
 
     // Check if the files are generated
     // Check src/Order/order/order.gen.ts
-    // Check with correct template
-    let genFile = readFile(
-      path.join(process.cwd(), "src", "Order", "order", "order.gen.ts"),
-    );
-    let templateFile = readFile(
-      path.join(process.cwd(), "templates", "order.gen.ts"),
-    );
-    expect(genFile).not.toBe("File Read Error");
-    expect(templateFile).not.toBe("File Read Error");
-    expect(genFile).toBe(templateFile);
-    // Check with incorrect template
+    compareFileSet(path.join(process.cwd(), "src/Order/order"));
 
     // Check src/Order/orderLine/orderLine.gen.ts
+    compareFileSet(path.join(process.cwd(), "src/Order/orderLine"));
+
     // Check src/User/profile/profile.gen.ts
+    compareFileSet(path.join(process.cwd(), "src/User/profile"));
+
     // remove the generated files
+    // Remove model files
+    removeFileSet(path.join(process.cwd(), "src/Order/order"));
+    removeFileSet(path.join(process.cwd(), "src/Order/orderLine"));
+    removeFileSet(path.join(process.cwd(), "src/User/profile"));
   });
 
   it("Generate Code for all files in the give folder", async () => {
@@ -101,3 +100,40 @@ describe("Code Generation Checks", () => {
     // remove the generated files
   });
 });
+
+const compareFiles = (genPath: string, templateFilename: string) => {
+  const genFile = readFile(genPath);
+  const correctTemplateFile = readFile(
+    path.join(process.cwd(), "templates/correct/", templateFilename),
+  );
+  const incorrectTemplateFile = readFile(
+    path.join(process.cwd(), "templates/incorrect/", templateFilename),
+  );
+
+  expect(genFile).not.toBe("File Read Error");
+  expect(correctTemplateFile).not.toBe("File Read Error");
+  expect(incorrectTemplateFile).not.toBe("File Read Error");
+  expect(genFile).toBe(correctTemplateFile);
+  expect(genFile).not.toBe(incorrectTemplateFile);
+};
+
+const compareFileSet = (filePath: string) => {
+  // When given a path like src/User/profile
+  // Check all the files that should be generated
+
+  // model file - orderLine.gen.ts
+  const domainModal = filePath.replace(/^.*[\\\/]/, "");
+  const modelFileName = domainModal + ".gen.ts";
+  const templateModelFileName = domainModal + ".template.ts";
+  compareFiles(path.join(filePath, modelFileName), templateModelFileName);
+
+  // useCase files - createOrderLine.gen.ts / readOrderLine.gen.ts / updateOrderLine.gen.ts / deleteOrderLine.gen.ts
+  // useCase stubs -  createOrderLine.ts / readOrderLine.ts / updateOrderLine.ts / deleteOrderLine.ts
+};
+
+const removeFileSet = (filePath: string) => {
+  const domainModal = filePath.replace(/^.*[\\\/]/, "");
+  const modelFileName = domainModal + ".gen.ts";
+
+  deleteFile(path.join(filePath, modelFileName));
+};
