@@ -12,21 +12,22 @@ describe("Code Generation Prerequisits", () => {
 
   it("Check configuration file exist", async () => {
     // Give an error when config is not present
-    const cmdExec = execCommand("npm run generate");
-    const { stdout, stderr, code } = await cmdExec;
+    const data = readFile("./ftd_config.json");
+    // const cmdExec = execCommand("npm run ftd-core:gen");
+    // const { stdout, stderr, code } = await cmdExec;
 
-    const trimmedStdout = stdout.split("\n");
+    // const trimmedStdout = stdout.split("\n");
 
-    expect(trimmedStdout[4]).toBe("");
-    expect(stderr).toBe(
-      "ftd_config.json file is missing, please npx ftd-core -init, or add it manually\n",
-    );
-    expect(code).toBe(0);
+    // expect(trimmedStdout[4]).toBe("");
+    // expect(stderr).toBe(
+    //   "ftd_config.json file is missing, please npx ftd-core -init, or add it manually\n",
+    // );
+    expect(data).toBe("File Read Error");
   });
 
   it("Create configuration file", async () => {
     // Create the default config
-    const cmdExec = execCommand("npm run ftd-core:init");
+    const cmdExec = execCommand("npm run ftd-core -- -init");
     const { stdout, stderr, code } = await cmdExec;
 
     // Check if command executed without any issues
@@ -45,3 +46,44 @@ describe("Code Generation Prerequisits", () => {
 });
 
 // Test the code generation itself
+describe("Code Generation Checks", () => {
+  it("Generate Code For All files", async () => {
+    const cmdExec = execCommand("npm run ftd-core -- -gen");
+    const { stdout, stderr, code } = await cmdExec;
+
+    // No errors were thrown
+    expect(stderr).toBe("");
+
+    // Check if the files are generated
+
+    // remove the generated files
+  });
+
+  it("Generate Code for all files in the give folder", async () => {
+    const cmdExec = execCommand("npm run ftd-core -- -gen --order");
+    const { stdout, stderr, code } = await cmdExec;
+
+    // No errors were thrown
+    expect(stderr).toBe("");
+
+    // Check if the files are generated
+    // Files should only be generated in the src/order/ folder and other folders should not be changed
+
+    // remove the generated files
+  });
+
+  it("Generate Code for all files in the give folder", async () => {
+    const cmdExec = execCommand(
+      "npm run ftd-core -- -gen --./order/order.ftd.json",
+    );
+    const { stdout, stderr, code } = await cmdExec;
+
+    // No errors were thrown
+    expect(stderr).toBe("");
+
+    // Check if the files are generated
+    // Only order_ftd.json should be generated and nothing else should be generated
+
+    // remove the generated files
+  });
+});

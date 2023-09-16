@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 
 // import { fileURLToPath } from "url";
 
@@ -13,27 +14,48 @@ export const generateCoreFiles = () => {
     // As a start do not use the config file
     // All files will be generated in this iteration
     // Search for files in the src folder (Fore now we assume sources are in the src/<Models> folder, this can be a src/server/<model> or server/<model> depending on whats defined as the src in the config file)
+    const filename = fileURLToPath(import.meta.url);
+    const dirname = path.dirname(filename);
 
     const rootFolder = path.join(process.cwd(), "src"); // Replace with your root folder path
-    const extension = ".ftd.ts";
+    const extension = ".ftd.json";
     const result = findFilesWithExtension(rootFolder, extension);
 
     console.log("Files with extension " + extension + ":");
     console.log(result);
+
+    // Copy Order
+    let destinationPath = path.join(process.cwd(), "order.gen.ts");
+    let sourcePath = path.join(dirname, "../", "templates", "orderLine.gen.ts");
+
+    fs.copyFileSync(sourcePath, destinationPath, fs.constants.COPYFILE_FICLONE);
+
+    // Copy Order Line
+    destinationPath = path.join(process.cwd(), "order.gen.ts");
+    sourcePath = path.join(dirname, "../", "templates", "orderLine.gen.ts");
+
+    fs.copyFileSync(sourcePath, destinationPath, fs.constants.COPYFILE_FICLONE);
+    // result.forEach((filePath) => {
+    //   const
+    //   const destinationPath = path.join(path.dirname(filePath));
+    //   fs.copyFileSync(sourcePath, destinationPath, fs.constants.COPYFILE_EXCL);
+    // })
     // Next generate files that are in the path given or the file in the path
     // Should force replace files that exist
   } catch (err) {
-    console.log(err);
-    console.error(
-      "ftd_config.json file is missing, please npx ftd-core -init, or add it manually",
-    );
+    if (err instanceof Error) {
+      // e is narrowed to Error!
+      console.error(err.message);
+    } else {
+      console.error(err);
+    }
   }
 };
 
 function findFilesWithExtension(rootDir: string, extension: string) {
   const fileList: string[] = [];
 
-  function traverseDir(currentDir: string) {
+  const traverseDir = (currentDir: string) => {
     const files = fs.readdirSync(currentDir);
 
     for (const file of files) {
@@ -46,7 +68,7 @@ function findFilesWithExtension(rootDir: string, extension: string) {
         fileList.push(filePath);
       }
     }
-  }
+  };
 
   traverseDir(rootDir);
   return fileList;

@@ -5,6 +5,11 @@ export const readFile = (path: string) => {
     const data = fs.readFileSync(path);
     return data;
   } catch (err) {
-    return "File Read Error";
+    if (err instanceof Error) {
+      // e is narrowed to Error!
+      return err.message;
+    } else {
+      return "File Read Error";
+    }
   }
 };
