@@ -55,7 +55,21 @@ describe("Code Generation Checks", () => {
     expect(stderr).toBe("");
 
     // Check if the files are generated
+    // Check src/Order/order/order.gen.ts
+    // Check with correct template
+    let genFile = readFile(
+      path.join(process.cwd(), "src", "Order", "order", "order.gen.ts"),
+    );
+    let templateFile = readFile(
+      path.join(process.cwd(), "templates", "order.gen.ts"),
+    );
+    expect(genFile).not.toBe("File Read Error");
+    expect(templateFile).not.toBe("File Read Error");
+    expect(genFile).toBe(templateFile);
+    // Check with incorrect template
 
+    // Check src/Order/orderLine/orderLine.gen.ts
+    // Check src/User/profile/profile.gen.ts
     // remove the generated files
   });
 

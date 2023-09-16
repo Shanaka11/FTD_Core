@@ -5,3 +5,5 @@ dist
 demo/ftd_config.json
 
 test.json
+
+*.gen.ts

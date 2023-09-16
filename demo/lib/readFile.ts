@@ -3,7 +3,7 @@ import fs from "fs";
 export const readFile = (path: string) => {
   try {
     const data = fs.readFileSync(path);
-    return data;
+    return data.toString();
   } catch (err) {
     if (err instanceof Error) {
       // e is narrowed to Error!
