@@ -28,24 +28,40 @@ export const generateCoreFiles = () => {
     let destinationPath = path.join(
       process.cwd(),
       "src",
+      "Order",
       "order",
       "order.gen.ts",
     );
-    let sourcePath = path.join(dirname, "../", "templates", "orderLine.gen.ts");
+    let sourcePath = path.join(dirname, "../", "templates", "order.gen.ts");
 
     fs.copyFileSync(sourcePath, destinationPath, fs.constants.COPYFILE_FICLONE);
     console.log("Created order.gen.ts");
+
     // Copy Order Line
     destinationPath = path.join(
       process.cwd(),
       "src",
-      "order",
+      "Order",
+      "orderLine",
       "orderLine.gen.ts",
     );
     sourcePath = path.join(dirname, "../", "templates", "orderLine.gen.ts");
 
     fs.copyFileSync(sourcePath, destinationPath, fs.constants.COPYFILE_FICLONE);
     console.log("Created orderLine.gen.ts");
+
+    // Copy Profile
+    destinationPath = path.join(
+      process.cwd(),
+      "src",
+      "User",
+      "profile",
+      "profile.gen.ts",
+    );
+    sourcePath = path.join(dirname, "../", "templates", "profile.gen.ts");
+
+    fs.copyFileSync(sourcePath, destinationPath, fs.constants.COPYFILE_FICLONE);
+    console.log("Created profile.gen.ts");
 
     // result.forEach((filePath) => {
     //   const
