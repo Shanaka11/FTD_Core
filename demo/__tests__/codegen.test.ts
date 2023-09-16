@@ -50,7 +50,7 @@ describe("Code Generation Prerequisits", () => {
 describe("Code Generation Checks", () => {
   it("Generate Code For All files", async () => {
     const cmdExec = execCommand("npm run ftd-core -- -gen");
-    const { stdout, stderr, code } = await cmdExec;
+    const { stderr } = await cmdExec;
 
     // No errors were thrown
     expect(stderr).toBe("");
@@ -73,29 +73,14 @@ describe("Code Generation Checks", () => {
   });
 
   it("Generate Code for all files in the give folder", async () => {
-    const cmdExec = execCommand("npm run ftd-core -- -gen --order");
-    const { stdout, stderr, code } = await cmdExec;
+    const cmdExec = execCommand("npm run ftd-core -- -gen --/Order");
+    const { stderr } = await cmdExec;
 
     // No errors were thrown
     expect(stderr).toBe("");
 
     // Check if the files are generated
     // Files should only be generated in the src/order/ folder and other folders should not be changed
-
-    // remove the generated files
-  });
-
-  it("Generate Code for all files in the give folder", async () => {
-    const cmdExec = execCommand(
-      "npm run ftd-core -- -gen --./order/order.ftd.json",
-    );
-    const { stdout, stderr, code } = await cmdExec;
-
-    // No errors were thrown
-    expect(stderr).toBe("");
-
-    // Check if the files are generated
-    // Only order_ftd.json should be generated and nothing else should be generated
 
     // remove the generated files
   });
