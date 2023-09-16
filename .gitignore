@@ -3,3 +3,6 @@ dist
 .DS_Store
 
 demo/ftd_config.json
+
+test.json
+demo/src/order/order.ftd.json
