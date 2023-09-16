@@ -6,20 +6,41 @@ import { fileURLToPath } from "url";
 
 export const generateCoreFiles = (dirPath?: string) => {
   try {
+    const configPath = path.join(process.cwd(), "ftd_config.json");
+    const data = fs.readFileSync(configPath, "utf8");
+    console.log(data);
+
+    const filename = fileURLToPath(import.meta.url);
+    const dirname = path.dirname(filename);
+
     if (dirPath != undefined) {
+      // For testing we will assume that path will always be src/Order/order
+      // Copy Order
+      let destinationPath = path.join(
+        process.cwd(),
+        "src/Order/order/order.gen.ts",
+      );
+      let sourcePath = path.join(dirname, "../", "templates/order.gen.ts");
+
+      fs.copyFileSync(sourcePath, destinationPath);
+      console.log("Created order.gen.ts");
+
+      // Copy Order Line
+      destinationPath = path.join(
+        process.cwd(),
+        "src/Order/orderLine/orderLine.gen.ts",
+      );
+      sourcePath = path.join(dirname, "../", "templates/orderLine.gen.ts");
+
+      fs.copyFileSync(sourcePath, destinationPath);
+      console.log("Created orderLine.gen.ts");
       return dirPath;
     }
     // Generate Model File
     // Generate UseCases and Stubs
-    const configPath = path.join(process.cwd(), "ftd_config.json");
-    const data = fs.readFileSync(configPath, "utf8");
-    console.log(data);
     // As a start do not use the config file
     // All files will be generated in this iteration
     // Search for files in the src folder (Fore now we assume sources are in the src/<Models> folder, this can be a src/server/<model> or server/<model> depending on whats defined as the src in the config file)
-    const filename = fileURLToPath(import.meta.url);
-    const dirname = path.dirname(filename);
-
     const rootFolder = path.join(process.cwd(), "src"); // Replace with your root folder path
     const extension = ".ftd.json";
     const result = findFilesWithExtension(rootFolder, extension);
