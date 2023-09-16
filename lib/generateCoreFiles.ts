@@ -4,8 +4,11 @@ import { fileURLToPath } from "url";
 
 // import { fileURLToPath } from "url";
 
-export const generateCoreFiles = () => {
+export const generateCoreFiles = (dirPath?: string) => {
   try {
+    if (dirPath != undefined) {
+      return dirPath;
+    }
     // Generate Model File
     // Generate UseCases and Stubs
     const configPath = path.join(process.cwd(), "ftd_config.json");
@@ -27,12 +30,9 @@ export const generateCoreFiles = () => {
     // Copy Order
     let destinationPath = path.join(
       process.cwd(),
-      "src",
-      "Order",
-      "order",
-      "order.gen.ts",
+      "src/Order/order/order.gen.ts",
     );
-    let sourcePath = path.join(dirname, "../", "templates", "order.gen.ts");
+    let sourcePath = path.join(dirname, "../", "templates/order.gen.ts");
 
     fs.copyFileSync(sourcePath, destinationPath);
     console.log("Created order.gen.ts");
@@ -40,12 +40,9 @@ export const generateCoreFiles = () => {
     // Copy Order Line
     destinationPath = path.join(
       process.cwd(),
-      "src",
-      "Order",
-      "orderLine",
-      "orderLine.gen.ts",
+      "src/Order/orderLine/orderLine.gen.ts",
     );
-    sourcePath = path.join(dirname, "../", "templates", "orderLine.gen.ts");
+    sourcePath = path.join(dirname, "../", "templates/orderLine.gen.ts");
 
     fs.copyFileSync(sourcePath, destinationPath);
     console.log("Created orderLine.gen.ts");
@@ -53,16 +50,13 @@ export const generateCoreFiles = () => {
     // Copy Profile
     destinationPath = path.join(
       process.cwd(),
-      "src",
-      "User",
-      "profile",
-      "profile.gen.ts",
+      "src/User/profile/profile.gen.ts",
     );
-    sourcePath = path.join(dirname, "../", "templates", "profile.gen.ts");
+    sourcePath = path.join(dirname, "../", "templates/profile.gen.ts");
 
     fs.copyFileSync(sourcePath, destinationPath);
     console.log("Created profile.gen.ts");
-
+    return;
     // result.forEach((filePath) => {
     //   const
     //   const destinationPath = path.join(path.dirname(filePath));

@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "test": "npm --prefix ./demo run test",
-    "dev": "ts-node-esm index.ts -gen",
+    "dev": "ts-node-esm index.ts",
     "clean": "rm -rf ./dist",
     "copy-temps": "mkdir -p dist/templates && cp -r ./templates ./dist",
     "dev:init": "ts-node-esm index.ts -init",
