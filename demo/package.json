@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "ftd-core:init": "ftd-core -init",
-    "generate": "ftd-core -gen"
+    "ftd-core": "ftd-core",
+    "permission": "chmod +x node_modules/.bin/ftd-core"
   },
   "dependencies": {
     "@five12days/core": "file:..",

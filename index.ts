@@ -14,10 +14,14 @@ program
 
 const options = program.opts();
 
-if (options.generate) {
-  generateCoreFiles();
+if (options.generate != undefined) {
+  if (options.generate !== true) {
+    generateCoreFiles(options.generate as string);
+  } else {
+    generateCoreFiles();
+  }
 }
 
-if (options.init) {
+if (options.init && !options.generate) {
   createDefaultConfig();
 }
