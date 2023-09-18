@@ -9,7 +9,7 @@ on:
 
 jobs:
   deploy:
-    if: github.event.pull_request.merged == true && github.event.pull_request.head.branch == 'test-release'
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - run: echo "Merged from test-release to test-main"
