@@ -31,6 +31,17 @@ This will use a defined schema to generate core functionality
       """
       npm run ftd:generate
       """
+    - To enable schema parsing in VS code add the following lines to in the json:schema section of the settings page and make sure that json schema download is enabled
+      """
+        {
+          "fileMatch": ["/*.ftd.json"],
+          "url": "https://five12daysgeneral.s3.ap-southeast-1.amazonaws.com/ftd-core/ftdModel.schema.json"
+        },
+        {
+          "fileMatch": ["ftd_config.json"],
+			    "url": "https://five12daysgeneral.s3.ap-southeast-1.amazonaws.com/ftd-core/ftdConfig.schema.json"
+        }
+      """
 
 ## Schema definition
 
