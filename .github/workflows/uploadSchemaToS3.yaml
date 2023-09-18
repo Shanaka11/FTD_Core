@@ -1,0 +1,16 @@
+name: Upload Schema Files
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - test-main
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true && github.event.pull_request.head.branch == 'test-release'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Merged from test-release to test-main"
+        # Your deployment steps go here
