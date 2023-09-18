@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft-2020-12/schema",
+  "$id": "https://five12daysgeneral.s3.ap-southeast-1.amazonaws.com/ftd-core/ftdConfig.schema.json",
+  "title": "FTD Config Definition",
+  "description": "FTD Config Definition Schema",
+  "type": "object",
+  "properties": {
+    "src": {
+      "type": "string"
+    }
+  },
+  "required": ["src"]
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft-2020-12/schema",
+  "$id": "https://five12daysgeneral.s3.ap-southeast-1.amazonaws.com/ftd-core/ftdModel.schema.json",
+  "title": "FTD Model Definition Schema",
+  "description": "FTD Schema Definition",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "attributes": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[a-zA-Z0-9]+$": {
+          "type": "object",
+          "required": ["flags", "type"],
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "flags": {
+              "type": "string",
+              "enum": ["KMI-", "AMIU", "AMI-", "A-I-", "A-IU"]
+            },
+            "type": {
+              "type": "string",
+              "enum": ["String", "Number", "Date"]
+            },
+            "maxLength": {
+              "type": "number",
+              "minimum": 1
+            }
+          },
+          "if": {
+            "properties": {
+              "type": { "const": "String" }
+            }
+          },
+          "then": {
+            "required": ["maxLength"]
+          },
+          "else": {
+            "not": {
+              "required": ["maxLength"]
+            }
+          }
+        }
+      }
+    },
+    "relationships": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^[a-zA-Z0-9]+$": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "required": ["name", "attributes"]
+}
