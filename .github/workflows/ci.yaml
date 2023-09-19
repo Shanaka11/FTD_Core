@@ -25,3 +25,6 @@ jobs:
     
       - name: Build, lint, test, and typecheck
         run: npm run build && npm run lint && npm install --prefix demo && npm run test
+
+      - name: list files
+        run: ls demo/src/order/order

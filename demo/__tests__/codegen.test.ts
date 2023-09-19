@@ -91,8 +91,8 @@ describe("Code Generation Checks", () => {
     compareFileSetNotExist(path.join(process.cwd(), "src/User/profile"));
 
     // remove the generated files
-    removeFileSet(path.join(process.cwd(), "src/Order/order"));
-    removeFileSet(path.join(process.cwd(), "src/Order/orderLine"));
+    // removeFileSet(path.join(process.cwd(), "src/Order/order"));
+    // removeFileSet(path.join(process.cwd(), "src/Order/orderLine"));
   });
 });
 
