@@ -10,12 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+
+      - name: Checkout
+        uses: actions/checkout@v2
 
       - name: Install deps (with cache)
         run: npm install
@@ -27,4 +27,4 @@ jobs:
         run: npm run build && npm run lint && npm install --prefix demo && npm run test
 
       - name: list files
-        run: ls ./demo/src
+        run: ls ./demo/src/Order
