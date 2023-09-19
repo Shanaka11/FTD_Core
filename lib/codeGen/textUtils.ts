@@ -6,4 +6,9 @@ const simplize = (str: string) => {
   return str.charAt(0).toLowerCase() + str.slice(1);
 };
 
-export { capitalize, simplize };
+const indent = (tabs: number) => {
+  const indentDelimeter = "  "; // 2 spaces
+  return indentDelimeter.repeat(tabs);
+};
+
+export { capitalize, simplize, indent };

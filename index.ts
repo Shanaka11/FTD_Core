@@ -5,6 +5,7 @@ import { generateModel } from "./lib/codeGen/generateModel.js";
 import { createDefaultConfig } from "./lib/createDefaultConfig.js";
 import { generateCoreFiles } from "./lib/generateCoreFiles.js";
 import { tModel } from "./types/ftdSchema.js";
+import { makeModelParams } from "./types/makeModelParams.js";
 
 const program = new Command();
 
@@ -40,3 +41,5 @@ if (options.Test) {
   };
   console.log(generateModel(data));
 }
+
+export { makeModelParams };
