@@ -50,11 +50,10 @@ describe("Code Generation Prerequisits", () => {
 describe("Code Generation Checks", () => {
   it("Generate Code For All files", async () => {
     const cmdExec = execCommand("npm run ftd-core -- -gen");
-    const { stdout, stderr } = await cmdExec;
+    const { stderr } = await cmdExec;
 
     // No errors were thrown
     expect(stderr).toBe("");
-    console.log(stdout);
 
     // Check if the files are generated
     // Check src/Order/order/order.gen.ts
@@ -91,8 +90,8 @@ describe("Code Generation Checks", () => {
     compareFileSetNotExist(path.join(process.cwd(), "src/User/profile"));
 
     // remove the generated files
-    // removeFileSet(path.join(process.cwd(), "src/Order/order"));
-    // removeFileSet(path.join(process.cwd(), "src/Order/orderLine"));
+    removeFileSet(path.join(process.cwd(), "src/Order/order"));
+    removeFileSet(path.join(process.cwd(), "src/Order/orderLine"));
   });
 });
 
@@ -105,17 +104,17 @@ const compareFiles = (genPath: string, templateFilename: string) => {
     path.join(process.cwd(), "templates/incorrect/", templateFilename),
   );
 
-  // expect(genFile).not.toBe("File Read Error");
-  // expect(correctTemplateFile).not.toBe("File Read Error");
-  // expect(incorrectTemplateFile).not.toBe("File Read Error");
-  // expect(genFile).toBe(correctTemplateFile);
-  // expect(genFile).not.toBe(incorrectTemplateFile);
+  expect(genFile).not.toBe("File Read Error");
+  expect(correctTemplateFile).not.toBe("File Read Error");
+  expect(incorrectTemplateFile).not.toBe("File Read Error");
+  expect(genFile).toBe(correctTemplateFile);
+  expect(genFile).not.toBe(incorrectTemplateFile);
 };
 
 const compareFileNotExist = (genPath: string) => {
   const data = readFile(genPath);
 
-  // expect(data).toBe("File Read Error");
+  expect(data).toBe("File Read Error");
 };
 
 const compareFileSet = (filePath: string) => {

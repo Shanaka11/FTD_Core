@@ -3,6 +3,7 @@ import path from "path";
 
 import { isTModel } from "../types/validateSchemaType.js";
 import { generateModel } from "./codeGen/generateModel.js";
+import { simplize } from "./codeGen/textUtils.js";
 
 // import { fileURLToPath } from "url";
 
@@ -41,11 +42,13 @@ const generateCoreFiles_ = (dirPath: string) => {
     if (isTModel(modelData)) {
       const code = generateModel(modelData);
       const directory = path.dirname(filePath);
-      fs.writeFileSync(`${directory}/${modelData.name}.gen.ts`, code);
-      console.log(`${modelData.name}.gen.ts Created successfully.`);
+      fs.writeFileSync(`${directory}/${simplize(modelData.name)}.gen.ts`, code);
+      console.log(`${simplize(modelData.name)}.gen.ts Created successfully.`);
     } else {
       const filename = filePath.replace(/^.*[\\/]/, "");
-      throw new Error(`Schema error, Please check ${filename} for errors.`);
+      throw new Error(
+        `Schema error, Please check ${simplize(filename)} for errors.`,
+      );
     }
   });
 };
