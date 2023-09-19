@@ -1,11 +1,12 @@
 // Generated Code, Do not modify
 export const makeOrder = ({ generateId, validateModel }) => {
-  return (modelData) => {
-    const model = {
-      id: generateId(),
-      orderNo: modelData.orderNo,
-      totalAmount: modelData.totalAmount,
-      date: modelData.date
-    }
-  }
-}
+	return (modelData) => {
+		const model = {
+			id: generateId(),
+			orderNo: modelData.orderNo,
+			totalAmount: modelData.totalAmount,
+			date: modelData.date
+		};
+	return model;
+	};
+};

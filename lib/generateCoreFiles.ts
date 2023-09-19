@@ -1,90 +1,25 @@
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
+
+import { isTModel } from "../types/validateSchemaType.js";
+import { generateModel } from "./codeGen/generateModel.js";
 
 // import { fileURLToPath } from "url";
 
 export const generateCoreFiles = (dirPath?: string) => {
   try {
-    const configPath = path.join(process.cwd(), "ftd_config.json");
-    const data = fs.readFileSync(configPath, "utf8");
-    console.log(data);
-
-    const filename = fileURLToPath(import.meta.url);
-    const dirname = path.dirname(filename);
-
     if (dirPath != undefined) {
-      // For testing we will assume that path will always be src/Order/order
-      // Copy Order
-      let destinationPath = path.join(
-        process.cwd(),
-        "src/Order/order/order.gen.ts",
-      );
-      let sourcePath = path.join(dirname, "../", "templates/order.gen.ts");
-
-      fs.copyFileSync(sourcePath, destinationPath);
-      console.log("Created order.gen.ts");
-
-      // Copy Order Line
-      destinationPath = path.join(
-        process.cwd(),
-        "src/Order/orderLine/orderLine.gen.ts",
-      );
-      sourcePath = path.join(dirname, "../", "templates/orderLine.gen.ts");
-
-      fs.copyFileSync(sourcePath, destinationPath);
-      console.log("Created orderLine.gen.ts");
-      return dirPath;
+      // TODO: We should get the full path, for instance if we invoke -gen , when in the Order folder, then -gen -orderLine, or -gen . should generate the files in the correct folder
+      console.log(dirPath);
+      generateCoreFiles_(path.join(process.cwd(), "src", dirPath));
+      return;
     }
     // Generate Model File
     // Generate UseCases and Stubs
     // As a start do not use the config file
     // All files will be generated in this iteration
     // Search for files in the src folder (Fore now we assume sources are in the src/<Models> folder, this can be a src/server/<model> or server/<model> depending on whats defined as the src in the config file)
-    const rootFolder = path.join(process.cwd(), "src"); // Replace with your root folder path
-    const extension = ".ftd.json";
-    const result = findFilesWithExtension(rootFolder, extension);
-
-    console.log("Files with extension " + extension + ":");
-    console.log(result);
-
-    // Copy Order
-    let destinationPath = path.join(
-      process.cwd(),
-      "src/Order/order/order.gen.ts",
-    );
-    let sourcePath = path.join(dirname, "../", "templates/order.gen.ts");
-
-    fs.copyFileSync(sourcePath, destinationPath);
-    console.log("Created order.gen.ts");
-
-    // Copy Order Line
-    destinationPath = path.join(
-      process.cwd(),
-      "src/Order/orderLine/orderLine.gen.ts",
-    );
-    sourcePath = path.join(dirname, "../", "templates/orderLine.gen.ts");
-
-    fs.copyFileSync(sourcePath, destinationPath);
-    console.log("Created orderLine.gen.ts");
-
-    // Copy Profile
-    destinationPath = path.join(
-      process.cwd(),
-      "src/User/profile/profile.gen.ts",
-    );
-    sourcePath = path.join(dirname, "../", "templates/profile.gen.ts");
-
-    fs.copyFileSync(sourcePath, destinationPath);
-    console.log("Created profile.gen.ts");
-    return;
-    // result.forEach((filePath) => {
-    //   const
-    //   const destinationPath = path.join(path.dirname(filePath));
-    //   fs.copyFileSync(sourcePath, destinationPath, fs.constants.COPYFILE_EXCL);
-    // })
-    // Next generate files that are in the path given or the file in the path
-    // Should force replace files that exist
+    generateCoreFiles_(path.join(process.cwd(), "src"));
   } catch (err) {
     if (err instanceof Error) {
       // e is narrowed to Error!
@@ -95,7 +30,27 @@ export const generateCoreFiles = (dirPath?: string) => {
   }
 };
 
-function findFilesWithExtension(rootDir: string, extension: string) {
+const generateCoreFiles_ = (dirPath: string) => {
+  const rootFolder = dirPath; // Replace with your root folder path
+  const extension = ".ftd.json";
+  const result = findFilesWithExtension(rootFolder, extension);
+
+  result.forEach((filePath) => {
+    const data: string = fs.readFileSync(filePath, "utf-8");
+    const modelData: unknown = JSON.parse(data);
+    if (isTModel(modelData)) {
+      const code = generateModel(modelData);
+      const directory = path.dirname(filePath);
+      fs.writeFileSync(`${directory}/${modelData.name}.gen.ts`, code);
+      console.log(`${modelData.name}.gen.ts Created successfully.`);
+    } else {
+      const filename = filePath.replace(/^.*[\\/]/, "");
+      throw new Error(`Schema error, Please check ${filename} for errors.`);
+    }
+  });
+};
+
+const findFilesWithExtension = (rootDir: string, extension: string) => {
   const fileList: string[] = [];
 
   const traverseDir = (currentDir: string) => {
@@ -115,4 +70,4 @@ function findFilesWithExtension(rootDir: string, extension: string) {
 
   traverseDir(rootDir);
   return fileList;
-}
+};

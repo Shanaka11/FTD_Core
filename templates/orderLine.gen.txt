@@ -1,0 +1,14 @@
+// Generated Code, Do not modify
+export const makeOrderLine = ({ generateId, validateModel }) => {
+	return (modelData) => {
+		const model = {
+			id: generateId(),
+			orderNo: modelData.orderNo,
+			lineNo: modelData.lineNo,
+			itemNo: modelData.itemNo,
+			itemDescription: modelData.itemDescription,
+			amount: modelData.amount
+		};
+	return model;
+	};
+};

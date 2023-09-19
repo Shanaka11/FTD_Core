@@ -1,0 +1,6 @@
+{
+  "name": "Profile",
+  "attributes": {
+    "ProfileId": { "type": "Number", "flags": "KMI-" }
+  }
+}

@@ -12,9 +12,10 @@ export const generateModel = (modelSchema: tModel) => {
   content += `\t\tconst model = {\n`;
   content += `\t\t\tid: generateId(),\n`;
   content += `\t\t\t${generateAttributes(attributes)}\n`;
-  content += `\t\t}\n`;
-  content += `\t}\n`;
-  content += `}`;
+  content += `\t\t};\n`;
+  content += `\treturn model;\n`;
+  content += `\t};\n`;
+  content += `};`;
   return content;
 };
 

@@ -1,0 +1,10 @@
+// Generated Code, Do not modify
+export const makeProfile = ({ generateId, validateModel }) => {
+	return (modelData) => {
+		const model = {
+			id: generateId(),
+			profileId: modelData.profileId
+		};
+	return model;
+	};
+};
