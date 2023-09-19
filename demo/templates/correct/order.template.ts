@@ -3,11 +3,11 @@ import { makeModelParams } from "@five12days/core";
 
 export type TOrder = {
   id?: string;
-  createdAt: string;
-  updatedAt: string;
-  orderNo: string;
+  createdAt?: string;
+  updatedAt?: string;
+  orderNo: number;
   totalAmount: number;
-  date: Date;
+  date?: string;
 };
 
 export const makeOrder = ({
@@ -23,9 +23,6 @@ export const makeOrder = ({
       totalAmount: modelData.totalAmount,
       date: modelData.date,
     };
-
-    validateModel(model);
-
     return model;
   };
 };
