@@ -3,6 +3,8 @@ export const makeOrderLine = ({ generateId, validateModel }) => {
 	return (modelData) => {
 		const model = {
 			id: generateId(),
+			createdAt: modleData.createdAt,
+			updatedAt: modelData.updatedAt,
 			orderNo: modelData.orderNo,
 			lineNo: modelData.lineNo,
 			itemNo: modelData.itemNo,

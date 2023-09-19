@@ -11,6 +11,8 @@ export const generateModel = (modelSchema: tModel) => {
   content += `\treturn (modelData) => {\n`;
   content += `\t\tconst model = {\n`;
   content += `\t\t\tid: generateId(),\n`;
+  content += `\t\t\tcreatedAt: modleData.createdAt,\n`;
+  content += `\t\t\tupdatedAt: modelData.updatedAt,\n`;
   content += `\t\t\t${generateAttributes(attributes)}\n`;
   content += `\t\t};\n`;
   content += `\treturn model;\n`;
