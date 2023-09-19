@@ -27,4 +27,4 @@ jobs:
         run: npm run build && npm run lint && npm install --prefix demo && npm run test
 
       - name: list files
-        run: ls ./demo/src/order/order
+        run: ls ./demo/src
