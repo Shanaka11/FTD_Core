@@ -50,10 +50,11 @@ describe("Code Generation Prerequisits", () => {
 describe("Code Generation Checks", () => {
   it("Generate Code For All files", async () => {
     const cmdExec = execCommand("npm run ftd-core -- -gen");
-    const { stderr } = await cmdExec;
+    const { stdout, stderr } = await cmdExec;
 
     // No errors were thrown
     expect(stderr).toBe("");
+    console.log(stdout);
 
     // Check if the files are generated
     // Check src/Order/order/order.gen.ts
