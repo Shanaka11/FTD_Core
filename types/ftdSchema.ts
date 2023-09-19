@@ -7,11 +7,12 @@ type tAttributeItemString = {
   type: "String";
   maxLength: number;
 };
-type tAttributeItem = {
+export type tAttributeItem = {
   label?: string;
   flags: tAttributeFlags;
 } & (tAttributeItemNoString | tAttributeItemString);
-type tAattributes = Record<string, tAttributeItem>;
+
+export type tAattributes = Record<string, tAttributeItem>;
 
 export type tModel = {
   name: string;
