@@ -6,6 +6,7 @@ import { createDefaultConfig } from "./lib/createDefaultConfig.js";
 import { generateCoreFiles } from "./lib/generateCoreFiles.js";
 import { tModel } from "./types/ftdSchema.js";
 import { makeModelParams } from "./types/makeModelParams.js";
+import { isIdPresent, TModelKey } from "./types/useCaseTypes.js";
 
 const program = new Command();
 
@@ -42,4 +43,4 @@ if (options.Test) {
   console.log(generateModel(data));
 }
 
-export { makeModelParams };
+export { makeModelParams, TModelKey, isIdPresent };
