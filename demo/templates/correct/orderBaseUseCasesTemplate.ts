@@ -1,3 +1,4 @@
+// Generated Code, Do not modify
 import { isIdPresent, TModelKey } from "@five12days/core";
 
 import { makeOrder, TOrder } from "./order.template";

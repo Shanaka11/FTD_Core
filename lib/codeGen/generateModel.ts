@@ -1,4 +1,5 @@
-import { tAattributes, tAttributeItem, tModel } from "../../types/ftdSchema.js";
+import { tAattributes, tModel } from "../../types/ftdSchema.js";
+import { decodeAttributeType } from "./attributeTypeUtils.js";
 import { capitalize, indent, simplize } from "./textUtils.js";
 
 export const generateModel = (modelSchema: tModel) => {
@@ -42,32 +43,10 @@ const generateTypes = (attributes: tAattributes) => {
   type += `${indent(1)}createdAt?: string;\n`;
   type += `${indent(1)}updatedAt?: string;\n${indent(1)}`;
   type += Object.entries(attributes)
-    .map(([key]) => {
-      return `${simplize(key)}${decodeAttributeType(attributes[key])}`;
+    .map(([key, attribute]) => {
+      return `${simplize(key)}${decodeAttributeType(attribute)}`;
     })
     .join(`;\n${indent(1)}`);
 
   return type;
-};
-
-const decodeAttributeType = (attribute: tAttributeItem) => {
-  let retString = "";
-  if (attribute.flags === "A-I-" || attribute.flags === "A-IU") {
-    retString = "?: ";
-  } else {
-    retString = ": ";
-  }
-  switch (attribute.type) {
-    case "Date":
-      retString += "Date";
-      break;
-    case "Number":
-      retString += "number";
-      break;
-    case "String":
-      retString += "string";
-      break;
-  }
-
-  return retString;
 };

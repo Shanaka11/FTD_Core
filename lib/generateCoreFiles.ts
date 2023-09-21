@@ -3,6 +3,7 @@ import path from "path";
 
 import { isTModel } from "../types/validateSchemaType.js";
 import { generateModel } from "./codeGen/generateModel.js";
+import { generateUseCase } from "./codeGen/generateUseCase.js";
 import { simplize } from "./codeGen/textUtils.js";
 
 // import { fileURLToPath } from "url";
@@ -10,8 +11,6 @@ import { simplize } from "./codeGen/textUtils.js";
 export const generateCoreFiles = (dirPath?: string) => {
   try {
     if (dirPath != undefined) {
-      // TODO: We should get the full path, for instance if we invoke -gen , when in the Order folder, then -gen -orderLine, or -gen . should generate the files in the correct folder
-      console.log(dirPath);
       generateCoreFiles_(path.join(process.cwd(), "src", dirPath));
       return;
     }
@@ -40,10 +39,22 @@ const generateCoreFiles_ = (dirPath: string) => {
     const data: string = fs.readFileSync(filePath, "utf-8");
     const modelData: unknown = JSON.parse(data);
     if (isTModel(modelData)) {
-      const code = generateModel(modelData);
       const directory = path.dirname(filePath);
-      fs.writeFileSync(`${directory}/${simplize(modelData.name)}.gen.ts`, code);
+      const modelCode = generateModel(modelData);
+      fs.writeFileSync(
+        `${directory}/${simplize(modelData.name)}.gen.ts`,
+        modelCode,
+      );
       console.log(`${simplize(modelData.name)}.gen.ts Created successfully.`);
+
+      const useCaseCode = generateUseCase(modelData);
+      fs.writeFileSync(
+        `${directory}/${simplize(modelData.name)}BaseUseCases.gen.ts`,
+        useCaseCode,
+      );
+      console.log(
+        `${simplize(modelData.name)}BaseUseCases.gen.ts Created successfully.`,
+      );
     } else {
       const filename = filePath.replace(/^.*[\\/]/, "");
       throw new Error(
