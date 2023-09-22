@@ -27,6 +27,7 @@ export const makeOrderLine = ({
       itemDescription: modelData.itemDescription,
       amount: modelData.amount,
     };
+    validateModel(model);
     return model;
   };
 };

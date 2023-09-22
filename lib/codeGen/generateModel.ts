@@ -1,32 +1,30 @@
 import { tAattributes, tModel } from "../../types/ftdSchema.js";
+import { MAKE_CREATE_MODEL_TEMPLATE } from "../templates/makeCreateModelTemplate.js";
 import { decodeAttributeType } from "./attributeTypeUtils.js";
-import { capitalize, indent, simplize } from "./textUtils.js";
+import {
+  capitalize,
+  createStringFromTemplate,
+  indent,
+  simplize,
+} from "./textUtils.js";
 
 export const generateModel = (modelSchema: tModel) => {
   const { name, attributes } = modelSchema;
 
-  let content = `// Generated Code, Do not modify\n`;
-  // Add imports
-  content += `import { makeModelParams } from "@five12days/core";\n\n`;
-  // Generate Type
-  content += `export type T${capitalize(name)} = {\n`;
-  content += `${generateTypes(attributes)};\n`;
-  content += `};\n\n`;
-  // Generate Make Model
-  content += `export const make${capitalize(name)} = ({\n`;
-  content += `${indent(1)}generateId,\n`;
-  content += `${indent(1)}validateModel,\n`;
-  content += `}: makeModelParams<T${capitalize(name)}>) => {\n`;
-  content += `${indent(1)}return (modelData: T${capitalize(name)}) => {\n`;
-  content += `${indent(2)}const model = {\n`;
-  content += `${indent(3)}id: generateId(),\n`;
-  content += `${indent(3)}createdAt: modelData.createdAt,\n`;
-  content += `${indent(3)}updatedAt: modelData.updatedAt,\n`;
-  content += `${indent(3)}${generateAttributes(attributes)},\n`;
-  content += `${indent(2)}};\n`;
-  content += `${indent(2)}return model;\n`;
-  content += `${indent(1)}};\n`;
-  content += `};\n`;
+  const nameCapitalized = capitalize(name);
+  const nameSimplized = simplize(name);
+  const tName = `T${nameCapitalized}`;
+
+  const content = createStringFromTemplate(
+    {
+      MODEL: nameCapitalized,
+      TNAME: tName,
+      MODELVAR: nameSimplized,
+      TYPE_ATTRIBUTES: generateTypes(attributes),
+      MODEL_ATTRIBUTES: generateAttributes(attributes),
+    },
+    MAKE_CREATE_MODEL_TEMPLATE,
+  );
   return content;
 };
 
@@ -39,10 +37,7 @@ const generateAttributes = (attributes: tAattributes) => {
 };
 
 const generateTypes = (attributes: tAattributes) => {
-  let type = `${indent(1)}id?: string;\n`;
-  type += `${indent(1)}createdAt?: string;\n`;
-  type += `${indent(1)}updatedAt?: string;\n${indent(1)}`;
-  type += Object.entries(attributes)
+  const type = Object.entries(attributes)
     .map(([key, attribute]) => {
       return `${simplize(key)}${decodeAttributeType(attribute)}`;
     })

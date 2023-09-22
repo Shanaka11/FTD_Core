@@ -11,4 +11,17 @@ const indent = (tabs: number) => {
   return indentDelimeter.repeat(tabs);
 };
 
-export { capitalize, simplize, indent };
+const createStringFromTemplate = (
+  values: Record<string, string>,
+  template: string,
+) => {
+  return template.replace(/{([^{}]+)}/g, (match, key) => {
+    if (typeof key === "string") {
+      const replacement = values[key.trim()];
+      return typeof replacement !== "undefined" ? replacement : match;
+    }
+    return match;
+  });
+};
+
+export { capitalize, simplize, indent, createStringFromTemplate };
