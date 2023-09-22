@@ -1,0 +1,16 @@
+// Generated Code, Do not modify
+import { isIdPresent, TModelKey } from "@five12days/core";
+
+import { makeOrder, TOrder } from "./order.gen.js";
+
+type TOrderKey = {
+  orderNo: number;
+  totalAmount: number;
+};
+
+export const makeReadOrderUseCase = ({ repository }: any) => {
+  return (keys: TModelKey | TOrderKey) => {
+    if (isIdPresent(keys)) {
+      return repository.readModel(keys.id);
+    }
+    return reposit

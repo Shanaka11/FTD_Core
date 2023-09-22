@@ -1,0 +1,85 @@
+// Generated Code, Do not modify
+import { isIdPresent, TModelKey } from "@five12days/core";
+
+import { makeProfile, TProfile } from "./profile.gen.js";
+
+type TProfileKey = {
+  profileId: number;
+};
+
+export const makeReadProfileUseCase = ({ repository }: any) => {
+  return (keys: TModelKey | TProfileKey) => {
+    if (isIdPresent(keys)) {
+      return repository.readModel(keys.id);
+    }
+    return repository.readModel(keys);
+  };
+};
+
+export const makeCreateProfileUseCase = ({
+  generateId,
+  validateModel,
+  repository,
+}: any) => {
+  return (modelData: TProfile) => {
+    const createProfile = makeProfile({
+      generateId,
+      validateModel,
+    });
+
+    const profile = createProfile(modelData);
+    return repository.create(profile);
+  };
+};
+
+export const makeUpdateProfileUseCase = ({
+  generateId,
+  validateModel,
+  repository,
+}: any) => {
+  return (modelData: TProfile) => {
+    const profile = checkProfileChanged({
+      generateId,
+      validateModel,
+      repository,
+      modelData,
+    });
+    repository.updateModel(profile);
+  };
+};
+
+export const makeDeleteProfileUseCase = ({
+  generateId,
+  validateModel,
+  repository,
+}: any) => {
+  return (modelData: TProfile) => {
+    const profile = checkProfileChanged({
+      generateId,
+      validateModel,
+      repository,
+      modelData,
+    });
+    repository.deleteModel(profile);
+  };
+};
+
+const checkProfileChanged = ({
+  generateId,
+  validateModel,
+  repository,
+  modelData,
+}: any) => {
+  const createProfile = makeProfile({
+    generateId,
+    validateModel,
+  });
+  const readProfile = makeReadProfileUseCase({
+    repository,
+  });
+  const newProfile = createProfile(modelData);
+  const oldProfile = readProfile({
+    id: newProfile.id,
+  });
+  return newProfile;
+};

@@ -9,7 +9,7 @@ export const CREATE_MODEL_USECASE_TEMPLATE = `export const makeCreate{MODEL}UseC
       validateModel,
     });
 
-    const {MODELVAR} = createOrder(modelData);
+    const {MODELVAR} = create{MODEL}(modelData);
     return repository.create({MODELVAR});
   };
 };`;

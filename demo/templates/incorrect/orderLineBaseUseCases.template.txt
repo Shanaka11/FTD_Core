@@ -1,0 +1,72 @@
+// Generated Code, Do not modify
+import { isIdPresent, TModelKey } from "@five12days/core";
+
+import { makeOrder, TOrder } from "./order.gen.js";
+
+type TOrderKey = {
+  orderNo: number;
+  totalAmount: number;
+};
+
+export const makeReadOrderUseCase = ({ repository }: any) => {
+  return (keys: TModelKey | TOrderKey) => {
+    if (isIdPresent(keys)) {
+      return repository.readModel(keys.id);
+    }
+    return repository.readModel(keys);
+  };
+};
+
+export const makeCreateOrderUseCase = ({
+  generateId,
+  validateModel,
+  repository,
+}: any) => {
+  return (modelData: TOrder) => {
+    const createOrder = makeOrder({
+      generateId,
+      validateModel,
+    });
+
+    const order = createOrder(modelData);
+    return repository.create(order);
+  };
+};
+
+export const makeUpdateOrderUseCase = ({
+  generateId,
+  validateModel,
+  repository,
+}: any) => {
+  return (modelData: TOrder) => {
+    const order = checkOrderChanged({
+      generateId,
+      validateModel,
+      repository,
+      modelData,
+    });
+    repository.updateModel(order);
+  };
+};
+
+export const makeDeleteOrderUseCase = ({
+  generateId,
+  validateModel,
+  repository,
+}: any) => {
+
+  modelData,
+}: any) => {
+  const createOrder = makeOrder({
+    generateId,
+    validateModel,
+  });
+  const readOrder = makeReadOrderUseCase({
+    repository,
+  });
+  const newOrder = createOrder(modelData);
+  const oldOrder = readOrder({
+    id: newOrder.id,
+  });
+  return newOrder;
+};
