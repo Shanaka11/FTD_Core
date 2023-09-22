@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 
-import { createReadModelUseCase } from "./lib/codeGen/generateUseCase.js";
 import { createDefaultConfig } from "./lib/createDefaultConfig.js";
 import { generateCoreFiles } from "./lib/generateCoreFiles.js";
 import { makeModelParams } from "./types/makeModelParams.js";
@@ -31,7 +30,7 @@ if (options.init && !options.generate) {
 }
 
 if (options.Test) {
-  console.log(createReadModelUseCase("Order", "TOrder", "order"));
+  // console.log(createReadModelUseCase("Order", "TOrder", "order"));
 }
 
 export { makeModelParams, TModelKey, isIdPresent };

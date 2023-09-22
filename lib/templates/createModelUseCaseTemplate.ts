@@ -1,4 +1,4 @@
-export const CREATE_MODEL_USECASE_TEMPLATE = `const makeCreate{MODEL}UseCase = ({
+export const CREATE_MODEL_USECASE_TEMPLATE = `export const makeCreate{MODEL}UseCase = ({
   generateId,
   validateModel,
   repository,
