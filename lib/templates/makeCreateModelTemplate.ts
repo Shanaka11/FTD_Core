@@ -14,7 +14,7 @@ export const make{MODEL} = ({
 }: makeModelParams<{TNAME}>) => {
   return (modelData: {TNAME}) => {
     const model = {
-      id: generateId(),
+      id: modelData.id === undefined ? generateId() : modelData.id,
       createdAt: modelData.createdAt,
       updatedAt: modelData.updatedAt,
       {MODEL_ATTRIBUTES},

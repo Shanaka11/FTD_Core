@@ -16,7 +16,7 @@ export const makeOrder = ({
 }: makeModelParams<TOrder>) => {
   return (modelData: TOrder) => {
     const model = {
-      id: generateId(),
+      id: modelData.id === undefined ? generateId() : modelData.id,
       createdAt: modelData.createdAt,
       updatedAt: modelData.updatedAt,
       orderNo: modelData.orderNo,

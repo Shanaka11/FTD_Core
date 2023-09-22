@@ -14,7 +14,7 @@ export const makeProfile = ({
 }: makeModelParams<TProfile>) => {
   return (modelData: TProfile) => {
     const model = {
-      id: generateId(),
+      id: modelData.id === undefined ? generateId() : modelData.id,
       createdAt: modelData.createdAt,
       updatedAt: modelData.updatedAt,
       profileId: modelData.profileId,
