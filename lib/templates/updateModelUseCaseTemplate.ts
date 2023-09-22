@@ -2,7 +2,7 @@ export const UPDATE_MODEL_USECASE_TEMPLATE = `export const makeUpdate{MODEL}UseC
   generateId,
   validateModel,
   repository,
-}: any) => {
+}: TBaseUseCase<{TNAME}>) => {
   return (modelData: {TNAME}) => {
     const {MODELVAR} = check{MODEL}Changed({
       generateId,

@@ -3,7 +3,7 @@ export const CHECK_ORDER_CHANGED_TEMPLATE = `const check{MODEL}Changed = ({
   validateModel,
   repository,
   modelData,
-}: any) => {
+}: TBaseUseCaseCheckChanged<{TNAME}>) => {
   const create{MODEL} = make{MODEL}({
     generateId,
     validateModel,

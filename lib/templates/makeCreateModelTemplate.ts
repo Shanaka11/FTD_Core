@@ -1,29 +1,26 @@
-// Generated Code, Do not modify
+export const MAKE_CREATE_MODEL_TEMPLATE = `// Generated Code, Do not modify
 import { makeModelParams } from "@five12days/core";
 
-export type TOrder = {
+export type {TNAME} = {
   id?: string;
   createdAt?: string;
   updatedAt?: string;
-  orderNo: number;
-  totalAmount: number;
-  date?: string;
+  {TYPE_ATTRIBUTES};
 };
 
-export const makeOrder = ({
+export const make{MODEL} = ({
   generateId,
   validateModel,
-}: makeModelParams<TOrder>) => {
-  return (modelData: TOrder) => {
+}: makeModelParams<{TNAME}>) => {
+  return (modelData: {TNAME}) => {
     const model = {
       id: modelData.id === undefined ? generateId() : modelData.id,
       createdAt: modelData.createdAt,
       updatedAt: modelData.updatedAt,
-      orderNo: modelData.orderNo,
-      totalAmount: modelData.totalAmount,
-      date: modelData.date,
+      {MODEL_ATTRIBUTES},
     };
     validateModel(model);
     return model;
   };
 };
+`;

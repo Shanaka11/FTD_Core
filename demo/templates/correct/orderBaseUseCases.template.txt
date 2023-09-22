@@ -1,5 +1,10 @@
 // Generated Code, Do not modify
-import { isIdPresent, TModelKey } from "@five12days/core";
+import {
+  isIdPresent,
+  TBaseUseCase,
+  TBaseUseCaseCheckChanged,
+  TModelKey,
+} from "@five12days/core";
 
 import { makeOrder, TOrder } from "./order.gen.js";
 
@@ -21,7 +26,7 @@ export const makeCreateOrderUseCase = ({
   generateId,
   validateModel,
   repository,
-}: any) => {
+}: TBaseUseCase<TOrder>) => {
   return (modelData: TOrder) => {
     const createOrder = makeOrder({
       generateId,
@@ -37,7 +42,7 @@ export const makeUpdateOrderUseCase = ({
   generateId,
   validateModel,
   repository,
-}: any) => {
+}: TBaseUseCase<TOrder>) => {
   return (modelData: TOrder) => {
     const order = checkOrderChanged({
       generateId,
@@ -53,7 +58,7 @@ export const makeDeleteOrderUseCase = ({
   generateId,
   validateModel,
   repository,
-}: any) => {
+}: TBaseUseCase<TOrder>) => {
   return (modelData: TOrder) => {
     const order = checkOrderChanged({
       generateId,
@@ -70,7 +75,7 @@ const checkOrderChanged = ({
   validateModel,
   repository,
   modelData,
-}: any) => {
+}: TBaseUseCaseCheckChanged<TOrder>) => {
   const createOrder = makeOrder({
     generateId,
     validateModel,

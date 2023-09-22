@@ -1,5 +1,10 @@
 // Generated Code, Do not modify
-import { isIdPresent, TModelKey } from "@five12days/core";
+import {
+  isIdPresent,
+  TBaseUseCase,
+  TBaseUseCaseCheckChanged,
+  TModelKey,
+} from "@five12days/core";
 
 import { makeOrderLine, TOrderLine } from "./orderLine.gen.js";
 
@@ -21,7 +26,7 @@ export const makeCreateOrderLineUseCase = ({
   generateId,
   validateModel,
   repository,
-}: any) => {
+}: TBaseUseCase<TOrderLine>) => {
   return (modelData: TOrderLine) => {
     const createOrderLine = makeOrderLine({
       generateId,
@@ -37,7 +42,7 @@ export const makeUpdateOrderLineUseCase = ({
   generateId,
   validateModel,
   repository,
-}: any) => {
+}: TBaseUseCase<TOrderLine>) => {
   return (modelData: TOrderLine) => {
     const orderLine = checkOrderLineChanged({
       generateId,
@@ -53,7 +58,7 @@ export const makeDeleteOrderLineUseCase = ({
   generateId,
   validateModel,
   repository,
-}: any) => {
+}: TBaseUseCase<TOrderLine>) => {
   return (modelData: TOrderLine) => {
     const orderLine = checkOrderLineChanged({
       generateId,
@@ -70,7 +75,7 @@ const checkOrderLineChanged = ({
   validateModel,
   repository,
   modelData,
-}: any) => {
+}: TBaseUseCaseCheckChanged<TOrderLine>) => {
   const createOrderLine = makeOrderLine({
     generateId,
     validateModel,

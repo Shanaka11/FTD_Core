@@ -5,7 +5,12 @@ import { READ_MODEL_USECASE_TEMPLATE } from "./readModelUseCaseTemplate.js";
 import { UPDATE_MODEL_USECASE_TEMPLATE } from "./updateModelUseCaseTemplate.js";
 
 export const CURD_USECASES_TEMPLATE = `// Generated Code, Do not modify
-import { isIdPresent, TModelKey } from "@five12days/core";
+import {
+  isIdPresent,
+  TBaseUseCase,
+  TBaseUseCaseCheckChanged,
+  TModelKey,
+} from "@five12days/core";
 
 import { make{MODEL}, {TNAME} } from "./{MODELVAR}.gen.js";
 
