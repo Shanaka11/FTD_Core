@@ -124,7 +124,7 @@ const compareFileSet = (filePath: string) => {
   // model file - orderLine.gen.ts
   const domainModal = filePath.replace(/^.*[\\\/]/, "");
   const modelFileName = domainModal + ".gen.ts";
-  const templateModelFileName = domainModal + ".template.ts";
+  const templateModelFileName = domainModal + ".template.txt";
   compareFiles(path.join(filePath, modelFileName), templateModelFileName);
 
   // useCase files - createOrderLine.gen.ts / readOrderLine.gen.ts / updateOrderLine.gen.ts / deleteOrderLine.gen.ts
