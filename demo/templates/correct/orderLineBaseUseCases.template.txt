@@ -1,0 +1,86 @@
+// Generated Code, Do not modify
+import { isIdPresent, TModelKey } from "@five12days/core";
+
+import { makeOrderLine, TOrderLine } from "./orderLine.gen.js";
+
+type TOrderLineKey = {
+  orderNo: number;
+  lineNo: number;
+};
+
+export const makeReadOrderLineUseCase = ({ repository }: any) => {
+  return (keys: TModelKey | TOrderLineKey) => {
+    if (isIdPresent(keys)) {
+      return repository.readModel(keys.id);
+    }
+    return repository.readModel(keys);
+  };
+};
+
+export const makeCreateOrderLineUseCase = ({
+  generateId,
+  validateModel,
+  repository,
+}: any) => {
+  return (modelData: TOrderLine) => {
+    const createOrderLine = makeOrderLine({
+      generateId,
+      validateModel,
+    });
+
+    const orderLine = createOrderLine(modelData);
+    return repository.create(orderLine);
+  };
+};
+
+export const makeUpdateOrderLineUseCase = ({
+  generateId,
+  validateModel,
+  repository,
+}: any) => {
+  return (modelData: TOrderLine) => {
+    const orderLine = checkOrderLineChanged({
+      generateId,
+      validateModel,
+      repository,
+      modelData,
+    });
+    repository.updateModel(orderLine);
+  };
+};
+
+export const makeDeleteOrderLineUseCase = ({
+  generateId,
+  validateModel,
+  repository,
+}: any) => {
+  return (modelData: TOrderLine) => {
+    const orderLine = checkOrderLineChanged({
+      generateId,
+      validateModel,
+      repository,
+      modelData,
+    });
+    repository.deleteModel(orderLine);
+  };
+};
+
+const checkOrderLineChanged = ({
+  generateId,
+  validateModel,
+  repository,
+  modelData,
+}: any) => {
+  const createOrderLine = makeOrderLine({
+    generateId,
+    validateModel,
+  });
+  const readOrderLine = makeReadOrderLineUseCase({
+    repository,
+  });
+  const newOrderLine = createOrderLine(modelData);
+  const oldOrderLine = readOrderLine({
+    id: newOrderLine.id,
+  });
+  return newOrderLine;
+};

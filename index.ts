@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 
-import { generateModel } from "./lib/codeGen/generateModel.js";
 import { createDefaultConfig } from "./lib/createDefaultConfig.js";
 import { generateCoreFiles } from "./lib/generateCoreFiles.js";
-import { tModel } from "./types/ftdSchema.js";
 import { makeModelParams } from "./types/makeModelParams.js";
+import { isIdPresent, TModelKey } from "./types/useCaseTypes.js";
 
 const program = new Command();
 
@@ -31,15 +30,7 @@ if (options.init && !options.generate) {
 }
 
 if (options.Test) {
-  const data: tModel = {
-    name: "Order",
-    attributes: {
-      OrderNo: { type: "Number", flags: "KMI-" },
-      TotalAmount: { type: "Number", flags: "AMIU" },
-      Date: { type: "String", flags: "A-I-", maxLength: 4 },
-    },
-  };
-  console.log(generateModel(data));
+  // console.log(createReadModelUseCase("Order", "TOrder", "order"));
 }
 
-export { makeModelParams };
+export { makeModelParams, TModelKey, isIdPresent };

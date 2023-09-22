@@ -4,6 +4,77 @@ import { deleteFile } from "../lib/deleteFile";
 import { execCommand } from "../lib/mockCommandInvoke";
 import { readFile } from "../lib/readFile";
 
+//Utils
+
+const compareFiles = (genPath: string, templateFilename: string) => {
+  const genFile = readFile(genPath);
+  const correctTemplateFile = readFile(
+    path.join(process.cwd(), "templates/correct/", templateFilename),
+  );
+  const incorrectTemplateFile = readFile(
+    path.join(process.cwd(), "templates/incorrect/", templateFilename),
+  );
+
+  expect(genFile).not.toBe("File Read Error");
+  expect(correctTemplateFile).not.toBe("File Read Error");
+  expect(incorrectTemplateFile).not.toBe("File Read Error");
+  expect(genFile).toBe(correctTemplateFile);
+  expect(genFile).not.toBe(incorrectTemplateFile);
+};
+
+const compareFileNotExist = (genPath: string) => {
+  const data = readFile(genPath);
+
+  expect(data).toBe("File Read Error");
+};
+
+const compareFileSet = (filePath: string) => {
+  // When given a path like src/User/profile
+  // Check all the files that should be generated
+
+  // model file - orderLine.gen.ts
+  const domainModal = filePath.replace(/^.*[\\\/]/, "");
+
+  const modelFileName = domainModal + ".gen.ts";
+  const templateModelFileName = domainModal + ".template.txt";
+  it(`Checking ${modelFileName}`, () =>
+    compareFiles(path.join(filePath, modelFileName), templateModelFileName));
+
+  // useCase files - createOrderLine.gen.ts / readOrderLine.gen.ts / updateOrderLine.gen.ts / deleteOrderLine.gen.ts
+  const modelBaseUseCaseFileName = domainModal + "BaseUseCases.gen.ts";
+  const templateBaseUseCaseFileName = domainModal + "BaseUseCases.template.txt";
+  it(`Checking ${modelBaseUseCaseFileName}`, () =>
+    compareFiles(
+      path.join(filePath, modelBaseUseCaseFileName),
+      templateBaseUseCaseFileName,
+    ));
+
+  // useCase stubs -  createOrderLine.ts / readOrderLine.ts / updateOrderLine.ts / deleteOrderLine.ts
+};
+
+const compareFileSetNotExist = (filePath: string) => {
+  const domainModal = filePath.replace(/^.*[\\\/]/, "");
+  const modelFileName = domainModal + ".gen.ts";
+  const useCaseFileName = domainModal + "BaseUseCases.gen.ts";
+  // Check model
+  it(`Checking ${modelFileName} does not exist`, () => {
+    compareFileNotExist(path.join(filePath, modelFileName));
+  });
+  // Check use case
+  it(`Checking ${useCaseFileName} does not exist`, () => {
+    compareFileNotExist(path.join(filePath, useCaseFileName));
+  });
+};
+
+const removeFileSet = (filePath: string) => {
+  const domainModal = filePath.replace(/^.*[\\\/]/, "");
+  const modelFileName = domainModal + ".gen.ts";
+  const useCaseFileName = domainModal + "BaseUseCases.gen.ts";
+
+  deleteFile(path.join(filePath, modelFileName));
+  deleteFile(path.join(filePath, useCaseFileName));
+};
+
 // Before running tests remove generated files
 
 describe("Code Generation Prerequisits", () => {
@@ -48,12 +119,14 @@ describe("Code Generation Prerequisits", () => {
 
 // Test the code generation itself
 describe("Code Generation Checks", () => {
-  it("Generate Code For All files", async () => {
-    const cmdExec = execCommand("npm run ftd-core -- -gen");
-    const { stderr } = await cmdExec;
+  describe("Generate Code For All files", () => {
+    it("Run code generation command", async () => {
+      const cmdExec = execCommand("npm run ftd-core -- -gen");
+      const { stderr } = await cmdExec;
 
-    // No errors were thrown
-    expect(stderr).toBe("");
+      // No errors were thrown
+      expect(stderr).toBe("");
+    });
 
     // Check if the files are generated
     // Check src/Order/order/order.gen.ts
@@ -67,17 +140,21 @@ describe("Code Generation Checks", () => {
 
     // remove the generated files
     // Remove model files
-    removeFileSet(path.join(process.cwd(), "src/Order/order"));
-    removeFileSet(path.join(process.cwd(), "src/Order/orderLine"));
-    removeFileSet(path.join(process.cwd(), "src/User/profile"));
+    afterAll(() => {
+      removeFileSet(path.join(process.cwd(), "src/Order/order"));
+      removeFileSet(path.join(process.cwd(), "src/Order/orderLine"));
+      removeFileSet(path.join(process.cwd(), "src/User/profile"));
+    });
   });
 
-  it("Generate Code for all files in the give folder", async () => {
-    const cmdExec = execCommand("npm run ftd-core -- -gen ./Order");
-    const { stderr } = await cmdExec;
+  describe("Generate Code for all files in the given folder", () => {
+    it("Run code generation command", async () => {
+      const cmdExec = execCommand("npm run ftd-core -- -gen ./Order");
+      const { stderr } = await cmdExec;
 
-    // No errors were thrown
-    expect(stderr).toBe("");
+      // No errors were thrown
+      expect(stderr).toBe("");
+    });
 
     // Check if the files are generated
     // Files should only be generated in the src/order/ folder and other folders should not be changed
@@ -90,56 +167,9 @@ describe("Code Generation Checks", () => {
     compareFileSetNotExist(path.join(process.cwd(), "src/User/profile"));
 
     // remove the generated files
-    removeFileSet(path.join(process.cwd(), "src/Order/order"));
-    removeFileSet(path.join(process.cwd(), "src/Order/orderLine"));
+    afterAll(() => {
+      removeFileSet(path.join(process.cwd(), "src/Order/order"));
+      removeFileSet(path.join(process.cwd(), "src/Order/orderLine"));
+    });
   });
 });
-
-const compareFiles = (genPath: string, templateFilename: string) => {
-  const genFile = readFile(genPath);
-  const correctTemplateFile = readFile(
-    path.join(process.cwd(), "templates/correct/", templateFilename),
-  );
-  const incorrectTemplateFile = readFile(
-    path.join(process.cwd(), "templates/incorrect/", templateFilename),
-  );
-
-  expect(genFile).not.toBe("File Read Error");
-  expect(correctTemplateFile).not.toBe("File Read Error");
-  expect(incorrectTemplateFile).not.toBe("File Read Error");
-  expect(genFile).toBe(correctTemplateFile);
-  expect(genFile).not.toBe(incorrectTemplateFile);
-};
-
-const compareFileNotExist = (genPath: string) => {
-  const data = readFile(genPath);
-
-  expect(data).toBe("File Read Error");
-};
-
-const compareFileSet = (filePath: string) => {
-  // When given a path like src/User/profile
-  // Check all the files that should be generated
-
-  // model file - orderLine.gen.ts
-  const domainModal = filePath.replace(/^.*[\\\/]/, "");
-  const modelFileName = domainModal + ".gen.ts";
-  const templateModelFileName = domainModal + ".template.ts";
-  compareFiles(path.join(filePath, modelFileName), templateModelFileName);
-
-  // useCase files - createOrderLine.gen.ts / readOrderLine.gen.ts / updateOrderLine.gen.ts / deleteOrderLine.gen.ts
-  // useCase stubs -  createOrderLine.ts / readOrderLine.ts / updateOrderLine.ts / deleteOrderLine.ts
-};
-
-const compareFileSetNotExist = (filePath: string) => {
-  const domainModal = filePath.replace(/^.*[\\\/]/, "");
-  const modelFileName = domainModal + ".gen.ts";
-  compareFileNotExist(path.join(filePath, modelFileName));
-};
-
-const removeFileSet = (filePath: string) => {
-  const domainModal = filePath.replace(/^.*[\\\/]/, "");
-  const modelFileName = domainModal + ".gen.ts";
-
-  deleteFile(path.join(filePath, modelFileName));
-};
