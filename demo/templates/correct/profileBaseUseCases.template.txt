@@ -1,5 +1,10 @@
 // Generated Code, Do not modify
-import { isIdPresent, TModelKey } from "@five12days/core";
+import {
+  isIdPresent,
+  TBaseUseCase,
+  TBaseUseCaseCheckChanged,
+  TModelKey,
+} from "@five12days/core";
 
 import { makeProfile, TProfile } from "./profile.gen.js";
 
@@ -20,7 +25,7 @@ export const makeCreateProfileUseCase = ({
   generateId,
   validateModel,
   repository,
-}: any) => {
+}: TBaseUseCase<TProfile>) => {
   return (modelData: TProfile) => {
     const createProfile = makeProfile({
       generateId,
@@ -36,7 +41,7 @@ export const makeUpdateProfileUseCase = ({
   generateId,
   validateModel,
   repository,
-}: any) => {
+}: TBaseUseCase<TProfile>) => {
   return (modelData: TProfile) => {
     const profile = checkProfileChanged({
       generateId,
@@ -52,7 +57,7 @@ export const makeDeleteProfileUseCase = ({
   generateId,
   validateModel,
   repository,
-}: any) => {
+}: TBaseUseCase<TProfile>) => {
   return (modelData: TProfile) => {
     const profile = checkProfileChanged({
       generateId,
@@ -69,7 +74,7 @@ const checkProfileChanged = ({
   validateModel,
   repository,
   modelData,
-}: any) => {
+}: TBaseUseCaseCheckChanged<TProfile>) => {
   const createProfile = makeProfile({
     generateId,
     validateModel,

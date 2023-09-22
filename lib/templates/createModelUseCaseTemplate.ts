@@ -2,7 +2,7 @@ export const CREATE_MODEL_USECASE_TEMPLATE = `export const makeCreate{MODEL}UseC
   generateId,
   validateModel,
   repository,
-}: any) => {
+}: TBaseUseCase<{TNAME}>) => {
   return (modelData: {TNAME}) => {
     const create{MODEL} = make{MODEL}({
       generateId,

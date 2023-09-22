@@ -2,7 +2,7 @@ export const DELETE_MODEL_USECASE_TEMPLATE = `export const makeDelete{MODEL}UseC
   generateId,
   validateModel,
   repository,
-}: any) => {
+}: TBaseUseCase<{TNAME}>) => {
   return (modelData: {TNAME}) => {
     const {MODELVAR} = check{MODEL}Changed({
       generateId,
