@@ -7,3 +7,7 @@ demo/ftd_config.json
 test.json
 
 *.gen.ts
+
+demo/src/Order/order/orderUseCases.ts
+demo/src/Order/orderLine/orderLineUseCases.ts
+demo/src/User/profile/profileUseCases.ts
