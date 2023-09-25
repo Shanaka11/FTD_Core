@@ -1,4 +1,4 @@
-export const DELETE_MODEL_USECASE_TEMPLATE = `export const makeDelete{MODEL}UseCase = ({
+export const DELETE_MODEL_USECASE_TEMPLATE = `export const makeDelete{MODEL}BaseUseCase = ({
   generateId,
   validateModel,
   repository,
