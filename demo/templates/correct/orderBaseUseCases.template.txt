@@ -8,12 +8,12 @@ import {
 
 import { makeOrder, TOrder } from "./order.gen.js";
 
-type TOrderKey = {
+export type TOrderKey = {
   orderNo: number;
   totalAmount: number;
 };
 
-export const makeReadOrderUseCase = ({ repository }: any) => {
+export const makeReadOrderBaseUseCase = ({ repository }: any) => {
   return (keys: TModelKey | TOrderKey) => {
     if (isIdPresent(keys)) {
       return repository.readModel(keys.id);
@@ -22,7 +22,7 @@ export const makeReadOrderUseCase = ({ repository }: any) => {
   };
 };
 
-export const makeCreateOrderUseCase = ({
+export const makeCreateOrderBaseUseCase = ({
   generateId,
   validateModel,
   repository,
@@ -38,7 +38,7 @@ export const makeCreateOrderUseCase = ({
   };
 };
 
-export const makeUpdateOrderUseCase = ({
+export const makeUpdateOrderBaseUseCase = ({
   generateId,
   validateModel,
   repository,
@@ -54,7 +54,7 @@ export const makeUpdateOrderUseCase = ({
   };
 };
 
-export const makeDeleteOrderUseCase = ({
+export const makeDeleteOrderBaseUseCase = ({
   generateId,
   validateModel,
   repository,
@@ -80,7 +80,7 @@ const checkOrderChanged = ({
     generateId,
     validateModel,
   });
-  const readOrder = makeReadOrderUseCase({
+  const readOrder = makeReadOrderBaseUseCase({
     repository,
   });
   const newOrder = createOrder(modelData);

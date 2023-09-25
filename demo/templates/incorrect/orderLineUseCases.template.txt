@@ -1,0 +1,70 @@
+import { TModelKey } from "@five12days/core";
+
+import { TOrderLine } from "./orderLine.gen";
+import {
+  makeCreateOrderLineBaseUseCase,
+  makeDeleteOrderLineBaseUseCase,
+  makeReadOrderLineBaseUseCase,
+  makeUpdateOrderLineBaseUseCase,
+  TOrderLineKey,
+} from "./orderLineBaseUseCases.gen";
+
+const repository = {};
+const generateId = () => "1234";
+const validateModel = () => true;
+
+export const readOrderLineUseCase = (keys: TModelKey | TOrderLineKey) => {
+  // Add business logic that should be executed before the core method
+  const readOrderLineBaseUseCase = makeReadOrderLineBaseUseCase({
+    repository,
+  });
+  const orderLines = readOrderLineBaseUseCase(keys);
+  // Add business logic that should be executed after the core method
+
+  return orderLines;
+};
+
+export const makeCreateOrderLineUseCase = (orderLineData: TOrderLine) => {
+  // Add business logic that should be executed before the core method
+  const createOrderLineBaseUseCase = makeCreateOrderLineBaseUseCase({
+    generateId,
+    validateModel,
+    repository,
+  });
+
+  const createdOrderLine = createOrderLineBaseUseCase(orderLineData);
+  // Add business logic that should be executed after the core method
+
+  return createdOrderLine;
+};
+
+export const makeUpdateOrderLineUseCase = (orderLineData: TOrderLine) => {
+  // Add business logic that should be executed before the core method
+  const updateOrderLineBaseUseCase = makeUpdateOrderLineBaseUseCase({
+    generateId,
+    validateModel,
+    repository,
+  });
+
+  const updatedOrderLine = updateOrderLineBaseUseCase(orderLineData);
+  // Add business logic that should be executed after the core method
+
+  return updatedOrderLine;
+};
+
+export const makeDeleteOrderLineUseCase = (orderLineData: TOrderLine) => {
+  // Add business logic that should be executed before the core method
+  const deleteOrderLineBaseUseCase = makeDeleteOrderLineBaseUseCase({
+    generateId,
+    validateModel,
+    repository,
+  });
+
+  const deletedOrderLine = deleteOrderLineBaseUseCase(orderLineData);
+  // Add business logic that should be executed after the core method
+
+  return deletedOrderLine;
+};
+
+
+1231

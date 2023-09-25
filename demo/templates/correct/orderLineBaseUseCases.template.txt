@@ -8,12 +8,12 @@ import {
 
 import { makeOrderLine, TOrderLine } from "./orderLine.gen.js";
 
-type TOrderLineKey = {
+export type TOrderLineKey = {
   orderNo: number;
   lineNo: number;
 };
 
-export const makeReadOrderLineUseCase = ({ repository }: any) => {
+export const makeReadOrderLineBaseUseCase = ({ repository }: any) => {
   return (keys: TModelKey | TOrderLineKey) => {
     if (isIdPresent(keys)) {
       return repository.readModel(keys.id);
@@ -22,7 +22,7 @@ export const makeReadOrderLineUseCase = ({ repository }: any) => {
   };
 };
 
-export const makeCreateOrderLineUseCase = ({
+export const makeCreateOrderLineBaseUseCase = ({
   generateId,
   validateModel,
   repository,
@@ -38,7 +38,7 @@ export const makeCreateOrderLineUseCase = ({
   };
 };
 
-export const makeUpdateOrderLineUseCase = ({
+export const makeUpdateOrderLineBaseUseCase = ({
   generateId,
   validateModel,
   repository,
@@ -54,7 +54,7 @@ export const makeUpdateOrderLineUseCase = ({
   };
 };
 
-export const makeDeleteOrderLineUseCase = ({
+export const makeDeleteOrderLineBaseUseCase = ({
   generateId,
   validateModel,
   repository,
@@ -80,7 +80,7 @@ const checkOrderLineChanged = ({
     generateId,
     validateModel,
   });
-  const readOrderLine = makeReadOrderLineUseCase({
+  const readOrderLine = makeReadOrderLineBaseUseCase({
     repository,
   });
   const newOrderLine = createOrderLine(modelData);

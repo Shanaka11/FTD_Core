@@ -8,11 +8,11 @@ import {
 
 import { makeProfile, TProfile } from "./profile.gen.js";
 
-type TProfileKey = {
+export type TProfileKey = {
   profileId: number;
 };
 
-export const makeReadProfileUseCase = ({ repository }: any) => {
+export const makeReadProfileBaseUseCase = ({ repository }: any) => {
   return (keys: TModelKey | TProfileKey) => {
     if (isIdPresent(keys)) {
       return repository.readModel(keys.id);
@@ -21,7 +21,7 @@ export const makeReadProfileUseCase = ({ repository }: any) => {
   };
 };
 
-export const makeCreateProfileUseCase = ({
+export const makeCreateProfileBaseUseCase = ({
   generateId,
   validateModel,
   repository,
@@ -37,7 +37,7 @@ export const makeCreateProfileUseCase = ({
   };
 };
 
-export const makeUpdateProfileUseCase = ({
+export const makeUpdateProfileBaseUseCase = ({
   generateId,
   validateModel,
   repository,
@@ -53,7 +53,7 @@ export const makeUpdateProfileUseCase = ({
   };
 };
 
-export const makeDeleteProfileUseCase = ({
+export const makeDeleteProfileBaseUseCase = ({
   generateId,
   validateModel,
   repository,
@@ -79,7 +79,7 @@ const checkProfileChanged = ({
     generateId,
     validateModel,
   });
-  const readProfile = makeReadProfileUseCase({
+  const readProfile = makeReadProfileBaseUseCase({
     repository,
   });
   const newProfile = createProfile(modelData);

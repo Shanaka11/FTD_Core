@@ -1,0 +1,68 @@
+import { TModelKey } from "@five12days/core";
+
+import { TOrder } from "./order.gen";
+import {
+  makeCreateOrderBaseUseCase,
+  makeDeleteOrderBaseUseCase,
+  makeReadOrderBaseUseCase,
+  makeUpdateOrderBaseUseCase,
+  TOrderKey,
+} from "./orderBaseUseCases.gen";
+
+const repository = {};
+const generateId = () => "1234";
+const validateModel = () => true;
+
+export const readOrderUseCase = (keys: TModelKey | TOrderKey) => {
+  // Add business logic that should be executed before the core method
+  const readOrderBaseUseCase = makeReadOrderBaseUseCase({
+    repository,
+  });
+  const orders = readOrderBaseUseCase(keys);
+  // Add business logic that should be executed after the core method
+
+  return orders;
+};
+
+export const makeCreateOrderUseCase = (orderData: TOrder) => {
+  // Add business logic that should be executed before the core method
+  const createOrderBaseUseCase = makeCreateOrderBaseUseCase({
+    generateId,
+    validateModel,
+    repository,
+  });
+
+  const createdOrder = createOrderBaseUseCase(orderData);
+  // Add business logic that should be executed after the core method
+
+  return createdOrder;
+};
+
+export const makeUpdateOrderUseCase = (orderData: TOrder) => {
+  // Add business logic that should be executed before the core method
+  const updateOrderBaseUseCase = makeUpdateOrderBaseUseCase({
+    generateId,
+    validateModel,
+    repository,
+  });
+
+  const updatedOrder = updateOrderBaseUseCase(orderData);
+  // Add business logic that should be executed after the core method
+
+  return updatedOrder;
+};
+
+export const makeDeleteOrderUseCase = (orderData: TOrder) => {
+  // Add business logic that should be executed before the core method
+  const deleteOrderBaseUseCase = makeDeleteOrderBaseUseCase({
+    generateId,
+    validateModel,
+    repository,
+  });
+
+  const deletedOrder = deleteOrderBaseUseCase(orderData);
+  // Add business logic that should be executed after the core method
+
+  return deletedOrder;
+};
+312

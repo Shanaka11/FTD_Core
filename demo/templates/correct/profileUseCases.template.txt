@@ -1,0 +1,67 @@
+import { TModelKey } from "@five12days/core";
+
+import { TProfile } from "./profile.gen";
+import {
+  makeCreateProfileBaseUseCase,
+  makeDeleteProfileBaseUseCase,
+  makeReadProfileBaseUseCase,
+  makeUpdateProfileBaseUseCase,
+  TProfileKey,
+} from "./profileBaseUseCases.gen";
+
+const repository = {};
+const generateId = () => "1234";
+const validateModel = () => true;
+
+export const readProfileUseCase = (keys: TModelKey | TProfileKey) => {
+  // Add business logic that should be executed before the core method
+  const readProfileBaseUseCase = makeReadProfileBaseUseCase({
+    repository,
+  });
+  const profiles = readProfileBaseUseCase(keys);
+  // Add business logic that should be executed after the core method
+
+  return profiles;
+};
+
+export const makeCreateProfileUseCase = (profileData: TProfile) => {
+  // Add business logic that should be executed before the core method
+  const createProfileBaseUseCase = makeCreateProfileBaseUseCase({
+    generateId,
+    validateModel,
+    repository,
+  });
+
+  const createdProfile = createProfileBaseUseCase(profileData);
+  // Add business logic that should be executed after the core method
+
+  return createdProfile;
+};
+
+export const makeUpdateProfileUseCase = (profileData: TProfile) => {
+  // Add business logic that should be executed before the core method
+  const updateProfileBaseUseCase = makeUpdateProfileBaseUseCase({
+    generateId,
+    validateModel,
+    repository,
+  });
+
+  const updatedProfile = updateProfileBaseUseCase(profileData);
+  // Add business logic that should be executed after the core method
+
+  return updatedProfile;
+};
+
+export const makeDeleteProfileUseCase = (profileData: TProfile) => {
+  // Add business logic that should be executed before the core method
+  const deleteProfileBaseUseCase = makeDeleteProfileBaseUseCase({
+    generateId,
+    validateModel,
+    repository,
+  });
+
+  const deletedProfile = deleteProfileBaseUseCase(profileData);
+  // Add business logic that should be executed after the core method
+
+  return deletedProfile;
+};
