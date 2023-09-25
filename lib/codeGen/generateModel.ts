@@ -1,5 +1,5 @@
 import { tAattributes, tModel } from "../../types/ftdSchema.js";
-import { MAKE_CREATE_MODEL_TEMPLATE } from "../templates/makeCreateModelTemplate.js";
+import { MAKE_CREATE_MODEL_TEMPLATE } from "../templates/model/makeCreateModelTemplate.js";
 import { decodeAttributeType } from "./attributeTypeUtils.js";
 import {
   capitalize,
