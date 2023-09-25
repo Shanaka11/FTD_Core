@@ -50,17 +50,29 @@ const compareFileSet = (filePath: string) => {
     ));
 
   // useCase stubs -  createOrderLine.ts / readOrderLine.ts / updateOrderLine.ts / deleteOrderLine.ts
+  const modelUseCaseStubFileName = domainModal + "UseCases.ts";
+  const templateUseCaseStubFileName = domainModal + "UseCases.template.txt";
+  it(`Checking ${modelUseCaseStubFileName}`, () =>
+    compareFiles(
+      path.join(filePath, modelUseCaseStubFileName),
+      templateUseCaseStubFileName,
+    ));
 };
 
 const compareFileSetNotExist = (filePath: string) => {
   const domainModal = filePath.replace(/^.*[\\\/]/, "");
   const modelFileName = domainModal + ".gen.ts";
-  const useCaseFileName = domainModal + "BaseUseCases.gen.ts";
+  const baseUseCaseFileName = domainModal + "BaseUseCases.gen.ts";
+  const useCaseFileName = domainModal + "UseCases.ts";
   // Check model
   it(`Checking ${modelFileName} does not exist`, () => {
     compareFileNotExist(path.join(filePath, modelFileName));
   });
   // Check use case
+  it(`Checking ${baseUseCaseFileName} does not exist`, () => {
+    compareFileNotExist(path.join(filePath, baseUseCaseFileName));
+  });
+  // Check use case stubs
   it(`Checking ${useCaseFileName} does not exist`, () => {
     compareFileNotExist(path.join(filePath, useCaseFileName));
   });
@@ -69,9 +81,11 @@ const compareFileSetNotExist = (filePath: string) => {
 const removeFileSet = (filePath: string) => {
   const domainModal = filePath.replace(/^.*[\\\/]/, "");
   const modelFileName = domainModal + ".gen.ts";
-  const useCaseFileName = domainModal + "BaseUseCases.gen.ts";
+  const baseUseCaseFileName = domainModal + "BaseUseCases.gen.ts";
+  const useCaseFileName = domainModal + "UseCases.ts";
 
   deleteFile(path.join(filePath, modelFileName));
+  deleteFile(path.join(filePath, baseUseCaseFileName));
   deleteFile(path.join(filePath, useCaseFileName));
 };
 

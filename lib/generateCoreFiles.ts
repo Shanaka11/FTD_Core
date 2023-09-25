@@ -4,6 +4,7 @@ import path from "path";
 import { isTModel } from "../types/validateSchemaType.js";
 import { generateModel } from "./codeGen/generateModel.js";
 import { generateUseCase } from "./codeGen/generateUseCase.js";
+import { generateUseCaseStubs } from "./codeGen/generateUseCaseStubs.js";
 import { simplize } from "./codeGen/textUtils.js";
 
 // import { fileURLToPath } from "url";
@@ -34,12 +35,13 @@ const generateCoreFiles_ = (dirPath: string) => {
   const rootFolder = dirPath; // Replace with your root folder path
   const extension = ".ftd.json";
   const result = findFilesWithExtension(rootFolder, extension);
-
+  // Try making this async ?
   result.forEach((filePath) => {
     const data: string = fs.readFileSync(filePath, "utf-8");
     const modelData: unknown = JSON.parse(data);
     if (isTModel(modelData)) {
       const directory = path.dirname(filePath);
+      // Model
       const modelCode = generateModel(modelData);
       fs.writeFileSync(
         `${directory}/${simplize(modelData.name)}.gen.ts`,
@@ -47,6 +49,7 @@ const generateCoreFiles_ = (dirPath: string) => {
       );
       console.log(`${simplize(modelData.name)}.gen.ts Created successfully.`);
 
+      // Usecases
       const useCaseCode = generateUseCase(modelData);
       fs.writeFileSync(
         `${directory}/${simplize(modelData.name)}BaseUseCases.gen.ts`,
@@ -55,6 +58,28 @@ const generateCoreFiles_ = (dirPath: string) => {
       console.log(
         `${simplize(modelData.name)}BaseUseCases.gen.ts Created successfully.`,
       );
+
+      // Usecase stubs
+      // Check if a file exists if so do not overwright it
+      const stubExists = fs.existsSync(
+        `${directory}/${simplize(modelData.name)}UseCases.ts`,
+      );
+      if (stubExists) {
+        console.log(
+          `${simplize(
+            modelData.name,
+          )}UseCases.ts Already exists, no file was generated.`,
+        );
+      } else {
+        const useCaseStubCode = generateUseCaseStubs(modelData);
+        fs.writeFileSync(
+          `${directory}/${simplize(modelData.name)}UseCases.ts`,
+          useCaseStubCode,
+        );
+        console.log(
+          `${simplize(modelData.name)}UseCases.ts Created successfully.`,
+        );
+      }
     } else {
       const filename = filePath.replace(/^.*[\\/]/, "");
       throw new Error(

@@ -14,7 +14,7 @@ import {
 
 import { make{MODEL}, {TNAME} } from "./{MODELVAR}.gen.js";
 
-{MODELTYPE}
+export {MODELTYPE}
 
 ${READ_MODEL_USECASE_TEMPLATE}
 

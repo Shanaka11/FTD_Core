@@ -1,4 +1,4 @@
-export const UPDATE_MODEL_USECASE_TEMPLATE = `export const makeUpdate{MODEL}UseCase = ({
+export const DELETE_MODEL_USECASE_TEMPLATE = `export const makeDelete{MODEL}BaseUseCase = ({
   generateId,
   validateModel,
   repository,
@@ -10,6 +10,6 @@ export const UPDATE_MODEL_USECASE_TEMPLATE = `export const makeUpdate{MODEL}UseC
       repository,
       modelData,
     });
-    repository.updateModel({MODELVAR});
+    repository.deleteModel({MODELVAR});
   };
 };`;

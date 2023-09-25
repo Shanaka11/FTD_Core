@@ -8,7 +8,7 @@ export const CHECK_ORDER_CHANGED_TEMPLATE = `const check{MODEL}Changed = ({
     generateId,
     validateModel,
   });
-  const read{MODEL} = makeRead{MODEL}UseCase({
+  const read{MODEL} = makeRead{MODEL}BaseUseCase({
     repository,
   });
   const new{MODEL} = create{MODEL}(modelData);

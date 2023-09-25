@@ -1,5 +1,5 @@
 import { tAattributes, tModel } from "../../types/ftdSchema.js";
-import { CURD_USECASES_TEMPLATE } from "../templates/crudUseCasesTemplate.js";
+import { CURD_USECASES_TEMPLATE } from "../templates/useCases/crudUseCasesTemplate.js";
 import { decodeAttributeType } from "./attributeTypeUtils.js";
 import {
   capitalize,
