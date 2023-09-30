@@ -24,4 +24,17 @@ const createStringFromTemplate = (
   });
 };
 
-export { capitalize, simplize, indent, createStringFromTemplate };
+const camelToSnakeCase = (str: string) => {
+  return str.replace(/([A-Z])/g, "_$1").toUpperCase();
+};
+
+export const arrayToCommaSeparatedString = (values: string[]) => {
+  return values.join(", ");
+};
+export {
+  capitalize,
+  simplize,
+  indent,
+  createStringFromTemplate,
+  camelToSnakeCase,
+};
