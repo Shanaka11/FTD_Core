@@ -2,6 +2,10 @@
 import { Command } from "commander";
 
 import { createDefaultConfig } from "./lib/createDefaultConfig.js";
+import { makeCreateModel } from "./lib/db/crudRepository/createModel.js";
+import { makeDeleteModel } from "./lib/db/crudRepository/deleteModel.js";
+import { makeReadModel } from "./lib/db/crudRepository/readModel.js";
+import { makeUpdateModel } from "./lib/db/crudRepository/updateModel.js";
 import { generateCoreFiles } from "./lib/generateCoreFiles.js";
 import { makeModelParams } from "./types/makeModelParams.js";
 import {
@@ -47,4 +51,8 @@ export {
   isIdPresent,
   TBaseUseCase,
   TBaseUseCaseCheckChanged,
+  makeCreateModel,
+  makeReadModel,
+  makeUpdateModel,
+  makeDeleteModel,
 };

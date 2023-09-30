@@ -1,4 +1,4 @@
-import { camelToSnakeCase } from "../codeGen/textUtils";
+import { camelToSnakeCase } from "../codeGen/textUtils.js";
 
 export const generateKeyWhere = (keys: Record<string, string>) => {
   return Object.entries(keys)
