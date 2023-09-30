@@ -38,10 +38,12 @@ export const generateUpdateQueryString = (
   table: string,
   columns: string[],
   values: string[],
+  where: string,
 ) => {
   const mappingValues = {
     TABLE_NAME: camelToSnakeCase(table),
     COLUMNS: generateSqlColValuePair(columns, values),
+    WHERE: where,
   };
   return createStringFromTemplate(mappingValues, UPDATE_QUERY_TEMPLATE);
 };

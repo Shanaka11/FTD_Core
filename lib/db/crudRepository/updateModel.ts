@@ -2,6 +2,7 @@ import { generateUpdateQueryString } from "../generateQueryString.js";
 
 type UpdateModelParams = {
   model: string;
+  key: string;
   columns: string[];
   values: string[];
 };
@@ -9,10 +10,16 @@ type UpdateModelParams = {
 // Update Model
 export const makeUpdateModel =
   (executeQuery: (query: string) => string[]) =>
-  ({ model, columns, values }: UpdateModelParams) => {
-    const queryString = generateUpdateQueryString(model, columns, values);
+  ({ model, key, columns, values }: UpdateModelParams) => {
+    const where = `WHERE ID = ${key}`;
+    const queryString = generateUpdateQueryString(
+      model,
+      columns,
+      values,
+      where,
+    );
     // Connect to the db
     // Execute the query
-    executeQuery(queryString);
+    return executeQuery(queryString);
     // Close the connection db
   };

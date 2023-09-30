@@ -13,6 +13,6 @@ export const makeDeleteModel =
     const queryString = generateDeleteQueryString(model, where);
     // Connect to the db
     // Execute the query
-    executeQuery(queryString);
+    return executeQuery(queryString);
     // Close the connection db
   };
