@@ -2,7 +2,6 @@
 import { Command } from "commander";
 
 import { createDefaultConfig } from "./lib/createDefaultConfig.js";
-import { generateQueryString } from "./lib/db/generateQueryString.js";
 import { generateCoreFiles } from "./lib/generateCoreFiles.js";
 import { makeModelParams } from "./types/makeModelParams.js";
 import {
@@ -36,10 +35,10 @@ if (options.init && !options.generate) {
 }
 
 if (options.Test) {
-  console.log(generateQueryString("orderLine", "SELECT"));
-  console.log(
-    generateQueryString("orderLine", "SELECT", ["id", "orderNo", "updatedAt"]),
-  );
+  // console.log(generateQueryString("orderLine", "SELECT"));
+  // console.log(
+  //   generateQueryString("orderLine", "SELECT", ["id", "orderNo", "updatedAt"]),
+  // );
 }
 
 export {

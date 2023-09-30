@@ -24,10 +24,10 @@ export const generateWhereClause = (filter: string) => {
 const replaceOperators = (filter: string) => {
   const replacements: Record<string, string> = {
     eq: `=`,
-    gt: ">",
-    lt: `<`,
-    lte: "<=",
-    gte: ">=",
+    gt: "<",
+    lt: `>`,
+    lte: ">=",
+    gte: "<=",
     neq: "><",
   };
 

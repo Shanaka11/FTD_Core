@@ -1,0 +1,18 @@
+import { generateDeleteQueryString } from "../generateQueryString.js";
+
+type DeleteModelParams = {
+  model: string;
+  key: string;
+};
+
+// Delete Model
+export const makeDeleteModel =
+  (executeQuery: (query: string) => string[]) =>
+  ({ model, key }: DeleteModelParams) => {
+    const where = `WHERE ID = ${key}`;
+    const queryString = generateDeleteQueryString(model, where);
+    // Connect to the db
+    // Execute the query
+    executeQuery(queryString);
+    // Close the connection db
+  };
