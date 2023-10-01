@@ -2,7 +2,7 @@ import { TValue } from "../../../types/repositoryTypes.js";
 import { generateUpdateQueryString } from "../generateQueryString.js";
 import { getColumnsAndValuesFromModelData } from "../repoUtils.js";
 
-type UpdateModelParams = {
+export type UpdateModelParams = {
   model: string;
   key: string;
   modelData: Record<string, TValue>;

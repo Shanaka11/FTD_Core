@@ -13,7 +13,7 @@ export const CHECK_ORDER_CHANGED_TEMPLATE = `const check{MODEL}Changed = ({
   });
   const new{MODEL} = create{MODEL}(modelData);
   const old{MODEL} = read{MODEL}({
-    id: new{MODEL}.id,
+    keys: { id: new{MODEL}.id },
   });
   return new{MODEL};
 };`;

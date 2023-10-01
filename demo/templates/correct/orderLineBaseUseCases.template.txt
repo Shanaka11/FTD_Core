@@ -3,7 +3,8 @@ import {
   isIdPresent,
   TBaseUseCase,
   TBaseUseCaseCheckChanged,
-  TModelKey,
+  TGetModelUseCase,
+  TMakeGetModelUseCase,
 } from "@five12days/core";
 
 import { makeOrderLine, TOrderLine } from "./orderLine.gen.js";
@@ -13,13 +14,20 @@ export type TOrderLineKey = {
   lineNo: number;
 };
 
-export const makeReadOrderLineBaseUseCase = ({ repository }: any) => {
-  return (keys: TModelKey | TOrderLineKey) => {
-    if (isIdPresent(keys)) {
-      return repository.readModel(keys.id);
-    }
-    return repository.readModel(keys);
-  };
+export const makeReadOrderLineBaseUseCase = ({ repository }: TMakeGetModelUseCase) => {
+  return ({ keys, columns, filter }: TGetModelUseCase<TOrderLineKey>) => {
+    if (repository.readModel === undefined)
+      throw new Error(
+        "Repository method of getModel was not defined in orderLine usecase",
+      );
+
+    return repository.readModel({
+      model: "orderLine",
+      key: keys === undefined ? undefined : isIdPresent(keys) ? keys.id : keys,
+      columns: columns,
+      filter: filter,
+    });
+  };  
 };
 
 export const makeCreateOrderLineBaseUseCase = ({
@@ -28,14 +36,24 @@ export const makeCreateOrderLineBaseUseCase = ({
   repository,
 }: TBaseUseCase<TOrderLine>) => {
   return (modelData: TOrderLine) => {
+    if (repository.createModel === undefined) {
+      throw new Error(
+        "Repository method of createModel was not defined in orderLine usecase",
+      );
+    }
+
     const createOrderLine = makeOrderLine({
       generateId,
       validateModel,
     });
 
     const orderLine = createOrderLine(modelData);
-    return repository.create(orderLine);
-  };
+
+    return repository.createModel({
+      model: "orderLine",
+      modelData: orderLine,
+    });
+  };  
 };
 
 export const makeUpdateOrderLineBaseUseCase = ({
@@ -44,13 +62,24 @@ export const makeUpdateOrderLineBaseUseCase = ({
   repository,
 }: TBaseUseCase<TOrderLine>) => {
   return (modelData: TOrderLine) => {
+    if (repository.updateModel === undefined) {
+      throw new Error(
+        "Repository method of updateModel was not defined in orderLine usecase",
+      );
+    }
+
     const orderLine = checkOrderLineChanged({
       generateId,
       validateModel,
       repository,
       modelData,
     });
-    repository.updateModel(orderLine);
+
+    repository.updateModel({
+      model: "orderLine",
+      key: orderLine.id,
+      modelData: orderLine,
+    });
   };
 };
 
@@ -60,13 +89,23 @@ export const makeDeleteOrderLineBaseUseCase = ({
   repository,
 }: TBaseUseCase<TOrderLine>) => {
   return (modelData: TOrderLine) => {
+    if (repository.deleteModel === undefined) {
+      throw new Error(
+        "Repository method of deleteModel was not defined in orderLine usecase",
+      );
+    }
+
     const orderLine = checkOrderLineChanged({
       generateId,
       validateModel,
       repository,
       modelData,
     });
-    repository.deleteModel(orderLine);
+
+    repository.deleteModel({
+      model: "orderLine",
+      key: orderLine.id,
+    });
   };
 };
 
@@ -85,7 +124,7 @@ const checkOrderLineChanged = ({
   });
   const newOrderLine = createOrderLine(modelData);
   const oldOrderLine = readOrderLine({
-    id: newOrderLine.id,
+    keys: { id: newOrderLine.id },
   });
   return newOrderLine;
 };

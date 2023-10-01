@@ -3,7 +3,8 @@ import {
   isIdPresent,
   TBaseUseCase,
   TBaseUseCaseCheckChanged,
-  TModelKey,
+  TGetModelUseCase,
+  TMakeGetModelUseCase,
 } from "@five12days/core";
 
 import { makeOrder, TOrder } from "./order.gen.js";
@@ -13,13 +14,20 @@ export type TOrderKey = {
   totalAmount: number;
 };
 
-export const makeReadOrderBaseUseCase = ({ repository }: any) => {
-  return (keys: TModelKey | TOrderKey) => {
-    if (isIdPresent(keys)) {
-      return repository.readModel(keys.id);
-    }
-    return repository.readModel(keys);
-  };
+export const makeReadOrderBaseUseCase = ({ repository }: TMakeGetModelUseCase) => {
+  return ({ keys, columns, filter }: TGetModelUseCase<TOrderKey>) => {
+    if (repository.readModel === undefined)
+      throw new Error(
+        "Repository method of getModel was not defined in order usecase",
+      );
+
+    return repository.readModel({
+      model: "order",
+      key: keys === undefined ? undefined : isIdPresent(keys) ? keys.id : keys,
+      columns: columns,
+      filter: filter,
+    });
+  };  
 };
 
 export const makeCreateOrderBaseUseCase = ({
@@ -28,14 +36,24 @@ export const makeCreateOrderBaseUseCase = ({
   repository,
 }: TBaseUseCase<TOrder>) => {
   return (modelData: TOrder) => {
+    if (repository.createModel === undefined) {
+      throw new Error(
+        "Repository method of createModel was not defined in order usecase",
+      );
+    }
+
     const createOrder = makeOrder({
       generateId,
       validateModel,
     });
 
     const order = createOrder(modelData);
-    return repository.create(order);
-  };
+
+    return repository.createModel({
+      model: "order",
+      modelData: order,
+    });
+  };  
 };
 
 export const makeUpdateOrderBaseUseCase = ({
@@ -44,13 +62,24 @@ export const makeUpdateOrderBaseUseCase = ({
   repository,
 }: TBaseUseCase<TOrder>) => {
   return (modelData: TOrder) => {
+    if (repository.updateModel === undefined) {
+      throw new Error(
+        "Repository method of updateModel was not defined in order usecase",
+      );
+    }
+
     const order = checkOrderChanged({
       generateId,
       validateModel,
       repository,
       modelData,
     });
-    repository.updateModel(order);
+
+    repository.updateModel({
+      model: "order",
+      key: order.id,
+      modelData: order,
+    });
   };
 };
 
@@ -60,13 +89,23 @@ export const makeDeleteOrderBaseUseCase = ({
   repository,
 }: TBaseUseCase<TOrder>) => {
   return (modelData: TOrder) => {
+    if (repository.deleteModel === undefined) {
+      throw new Error(
+        "Repository method of deleteModel was not defined in order usecase",
+      );
+    }
+
     const order = checkOrderChanged({
       generateId,
       validateModel,
       repository,
       modelData,
     });
-    repository.deleteModel(order);
+
+    repository.deleteModel({
+      model: "order",
+      key: order.id,
+    });
   };
 };
 
@@ -85,7 +124,7 @@ const checkOrderChanged = ({
   });
   const newOrder = createOrder(modelData);
   const oldOrder = readOrder({
-    id: newOrder.id,
+    keys: { id: newOrder.id },
   });
   return newOrder;
 };

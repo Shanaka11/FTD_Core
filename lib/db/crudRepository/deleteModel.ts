@@ -1,6 +1,6 @@
 import { generateDeleteQueryString } from "../generateQueryString.js";
 
-type DeleteModelParams = {
+export type DeleteModelParams = {
   model: string;
   key: string;
 };

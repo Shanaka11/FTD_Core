@@ -1,8 +1,12 @@
+import { TValue } from "../../types/repositoryTypes.js";
 import { camelToSnakeCase } from "../codeGen/textUtils.js";
 
-export const generateKeyWhere = (keys: Record<string, string>) => {
+export const generateKeyWhere = (keys: Record<string, TValue>) => {
   return Object.entries(keys)
     .map(([key, value]) => {
+      if (value instanceof Date) {
+        return `${camelToSnakeCase(key)} = ${value.toISOString()}`;
+      }
       return `${camelToSnakeCase(key)} = ${value}`;
     })
     .join(" AND ");

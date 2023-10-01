@@ -1,4 +1,4 @@
-import { TModelKey } from "@five12days/core";
+import { TGetModelUseCase } from "@five12days/core";
 
 import { TOrderLine } from "./orderLine.gen";
 import {
@@ -13,12 +13,15 @@ const repository = {};
 const generateId = () => "1234";
 const validateModel = () => true;
 
-export const readOrderLineUseCase = (keys: TModelKey | TOrderLineKey) => {
-  // Add business logic that should be executed before the core method
+export const readOrderLineUseCase = ({
+  keys,
+  columns,
+  filter,
+}: TGetModelUseCase<TOrderLineKey>) => {
   const readOrderLineBaseUseCase = makeReadOrderLineBaseUseCase({
     repository,
   });
-  const orderLines = readOrderLineBaseUseCase(keys);
+  const orderLines = readOrderLineBaseUseCase({ keys, columns, filter });
   // Add business logic that should be executed after the core method
 
   return orderLines;

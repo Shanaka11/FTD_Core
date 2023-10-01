@@ -1,4 +1,4 @@
-export const CRUD_USECASE_STUB_TEMPLATE = `import { TModelKey } from "@five12days/core";
+export const CRUD_USECASE_STUB_TEMPLATE = `import { TGetModelUseCase } from "@five12days/core";
 
 import { {TNAME} } from "./{MODELVAR}.gen";
 import {
@@ -13,12 +13,15 @@ const repository = {};
 const generateId = () => "1234";
 const validateModel = () => true;
 
-export const read{MODEL}UseCase = (keys: TModelKey | {TNAME}Key) => {
-  // Add business logic that should be executed before the core method
+export const read{MODEL}UseCase = ({
+  keys,
+  columns,
+  filter,
+}: TGetModelUseCase<{TNAME}Key>) => {
   const read{MODEL}BaseUseCase = makeRead{MODEL}BaseUseCase({
     repository,
   });
-  const {MODELVAR}s = read{MODEL}BaseUseCase(keys);
+  const {MODELVAR}s = read{MODEL}BaseUseCase({ keys, columns, filter });
   // Add business logic that should be executed after the core method
 
   return {MODELVAR}s;

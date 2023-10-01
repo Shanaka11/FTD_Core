@@ -3,7 +3,8 @@ import {
   isIdPresent,
   TBaseUseCase,
   TBaseUseCaseCheckChanged,
-  TModelKey,
+  TGetModelUseCase,
+  TMakeGetModelUseCase,
 } from "@five12days/core";
 
 import { makeProfile, TProfile } from "./profile.gen.js";
@@ -12,13 +13,20 @@ export type TProfileKey = {
   profileId: number;
 };
 
-export const makeReadProfileBaseUseCase = ({ repository }: any) => {
-  return (keys: TModelKey | TProfileKey) => {
-    if (isIdPresent(keys)) {
-      return repository.readModel(keys.id);
-    }
-    return repository.readModel(keys);
-  };
+export const makeReadProfileBaseUseCase = ({ repository }: TMakeGetModelUseCase) => {
+  return ({ keys, columns, filter }: TGetModelUseCase<TProfileKey>) => {
+    if (repository.readModel === undefined)
+      throw new Error(
+        "Repository method of getModel was not defined in profile usecase",
+      );
+
+    return repository.readModel({
+      model: "profile",
+      key: keys === undefined ? undefined : isIdPresent(keys) ? keys.id : keys,
+      columns: columns,
+      filter: filter,
+    });
+  };  
 };
 
 export const makeCreateProfileBaseUseCase = ({
@@ -27,14 +35,24 @@ export const makeCreateProfileBaseUseCase = ({
   repository,
 }: TBaseUseCase<TProfile>) => {
   return (modelData: TProfile) => {
+    if (repository.createModel === undefined) {
+      throw new Error(
+        "Repository method of createModel was not defined in profile usecase",
+      );
+    }
+
     const createProfile = makeProfile({
       generateId,
       validateModel,
     });
 
     const profile = createProfile(modelData);
-    return repository.create(profile);
-  };
+
+    return repository.createModel({
+      model: "profile",
+      modelData: profile,
+    });
+  };  
 };
 
 export const makeUpdateProfileBaseUseCase = ({
@@ -43,13 +61,24 @@ export const makeUpdateProfileBaseUseCase = ({
   repository,
 }: TBaseUseCase<TProfile>) => {
   return (modelData: TProfile) => {
+    if (repository.updateModel === undefined) {
+      throw new Error(
+        "Repository method of updateModel was not defined in profile usecase",
+      );
+    }
+
     const profile = checkProfileChanged({
       generateId,
       validateModel,
       repository,
       modelData,
     });
-    repository.updateModel(profile);
+
+    repository.updateModel({
+      model: "profile",
+      key: profile.id,
+      modelData: profile,
+    });
   };
 };
 
@@ -59,13 +88,23 @@ export const makeDeleteProfileBaseUseCase = ({
   repository,
 }: TBaseUseCase<TProfile>) => {
   return (modelData: TProfile) => {
+    if (repository.deleteModel === undefined) {
+      throw new Error(
+        "Repository method of deleteModel was not defined in profile usecase",
+      );
+    }
+
     const profile = checkProfileChanged({
       generateId,
       validateModel,
       repository,
       modelData,
     });
-    repository.deleteModel(profile);
+
+    repository.deleteModel({
+      model: "profile",
+      key: profile.id,
+    });
   };
 };
 
@@ -84,7 +123,7 @@ const checkProfileChanged = ({
   });
   const newProfile = createProfile(modelData);
   const oldProfile = readProfile({
-    id: newProfile.id,
+    keys: { id: newProfile.id },
   });
   return newProfile;
 };

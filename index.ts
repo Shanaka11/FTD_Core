@@ -12,6 +12,8 @@ import {
   isIdPresent,
   TBaseUseCase,
   TBaseUseCaseCheckChanged,
+  TGetModelUseCase,
+  TMakeGetModelUseCase,
   TModelKey,
 } from "./types/useCaseTypes.js";
 
@@ -51,6 +53,8 @@ export {
   isIdPresent,
   TBaseUseCase,
   TBaseUseCaseCheckChanged,
+  TGetModelUseCase,
+  TMakeGetModelUseCase,
   makeCreateModel,
   makeReadModel,
   makeUpdateModel,

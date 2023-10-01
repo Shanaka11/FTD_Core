@@ -9,7 +9,8 @@ import {
   isIdPresent,
   TBaseUseCase,
   TBaseUseCaseCheckChanged,
-  TModelKey,
+  TGetModelUseCase,
+  TMakeGetModelUseCase,
 } from "@five12days/core";
 
 import { make{MODEL}, {TNAME} } from "./{MODELVAR}.gen.js";

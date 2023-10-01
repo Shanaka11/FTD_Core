@@ -1,4 +1,4 @@
-import { TModelKey } from "@five12days/core";
+import { TGetModelUseCase } from "@five12days/core";
 
 import { TProfile } from "./profile.gen";
 import {
@@ -13,12 +13,15 @@ const repository = {};
 const generateId = () => "1234";
 const validateModel = () => true;
 
-export const readProfileUseCase = (keys: TModelKey | TProfileKey) => {
-  // Add business logic that should be executed before the core method
+export const readProfileUseCase = ({
+  keys,
+  columns,
+  filter,
+}: TGetModelUseCase<TProfileKey>) => {
   const readProfileBaseUseCase = makeReadProfileBaseUseCase({
     repository,
   });
-  const profiles = readProfileBaseUseCase(keys);
+  const profiles = readProfileBaseUseCase({ keys, columns, filter });
   // Add business logic that should be executed after the core method
 
   return profiles;

@@ -65,10 +65,13 @@ const generateSqlColValuePair = (columns: string[], values: TValue[]) => {
   return columns
     .map((column, index) => {
       const value = values[index];
+      if (value === undefined) {
+        return `${camelToSnakeCase(column)} = NULL`;
+      }
       if (value instanceof Date) {
         return `${camelToSnakeCase(column)} = ${value.toISOString()}`;
       }
-      return `${camelToSnakeCase(column)} = ${values[index].toString()}`;
+      return `${camelToSnakeCase(column)} = ${value}`;
     })
     .join(", ");
 };

@@ -1,9 +1,10 @@
+import { TValue } from "../../../types/repositoryTypes.js";
 import { generateKeyWhere, generateWhereClause } from "../filterMethods.js";
 import { generateSelectQueryString } from "../generateQueryString.js";
 
-type ReadModelParams = {
+export type ReadModelParams = {
   model: string;
-  key?: string | Record<string, string>;
+  key?: string | Record<string, TValue>;
   columns?: string[];
   filter?: string;
 };
