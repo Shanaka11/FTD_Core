@@ -1,17 +1,19 @@
+import { TValue } from "../../../types/repositoryTypes.js";
 import { generateUpdateQueryString } from "../generateQueryString.js";
+import { getColumnsAndValuesFromModelData } from "../repoUtils.js";
 
 type UpdateModelParams = {
   model: string;
   key: string;
-  columns: string[];
-  values: string[];
+  modelData: Record<string, TValue>;
 };
 
 // Update Model
 export const makeUpdateModel =
   (executeQuery: (query: string) => string[]) =>
-  ({ model, key, columns, values }: UpdateModelParams) => {
+  ({ model, key, modelData }: UpdateModelParams) => {
     const where = `WHERE ID = ${key}`;
+    const { columns, values } = getColumnsAndValuesFromModelData(modelData);
     const queryString = generateUpdateQueryString(
       model,
       columns,

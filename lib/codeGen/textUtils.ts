@@ -1,3 +1,5 @@
+import { TValue } from "../../types/repositoryTypes";
+
 const capitalize = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
@@ -28,7 +30,7 @@ const camelToSnakeCase = (str: string) => {
   return str.replace(/([A-Z])/g, "_$1").toUpperCase();
 };
 
-export const arrayToCommaSeparatedString = (values: string[]) => {
+export const arrayToCommaSeparatedString = (values: TValue[]) => {
   return values.join(", ");
 };
 export {

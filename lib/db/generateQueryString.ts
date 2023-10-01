@@ -1,3 +1,4 @@
+import { TValue } from "../../types/repositoryTypes.js";
 import {
   arrayToCommaSeparatedString,
   camelToSnakeCase,
@@ -24,7 +25,7 @@ export const generateSelectQueryString = (
 export const generateCreateQueryString = (
   table: string,
   columns: string[],
-  values: string[],
+  values: TValue[],
 ) => {
   const mappingValues = {
     TABLE_NAME: camelToSnakeCase(table),
@@ -37,7 +38,7 @@ export const generateCreateQueryString = (
 export const generateUpdateQueryString = (
   table: string,
   columns: string[],
-  values: string[],
+  values: TValue[],
   where: string,
 ) => {
   const mappingValues = {
@@ -60,8 +61,14 @@ const generateSqlColumnString = (columns?: string[]) => {
   return columns.map((column) => camelToSnakeCase(column)).join(", ");
 };
 
-const generateSqlColValuePair = (columns: string[], values: string[]) => {
+const generateSqlColValuePair = (columns: string[], values: TValue[]) => {
   return columns
-    .map((column, index) => `${camelToSnakeCase(column)} = ${values[index]}`)
+    .map((column, index) => {
+      const value = values[index];
+      if (value instanceof Date) {
+        return `${camelToSnakeCase(column)} = ${value.toISOString()}`;
+      }
+      return `${camelToSnakeCase(column)} = ${values[index].toString()}`;
+    })
     .join(", ");
 };

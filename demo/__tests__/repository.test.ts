@@ -66,10 +66,14 @@ describe("CRUD Repository", () => {
     const createModel = makeCreateModel(mockQueryExecutor);
 
     it("Create an order", () => {
+      const user = {
+        orderNo: "123",
+        orderLineNo: "2",
+        amount: 100,
+      };
       const result = createModel({
         model: "user",
-        columns: ["orderNo", "orderLineNo", "amount"],
-        values: ["123", "2", "100"],
+        modelData: user,
       });
 
       expect(result).toBeDefined();
@@ -84,11 +88,14 @@ describe("CRUD Repository", () => {
     const updateModel = makeUpdateModel(mockQueryExecutor);
 
     it("Update an order", () => {
+      const user = {
+        amount: 2,
+        discount: 100,
+      };
       const result = updateModel({
         model: "user",
-        columns: ["amount", "discount"],
-        values: ["2", "100"],
         key: "1233",
+        modelData: user,
       });
 
       expect(result).toBeDefined();
