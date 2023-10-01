@@ -1,4 +1,10 @@
-import { TModelKey } from "@five12days/core";
+import {
+  makeCreateModel,
+  makeDeleteModel,
+  makeReadModel,
+  makeUpdateModel,
+  TGetModelUseCase,
+} from "@five12days/core";
 
 import { TOrderLine } from "./orderLine.gen";
 import {
@@ -9,16 +15,19 @@ import {
   TOrderLineKey,
 } from "./orderLineBaseUseCases.gen";
 
-const repository = {};
+const executeQuery = (query: string) => [query];
 const generateId = () => "1234";
 const validateModel = () => true;
 
-export const readOrderLineUseCase = (keys: TModelKey | TOrderLineKey) => {
-  // Add business logic that should be executed before the core method
+export const readOrderLineUseCase = ({
+  keys,
+  columns,
+  filter,
+}: TGetModelUseCase<TOrderLineKey>) => {
   const readOrderLineBaseUseCase = makeReadOrderLineBaseUseCase({
-    repository,
+    repository: { readModel: makeReadModel(executeQuery) },
   });
-  const orderLines = readOrderLineBaseUseCase(keys);
+  const orderLines = readOrderLineBaseUseCase({ keys, columns, filter });
   // Add business logic that should be executed after the core method
 
   return orderLines;
@@ -29,7 +38,10 @@ export const makeCreateOrderLineUseCase = (orderLineData: TOrderLine) => {
   const createOrderLineBaseUseCase = makeCreateOrderLineBaseUseCase({
     generateId,
     validateModel,
-    repository,
+    repository: { 
+      readModel: makeReadModel(executeQuery),
+      createModel: makeCreateModel(executeQuery),
+    },
   });
 
   const createdOrderLine = createOrderLineBaseUseCase(orderLineData);
@@ -43,7 +55,10 @@ export const makeUpdateOrderLineUseCase = (orderLineData: TOrderLine) => {
   const updateOrderLineBaseUseCase = makeUpdateOrderLineBaseUseCase({
     generateId,
     validateModel,
-    repository,
+    repository: { 
+      readModel: makeReadModel(executeQuery),
+      updateModel: makeUpdateModel(executeQuery),
+    },
   });
 
   const updatedOrderLine = updateOrderLineBaseUseCase(orderLineData);
@@ -57,7 +72,10 @@ export const makeDeleteOrderLineUseCase = (orderLineData: TOrderLine) => {
   const deleteOrderLineBaseUseCase = makeDeleteOrderLineBaseUseCase({
     generateId,
     validateModel,
-    repository,
+    repository: { 
+      readModel: makeReadModel(executeQuery),
+      deleteModel: makeDeleteModel(executeQuery),
+    },
   });
 
   const deletedOrderLine = deleteOrderLineBaseUseCase(orderLineData);

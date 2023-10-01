@@ -1,3 +1,4 @@
+import fs from "fs";
 import path from "path";
 
 import { deleteFile } from "../lib/deleteFile";
@@ -5,6 +6,15 @@ import { execCommand } from "../lib/mockCommandInvoke";
 import { readFile } from "../lib/readFile";
 
 //Utils
+afterAll(() => {
+  // Clear all generated files
+  // Clear ftd_config.json
+  try {
+    fs.unlinkSync(path.join(process.cwd(), "ftd_config.json"));
+  } catch (err) {
+    console.error("Unable to remove test files");
+  }
+});
 
 const compareFiles = (genPath: string, templateFilename: string) => {
   const genFile = readFile(genPath);

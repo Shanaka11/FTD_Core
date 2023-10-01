@@ -2,12 +2,18 @@
 import { Command } from "commander";
 
 import { createDefaultConfig } from "./lib/createDefaultConfig.js";
+import { makeCreateModel } from "./lib/db/crudRepository/createModel.js";
+import { makeDeleteModel } from "./lib/db/crudRepository/deleteModel.js";
+import { makeReadModel } from "./lib/db/crudRepository/readModel.js";
+import { makeUpdateModel } from "./lib/db/crudRepository/updateModel.js";
 import { generateCoreFiles } from "./lib/generateCoreFiles.js";
 import { makeModelParams } from "./types/makeModelParams.js";
 import {
   isIdPresent,
   TBaseUseCase,
   TBaseUseCaseCheckChanged,
+  TGetModelUseCase,
+  TMakeGetModelUseCase,
   TModelKey,
 } from "./types/useCaseTypes.js";
 
@@ -35,7 +41,10 @@ if (options.init && !options.generate) {
 }
 
 if (options.Test) {
-  // console.log(createReadModelUseCase("Order", "TOrder", "order"));
+  // console.log(generateQueryString("orderLine", "SELECT"));
+  // console.log(
+  //   generateQueryString("orderLine", "SELECT", ["id", "orderNo", "updatedAt"]),
+  // );
 }
 
 export {
@@ -44,4 +53,10 @@ export {
   isIdPresent,
   TBaseUseCase,
   TBaseUseCaseCheckChanged,
+  TGetModelUseCase,
+  TMakeGetModelUseCase,
+  makeCreateModel,
+  makeReadModel,
+  makeUpdateModel,
+  makeDeleteModel,
 };

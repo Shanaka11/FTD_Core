@@ -1,4 +1,10 @@
-import { TModelKey } from "@five12days/core";
+import {
+  makeCreateModel,
+  makeDeleteModel,
+  makeReadModel,
+  makeUpdateModel,
+  TGetModelUseCase,
+} from "@five12days/core";
 
 import { TOrder } from "./order.gen";
 import {
@@ -9,16 +15,19 @@ import {
   TOrderKey,
 } from "./orderBaseUseCases.gen";
 
-const repository = {};
+const executeQuery = (query: string) => [query];
 const generateId = () => "1234";
 const validateModel = () => true;
 
-export const readOrderUseCase = (keys: TModelKey | TOrderKey) => {
-  // Add business logic that should be executed before the core method
+export const readOrderUseCase = ({
+  keys,
+  columns,
+  filter,
+}: TGetModelUseCase<TOrderKey>) => {
   const readOrderBaseUseCase = makeReadOrderBaseUseCase({
-    repository,
+    repository: { readModel: makeReadModel(executeQuery) },
   });
-  const orders = readOrderBaseUseCase(keys);
+  const orders = readOrderBaseUseCase({ keys, columns, filter });
   // Add business logic that should be executed after the core method
 
   return orders;
@@ -29,7 +38,10 @@ export const makeCreateOrderUseCase = (orderData: TOrder) => {
   const createOrderBaseUseCase = makeCreateOrderBaseUseCase({
     generateId,
     validateModel,
-    repository,
+    repository: { 
+      readModel: makeReadModel(executeQuery),
+      createModel: makeCreateModel(executeQuery),
+    },
   });
 
   const createdOrder = createOrderBaseUseCase(orderData);
@@ -43,7 +55,10 @@ export const makeUpdateOrderUseCase = (orderData: TOrder) => {
   const updateOrderBaseUseCase = makeUpdateOrderBaseUseCase({
     generateId,
     validateModel,
-    repository,
+    repository: { 
+      readModel: makeReadModel(executeQuery),
+      updateModel: makeUpdateModel(executeQuery),
+    },
   });
 
   const updatedOrder = updateOrderBaseUseCase(orderData);
@@ -57,7 +72,10 @@ export const makeDeleteOrderUseCase = (orderData: TOrder) => {
   const deleteOrderBaseUseCase = makeDeleteOrderBaseUseCase({
     generateId,
     validateModel,
-    repository,
+    repository: { 
+      readModel: makeReadModel(executeQuery),
+      deleteModel: makeDeleteModel(executeQuery),
+    },
   });
 
   const deletedOrder = deleteOrderBaseUseCase(orderData);
