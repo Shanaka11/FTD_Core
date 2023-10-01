@@ -7,6 +7,7 @@ import { makeDeleteModel } from "./lib/db/crudRepository/deleteModel.js";
 import { makeReadModel } from "./lib/db/crudRepository/readModel.js";
 import { makeUpdateModel } from "./lib/db/crudRepository/updateModel.js";
 import { generateCoreFiles } from "./lib/generateCoreFiles.js";
+import { generateId } from "./lib/generateId.js";
 import { makeModelParams } from "./types/makeModelParams.js";
 import {
   isIdPresent,
@@ -59,4 +60,5 @@ export {
   makeReadModel,
   makeUpdateModel,
   makeDeleteModel,
+  generateId,
 };
