@@ -123,8 +123,11 @@ const checkOrderLineChanged = ({
     repository,
   });
   const newOrderLine = createOrderLine(modelData);
-  const oldOrderLine = readOrderLine({
+  const oldOrderLine = JSON.parse(readOrderLine({
     keys: { id: newOrderLine.id },
-  });
+  })[0],
+  ) as TOrderLine
+  
+  if(newOrderLine.updatedAt !== oldOrderLine.updatedAt) throw new Error("OrderLine is being modified by another user")
   return newOrderLine;
 };

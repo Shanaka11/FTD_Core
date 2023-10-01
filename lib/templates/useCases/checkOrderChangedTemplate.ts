@@ -12,8 +12,11 @@ export const CHECK_ORDER_CHANGED_TEMPLATE = `const check{MODEL}Changed = ({
     repository,
   });
   const new{MODEL} = create{MODEL}(modelData);
-  const old{MODEL} = read{MODEL}({
+  const old{MODEL} = JSON.parse(read{MODEL}({
     keys: { id: new{MODEL}.id },
-  });
+  })[0],
+  ) as {TNAME}
+  
+  if(new{MODEL}.updatedAt !== old{MODEL}.updatedAt) throw new Error("{MODEL} is being modified by another user")
   return new{MODEL};
 };`;

@@ -122,8 +122,11 @@ const checkProfileChanged = ({
     repository,
   });
   const newProfile = createProfile(modelData);
-  const oldProfile = readProfile({
+  const oldProfile = JSON.parse(readProfile({
     keys: { id: newProfile.id },
-  });
+  })[0],
+  ) as TProfile
+  
+  if(newProfile.updatedAt !== oldProfile.updatedAt) throw new Error("Profile is being modified by another user")
   return newProfile;
 };

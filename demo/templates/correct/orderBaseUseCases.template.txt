@@ -123,8 +123,11 @@ const checkOrderChanged = ({
     repository,
   });
   const newOrder = createOrder(modelData);
-  const oldOrder = readOrder({
+  const oldOrder = JSON.parse(readOrder({
     keys: { id: newOrder.id },
-  });
+  })[0],
+  ) as TOrder
+  
+  if(newOrder.updatedAt !== oldOrder.updatedAt) throw new Error("Order is being modified by another user")
   return newOrder;
 };
