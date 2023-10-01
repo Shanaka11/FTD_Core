@@ -4,6 +4,7 @@ export const CRUD_USECASE_STUB_TEMPLATE = `import {
   makeReadModel,
   makeUpdateModel,
   TGetModelUseCase,
+  generateId,
 } from "@five12days/core";
 
 import { {TNAME} } from "./{MODELVAR}.gen";
@@ -16,7 +17,6 @@ import {
 } from "./{MODELVAR}BaseUseCases.gen";
 
 const executeQuery = (query: string) => [query];
-const generateId = () => "1234";
 const validateModel = () => true;
 
 export const read{MODEL}UseCase = ({

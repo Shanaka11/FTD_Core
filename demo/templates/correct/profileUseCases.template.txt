@@ -4,6 +4,7 @@ import {
   makeReadModel,
   makeUpdateModel,
   TGetModelUseCase,
+  generateId,
 } from "@five12days/core";
 
 import { TProfile } from "./profile.gen";
@@ -16,7 +17,6 @@ import {
 } from "./profileBaseUseCases.gen";
 
 const executeQuery = (query: string) => [query];
-const generateId = () => "1234";
 const validateModel = () => true;
 
 export const readProfileUseCase = ({
