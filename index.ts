@@ -2,6 +2,7 @@
 import { Command } from "commander";
 
 import { createDefaultConfig } from "./lib/createDefaultConfig.js";
+import { testSql } from "./lib/db/connecter/mysql/executeQuery.js";
 import { makeCreateModel } from "./lib/db/crudRepository/createModel.js";
 import { makeDeleteModel } from "./lib/db/crudRepository/deleteModel.js";
 import { makeReadModel } from "./lib/db/crudRepository/readModel.js";
@@ -46,6 +47,7 @@ if (options.Test) {
   // console.log(
   //   generateQueryString("orderLine", "SELECT", ["id", "orderNo", "updatedAt"]),
   // );
+  console.log(Promise.resolve(testSql()));
 }
 
 export {
