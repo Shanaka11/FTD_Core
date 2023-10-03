@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 import { Command } from "commander";
+import mysql from "mysql2/promise.js";
 
 import { createDefaultConfig } from "./lib/createDefaultConfig.js";
-import { testSql } from "./lib/db/connecter/mysql/executeQuery.js";
+import { makeExecuteQuery } from "./lib/db/connecter/mysql/executeQuery.js";
+import { executeTransaction } from "./lib/db/connecter/mysql/executeTransaction.js";
 import { makeCreateModel } from "./lib/db/crudRepository/createModel.js";
 import { makeDeleteModel } from "./lib/db/crudRepository/deleteModel.js";
 import { makeReadModel } from "./lib/db/crudRepository/readModel.js";
@@ -43,11 +45,32 @@ if (options.init && !options.generate) {
 }
 
 if (options.Test) {
-  // console.log(generateQueryString("orderLine", "SELECT"));
-  // console.log(
-  //   generateQueryString("orderLine", "SELECT", ["id", "orderNo", "updatedAt"]),
-  // );
-  console.log(Promise.resolve(testSql()));
+  const test =
+    (id: string, orderno: string, amount: number) =>
+    async (connection: mysql.PoolConnection) => {
+      const executeQuery = makeExecuteQuery(connection);
+      await executeQuery(
+        `INSERT INTO CustomerOrder (id, orderno, date, amount) VALUES (${id}, ${orderno}, now(), ${amount})`,
+      );
+
+      await executeQuery(
+        `INSERT INTO CustomerOrder (id, orderno, date, amount) VALUES (366, 312, now(), 100)`,
+      );
+    };
+
+  // const dummyTransaction = async (connection: mysql.PoolConnection) => {
+  //   const executeQuery = makeExecuteQuery(connection);
+  //   await executeQuery(
+  //     `INSERT INTO CustomerOrder (id, orderno, date, amount) VALUES (339, 312, now(), 100)`,
+  //   );
+
+  //   await executeQuery(
+  //     `INSERT INTO CustomerOrder (id, orderno, date, amount) VALUES (340, 312, now(), 100)`,
+  //   );
+  // };
+  await executeTransaction(test("410", "123", 100));
+  await executeTransaction(test("405", "123", 100));
+  // await executeTransaction(dummyTransaction);
 }
 
 export {
