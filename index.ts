@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import { Command } from "commander";
-import mysql from "mysql2/promise.js";
 
 import { createDefaultConfig } from "./lib/createDefaultConfig.js";
 import { makeExecuteQuery } from "./lib/db/connecter/mysql/executeQuery.js";
@@ -12,6 +11,10 @@ import { makeUpdateModel } from "./lib/db/crudRepository/updateModel.js";
 import { generateCoreFiles } from "./lib/generateCoreFiles.js";
 import { generateId } from "./lib/generateId.js";
 import { makeModelParams } from "./types/makeModelParams.js";
+import {
+  TExecuteQuery,
+  TExecuteQueryResponse,
+} from "./types/repositoryTypes.js";
 import {
   isIdPresent,
   TBaseUseCase,
@@ -45,32 +48,7 @@ if (options.init && !options.generate) {
 }
 
 if (options.Test) {
-  const test =
-    (id: string, orderno: string, amount: number) =>
-    async (connection: mysql.PoolConnection) => {
-      const executeQuery = makeExecuteQuery(connection);
-      await executeQuery(
-        `INSERT INTO CustomerOrder (id, orderno, date, amount) VALUES (${id}, ${orderno}, now(), ${amount})`,
-      );
-
-      await executeQuery(
-        `INSERT INTO CustomerOrder (id, orderno, date, amount) VALUES (366, 312, now(), 100)`,
-      );
-    };
-
-  // const dummyTransaction = async (connection: mysql.PoolConnection) => {
-  //   const executeQuery = makeExecuteQuery(connection);
-  //   await executeQuery(
-  //     `INSERT INTO CustomerOrder (id, orderno, date, amount) VALUES (339, 312, now(), 100)`,
-  //   );
-
-  //   await executeQuery(
-  //     `INSERT INTO CustomerOrder (id, orderno, date, amount) VALUES (340, 312, now(), 100)`,
-  //   );
-  // };
-  await executeTransaction(test("410", "123", 100));
-  await executeTransaction(test("405", "123", 100));
-  // await executeTransaction(dummyTransaction);
+  console.log("Tets");
 }
 
 export {
@@ -81,9 +59,13 @@ export {
   TBaseUseCaseCheckChanged,
   TGetModelUseCase,
   TMakeGetModelUseCase,
+  TExecuteQuery,
+  TExecuteQueryResponse,
   makeCreateModel,
   makeReadModel,
   makeUpdateModel,
   makeDeleteModel,
   generateId,
+  makeExecuteQuery,
+  executeTransaction,
 };

@@ -1,4 +1,4 @@
-import { TValue } from "../../../types/repositoryTypes.js";
+import { TExecuteQuery, TValue } from "../../../types/repositoryTypes.js";
 import { generateKeyWhere, generateWhereClause } from "../filterMethods.js";
 import { generateSelectQueryString } from "../generateQueryString.js";
 
@@ -15,11 +15,12 @@ export type ReadModelParams = {
 
 // Read Models
 export const makeReadModel =
-  (executeQuery: (query: string) => string[]) =>
+  (executeQuery: TExecuteQuery) =>
   ({ model, key, columns, filter }: ReadModelParams) => {
     // Create Query String
     // Check if the key is a string or object, if its a string  then its the ID, else it is the Keys
     // If either keys or the id is there then ignore rest of the filters
+    console.log(model);
     let where = "";
     if (key != undefined) {
       if (typeof key === "string") {

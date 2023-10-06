@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
+    "dev": "ts-node-esm src/index.ts",
     "test": "jest",
     "ftd-core": "ftd-core",
     "permission": "chmod +x node_modules/.bin/ftd-core"
