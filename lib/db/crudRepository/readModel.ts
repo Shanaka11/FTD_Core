@@ -15,12 +15,11 @@ export type ReadModelParams = {
 
 // Read Models
 export const makeReadModel =
-  (executeQuery: TExecuteQuery) =>
-  ({ model, key, columns, filter }: ReadModelParams) => {
+  <T>(executeQuery: TExecuteQuery) =>
+  async ({ model, key, columns, filter }: ReadModelParams) => {
     // Create Query String
     // Check if the key is a string or object, if its a string  then its the ID, else it is the Keys
     // If either keys or the id is there then ignore rest of the filters
-    console.log(model);
     let where = "";
     if (key != undefined) {
       if (typeof key === "string") {
@@ -35,6 +34,6 @@ export const makeReadModel =
     const queryString = generateSelectQueryString(model, columns, where);
     // Connect to the db
     // Execute the query
-    return executeQuery(queryString);
+    return (await executeQuery(queryString)) as T[];
     // Close the connection db
   };

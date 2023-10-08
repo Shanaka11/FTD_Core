@@ -9,7 +9,7 @@ const execute = async () => {
         id: "123",
       },
     });
-    console.log(data);
+    const date = data[0].date;
     exit();
   } catch (e) {
     throw e;

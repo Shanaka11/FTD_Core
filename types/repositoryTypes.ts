@@ -13,13 +13,13 @@ export type TExecuteQueryResponse =
   | mysql.OkPacket[]
   | mysql.ProcedureCallPacket;
 
-export type TRepository = {
+export type TRepository<T> = {
   readModel?: ({
     model,
     key,
     columns,
     filter,
-  }: ReadModelParams) => Promise<TExecuteQueryResponse>; //Promise<TExecuteQueryResponse>;
+  }: ReadModelParams) => Promise<T[]>; //Promise<TExecuteQueryResponse>;
   createModel?: ({ model, modelData }: CreateModelParams) => string[];
   updateModel?: ({ model, key, modelData }: UpdateModelParams) => string[];
   deleteModel?: ({ model, key }: DeleteModelParams) => string[];

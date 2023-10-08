@@ -13,11 +13,11 @@ export const isIdPresent = <T extends object>(
 export type TBaseUseCase<T> = {
   generateId: () => string;
   validateModel: (data: T) => boolean;
-  repository: TRepository;
+  repository: TRepository<T>;
 };
 
-export type TMakeGetModelUseCase = {
-  repository: TRepository;
+export type TMakeGetModelUseCase<T> = {
+  repository: TRepository<T>;
 };
 
 export type TGetModelUseCase<T> = {

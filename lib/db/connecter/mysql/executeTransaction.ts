@@ -1,16 +1,11 @@
-import {
-  TExecuteQuery,
-  TExecuteQueryResponse,
-} from "../../../../types/repositoryTypes.js";
+import { TExecuteQuery } from "../../../../types/repositoryTypes.js";
 import { getConnection } from "./connecter.js";
 import { makeExecuteQuery } from "./executeQuery.js";
 
-export const executeTransaction = async <T>(
+// TODO: Add another genric to denote the return type of the transaction, the whole transaction, not the execute query function
+export const executeTransaction = async <T, S>(
   data: T,
-  transaction: (
-    data: T,
-    executeQuery: TExecuteQuery,
-  ) => Promise<TExecuteQueryResponse>,
+  transaction: (data: T, executeQuery: TExecuteQuery) => Promise<S>,
 ) => {
   const connection = await getConnection();
   try {
