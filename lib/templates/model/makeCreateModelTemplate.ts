@@ -1,10 +1,27 @@
 export const MAKE_CREATE_MODEL_TEMPLATE = `// Generated Code, Do not modify
+import { makeModelParams, TRawData } from "@five12days/core";
+
+export type {TNAME} = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  {TYPE_ATTRIBUTES};
+};
+export const make{MODEL} = ({ validateModel }: makeModelParams<{TNAME}>) => {
+  return (modelData: TRawData) => {
+    const validatedModel = validateModel(modelData);
+    return validatedModel;
+  };
+};
+`;
+/*
+export const MAKE_CREATE_MODEL_TEMPLATE = `// Generated Code, Do not modify
 import { makeModelParams } from "@five12days/core";
 
 export type {TNAME} = {
-  id?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
   {TYPE_ATTRIBUTES};
 };
 
@@ -24,3 +41,4 @@ export const make{MODEL} = ({
   };
 };
 `;
+*/
