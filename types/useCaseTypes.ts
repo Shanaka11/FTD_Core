@@ -12,7 +12,7 @@ export const isIdPresent = <T extends object>(
 };
 
 export type TBaseUseCase<T> = {
-  generateId: () => string;
+  generateId?: () => string;
   validateModel: (data: TRawData) => T;
   repository: TRepository<T>;
 };

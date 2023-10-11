@@ -33,8 +33,12 @@ const camelToSnakeCase = (str: string) => {
 const snakeToCamel = (str: string): string =>
   str.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
 
-export const arrayToCommaSeparatedString = (values: TValue[]) => {
+const arrayToCommaSeparatedString = (values: TValue[]) => {
   return values.join(", ");
+};
+
+const formatDateToSqlString = (date: Date) => {
+  return date.toISOString().slice(0, 19).replace("T", " ");
 };
 
 export {
@@ -44,4 +48,6 @@ export {
   createStringFromTemplate,
   camelToSnakeCase,
   snakeToCamel,
+  arrayToCommaSeparatedString,
+  formatDateToSqlString,
 };

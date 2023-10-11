@@ -1,5 +1,6 @@
-import { TRawData } from "../../types/makeModelParams";
-import { TValue } from "../../types/repositoryTypes";
+import { TRawData } from "../../types/makeModelParams.js";
+import { TValue } from "../../types/repositoryTypes.js";
+import { formatDateToSqlString } from "../codeGen/textUtils.js";
 
 export const getColumnsAndValuesFromModelData = (modelData: TRawData) => {
   const columns: string[] = [];
@@ -9,7 +10,7 @@ export const getColumnsAndValuesFromModelData = (modelData: TRawData) => {
     columns.push(key);
     if (value instanceof Date) {
       //convert to server timezone
-      values.push(`'${value.toISOString().slice(0, 19).replace("T", " ")}'`);
+      values.push(`'${formatDateToSqlString(value)}'`);
     } else if (typeof value === "string") {
       values.push(`'${value}'`);
     } else {

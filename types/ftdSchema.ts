@@ -18,30 +18,3 @@ export type tModel = {
   name: string;
   attributes: tAattributes;
 };
-
-//  export type TodoPreview = Pick<Todo, "title" | "completed">;
-/*
-    A normal schema file would look like this
-
-    export const model: tModel = {
-        name: "Order",
-        attributes: {
-            OrderNo: {
-            label: "Order Id",
-            type: "String",
-            flags: "KMI-",
-            maxLength: 100,
-            },
-        },
-        };
-
-    export {
-        name: 'Order'
-        attributes : {
-            name: { label: Name, type: String, max_length : 10, flags : KMIU  }
-        },
-        reference : {
-
-        }
-    }
-*/

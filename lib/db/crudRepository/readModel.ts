@@ -27,7 +27,7 @@ export const makeReadModel =
     let where = "";
     if (key != undefined) {
       if (typeof key === "string") {
-        where = `WHERE ID = ${key}`;
+        where = `WHERE ID = '${key}'`;
       } else {
         where = `WHERE ${generateKeyWhere(key)}`;
       }

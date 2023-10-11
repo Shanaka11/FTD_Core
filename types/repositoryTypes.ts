@@ -21,7 +21,11 @@ export type TRepository<T> = {
     filter,
   }: ReadModelParams) => Promise<T[]>; //Promise<TExecuteQueryResponse>;
   createModel?: ({ model, modelData }: CreateModelParams) => Promise<boolean>;
-  updateModel?: ({ model, key, modelData }: UpdateModelParams) => string[];
+  updateModel?: ({
+    model,
+    key,
+    modelData,
+  }: UpdateModelParams) => Promise<boolean>;
   deleteModel?: ({ model, key }: DeleteModelParams) => string[];
 };
 
