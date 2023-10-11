@@ -26,7 +26,7 @@ export type TRepository<T> = {
     key,
     modelData,
   }: UpdateModelParams) => Promise<boolean>;
-  deleteModel?: ({ model, key }: DeleteModelParams) => string[];
+  deleteModel?: ({ model, key }: DeleteModelParams) => Promise<boolean>;
 };
 
 export type TExecuteQuery = (query: string) => Promise<TExecuteQueryResponse>;
