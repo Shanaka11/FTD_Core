@@ -1,5 +1,7 @@
 import { TValue } from "./repositoryTypes";
 
 export type makeModelParams<T> = {
-  validateModel: (model: Record<string, TValue>) => T;
+  validateModel: (model: TRawData) => T;
 };
+
+export type TRawData = Record<string, TValue>;

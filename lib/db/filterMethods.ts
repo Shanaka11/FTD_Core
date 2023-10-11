@@ -1,7 +1,7 @@
-import { TValue } from "../../types/repositoryTypes.js";
+import { TRawData } from "../../types/makeModelParams.js";
 import { camelToSnakeCase } from "../codeGen/textUtils.js";
 
-export const generateKeyWhere = (keys: Record<string, TValue>) => {
+export const generateKeyWhere = (keys: TRawData) => {
   return Object.entries(keys)
     .map(([key, value]) => {
       if (value instanceof Date) {

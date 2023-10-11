@@ -20,7 +20,7 @@ export type TRepository<T> = {
     columns,
     filter,
   }: ReadModelParams) => Promise<T[]>; //Promise<TExecuteQueryResponse>;
-  createModel?: ({ model, modelData }: CreateModelParams) => string[];
+  createModel?: ({ model, modelData }: CreateModelParams) => Promise<boolean>;
   updateModel?: ({ model, key, modelData }: UpdateModelParams) => string[];
   deleteModel?: ({ model, key }: DeleteModelParams) => string[];
 };

@@ -10,10 +10,11 @@ import { makeReadModel } from "./lib/db/crudRepository/readModel.js";
 import { makeUpdateModel } from "./lib/db/crudRepository/updateModel.js";
 import { generateCoreFiles } from "./lib/generateCoreFiles.js";
 import { generateId } from "./lib/generateId.js";
-import { makeModelParams } from "./types/makeModelParams.js";
+import { makeModelParams, TRawData } from "./types/makeModelParams.js";
 import {
   TExecuteQuery,
   TExecuteQueryResponse,
+  TValue,
 } from "./types/repositoryTypes.js";
 import {
   isIdPresent,
@@ -61,6 +62,8 @@ export {
   TMakeGetModelUseCase,
   TExecuteQuery,
   TExecuteQueryResponse,
+  TRawData,
+  TValue,
   makeCreateModel,
   makeReadModel,
   makeUpdateModel,

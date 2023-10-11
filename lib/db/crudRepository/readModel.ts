@@ -1,10 +1,14 @@
-import { TExecuteQuery, TValue } from "../../../types/repositoryTypes.js";
+import camelcaseKeys from "camelcase-keys";
+import type { RowDataPacket } from "mysql2";
+
+import { TRawData } from "../../../types/makeModelParams.js";
+import { TExecuteQuery } from "../../../types/repositoryTypes.js";
 import { generateKeyWhere, generateWhereClause } from "../filterMethods.js";
 import { generateSelectQueryString } from "../generateQueryString.js";
 
 export type ReadModelParams = {
   model: string;
-  key?: string | Record<string, TValue>;
+  key?: string | TRawData;
   columns?: string[];
   filter?: string;
 };
@@ -34,6 +38,8 @@ export const makeReadModel =
     const queryString = generateSelectQueryString(model, columns, where);
     // Connect to the db
     // Execute the query
-    return (await executeQuery(queryString)) as T[];
+    return camelcaseKeys(
+      (await executeQuery(queryString)) as RowDataPacket[],
+    ) as T[];
     // Close the connection db
   };

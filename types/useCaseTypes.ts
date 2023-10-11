@@ -1,3 +1,4 @@
+import { TRawData } from "./makeModelParams";
 import { TRepository } from "./repositoryTypes";
 
 export type TModelKey = {
@@ -12,7 +13,7 @@ export const isIdPresent = <T extends object>(
 
 export type TBaseUseCase<T> = {
   generateId: () => string;
-  validateModel: (data: T) => boolean;
+  validateModel: (data: TRawData) => T;
   repository: TRepository<T>;
 };
 

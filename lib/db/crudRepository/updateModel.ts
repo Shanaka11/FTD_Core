@@ -1,11 +1,11 @@
-import { TValue } from "../../../types/repositoryTypes.js";
+import { TRawData } from "../../../types/makeModelParams.js";
 import { generateUpdateQueryString } from "../generateQueryString.js";
 import { getColumnsAndValuesFromModelData } from "../repoUtils.js";
 
 export type UpdateModelParams = {
   model: string;
   key: string;
-  modelData: Record<string, TValue>;
+  modelData: TRawData;
 };
 
 // Update Model
