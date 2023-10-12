@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/Shanaka11/FTD_Core/compare/v1.1.1...v1.1.2) (2023-10-12)
+
+
+### Bug Fixes
+
+* **CI:** Fixed Automatic Release issues ([#42](https://github.com/Shanaka11/FTD_Core/issues/42)) ([9f012f3](https://github.com/Shanaka11/FTD_Core/commit/9f012f381a87df923c89af8b661a98d5a5c28fe2))
+
 ## [1.1.1](https://github.com/Shanaka11/FTD_Core/compare/v1.1.0...v1.1.1) (2023-10-12)
 
 
