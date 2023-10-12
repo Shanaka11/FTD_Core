@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/Shanaka11/FTD_Core/compare/v1.1.2...v1.1.3) (2023-10-12)
+
+
+### Bug Fixes
+
+* **ci:** Changed node version in ci ([#44](https://github.com/Shanaka11/FTD_Core/issues/44)) ([3397d11](https://github.com/Shanaka11/FTD_Core/commit/3397d114db7d1f61fc6314b97f40f2a6c17e3f6f))
+
 ## [1.1.2](https://github.com/Shanaka11/FTD_Core/compare/v1.1.1...v1.1.2) (2023-10-12)
 
 
