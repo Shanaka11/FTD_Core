@@ -14,7 +14,9 @@ export type TOrderKey = {
   totalAmount: number;
 };
 
-export const makeReadOrderBaseUseCase = ({ repository }: TMakeGetModelUseCase) => {
+export const makeReadOrderBaseUseCase = ({
+  repository,
+}: TMakeGetModelUseCase<TOrder>) => {
   return ({ keys, columns, filter }: TGetModelUseCase<TOrderKey>) => {
     if (repository.readModel === undefined)
       throw new Error(
@@ -27,7 +29,7 @@ export const makeReadOrderBaseUseCase = ({ repository }: TMakeGetModelUseCase) =
       columns: columns,
       filter: filter,
     });
-  };  
+  };
 };
 
 export const makeCreateOrderBaseUseCase = ({
@@ -35,48 +37,70 @@ export const makeCreateOrderBaseUseCase = ({
   validateModel,
   repository,
 }: TBaseUseCase<TOrder>) => {
-  return (modelData: TOrder) => {
+  return (modelData: Partial<TOrder>) => {
     if (repository.createModel === undefined) {
       throw new Error(
         "Repository method of createModel was not defined in order usecase",
       );
     }
 
+    if (generateId === undefined) {
+      throw new Error("Please provide a generateId method");
+    }
+
     const createOrder = makeOrder({
-      generateId,
       validateModel,
     });
 
+    // Generate ID
+    modelData.id = generateId();
+    // Set CreatedAt
+    const sysDate = new Date();
+    modelData.createdAt = sysDate;
+    // Set UpdatedAt
+    modelData.updatedAt = sysDate;
+    // Run validation, check exist, column validation will be handled by zod
+    // Check if a record with the same id exists
+    // Check if the realtionships are valid, i.e primary keys match etc
+    // Other validation, such as max, min, length, mandatory checks will be handled by zod
     const order = createOrder(modelData);
 
     return repository.createModel({
-      model: "order",
+      model: "customerOrder",
       modelData: order,
     });
-  };  
+  };
 };
 
 export const makeUpdateOrderBaseUseCase = ({
-  generateId,
   validateModel,
   repository,
 }: TBaseUseCase<TOrder>) => {
-  return (modelData: TOrder) => {
+  return async (modelData: TOrder) => {
     if (repository.updateModel === undefined) {
       throw new Error(
         "Repository method of updateModel was not defined in order usecase",
       );
     }
 
-    const order = checkOrderChanged({
-      generateId,
+    if (repository.readModel === undefined) {
+      throw new Error(
+        "Repository method of readModel was not defined in order usecase",
+      );
+    }
+
+    const order = await checkOrderChanged({
       validateModel,
       repository,
       modelData,
     });
 
-    repository.updateModel({
-      model: "order",
+    // Set UpdatedAt
+    const sysDate = new Date();
+    modelData.updatedAt = sysDate;
+
+    return repository.updateModel({
+      model: "Order",
       key: order.id,
       modelData: order,
     });
@@ -84,50 +108,46 @@ export const makeUpdateOrderBaseUseCase = ({
 };
 
 export const makeDeleteOrderBaseUseCase = ({
-  generateId,
   validateModel,
   repository,
 }: TBaseUseCase<TOrder>) => {
-  return (modelData: TOrder) => {
+  return async (modelData: TOrder) => {
     if (repository.deleteModel === undefined) {
       throw new Error(
         "Repository method of deleteModel was not defined in order usecase",
       );
     }
 
-    const order = checkOrderChanged({
-      generateId,
+    const order = await checkOrderChanged({
       validateModel,
       repository,
       modelData,
     });
 
-    repository.deleteModel({
-      model: "order",
+    return repository.deleteModel({
+      model: "Order",
       key: order.id,
     });
   };
 };
 
-const checkOrderChanged = ({
-  generateId,
+const checkOrderChanged = async ({
   validateModel,
   repository,
   modelData,
 }: TBaseUseCaseCheckChanged<TOrder>) => {
   const createOrder = makeOrder({
-    generateId,
     validateModel,
   });
   const readOrder = makeReadOrderBaseUseCase({
     repository,
   });
   const newOrder = createOrder(modelData);
-  const oldOrder = JSON.parse(readOrder({
+  const oldOrder = await readOrder({
     keys: { id: newOrder.id },
-  })[0],
-  ) as TOrder
-  
-  if(newOrder.updatedAt !== oldOrder.updatedAt) throw new Error("Order is being modified by another user")
+  });
+
+  if (newOrder.updatedAt.toISOString() !== oldOrder[0].updatedAt.toISOString())
+    throw new Error("Order is being modified by another user");
   return newOrder;
 };

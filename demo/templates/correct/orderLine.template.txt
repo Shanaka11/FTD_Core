@@ -1,33 +1,19 @@
 // Generated Code, Do not modify
-import { makeModelParams } from "@five12days/core";
+import { makeModelParams, TRawData } from "@five12days/core";
 
 export type TOrderLine = {
-  id?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
   orderNo: number;
   lineNo: number;
   itemNo: string;
   itemDescription?: string;
   amount: number;
 };
-
-export const makeOrderLine = ({
-  generateId,
-  validateModel,
-}: makeModelParams<TOrderLine>) => {
-  return (modelData: TOrderLine) => {
-    const model = {
-      id: modelData.id === undefined ? generateId() : modelData.id,
-      createdAt: modelData.createdAt,
-      updatedAt: modelData.updatedAt,
-      orderNo: modelData.orderNo,
-      lineNo: modelData.lineNo,
-      itemNo: modelData.itemNo,
-      itemDescription: modelData.itemDescription,
-      amount: modelData.amount,
-    };
-    validateModel(model);
-    return model;
+export const makeOrderLine = ({ validateModel }: makeModelParams<TOrderLine>) => {
+  return (modelData: TRawData) => {
+    const validatedModel = validateModel(modelData);
+    return validatedModel;
   };
 };

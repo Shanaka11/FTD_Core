@@ -30,13 +30,24 @@ const camelToSnakeCase = (str: string) => {
   return str.replace(/([A-Z])/g, "_$1").toUpperCase();
 };
 
-export const arrayToCommaSeparatedString = (values: TValue[]) => {
+const snakeToCamel = (str: string): string =>
+  str.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
+
+const arrayToCommaSeparatedString = (values: TValue[]) => {
   return values.join(", ");
 };
+
+const formatDateToSqlString = (date: Date) => {
+  return date.toISOString().slice(0, 19).replace("T", " ");
+};
+
 export {
   capitalize,
   simplize,
   indent,
   createStringFromTemplate,
   camelToSnakeCase,
+  snakeToCamel,
+  arrayToCommaSeparatedString,
+  formatDateToSqlString,
 };

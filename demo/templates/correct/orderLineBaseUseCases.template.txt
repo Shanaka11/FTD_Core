@@ -14,7 +14,9 @@ export type TOrderLineKey = {
   lineNo: number;
 };
 
-export const makeReadOrderLineBaseUseCase = ({ repository }: TMakeGetModelUseCase) => {
+export const makeReadOrderLineBaseUseCase = ({
+  repository,
+}: TMakeGetModelUseCase<TOrderLine>) => {
   return ({ keys, columns, filter }: TGetModelUseCase<TOrderLineKey>) => {
     if (repository.readModel === undefined)
       throw new Error(
@@ -27,7 +29,7 @@ export const makeReadOrderLineBaseUseCase = ({ repository }: TMakeGetModelUseCas
       columns: columns,
       filter: filter,
     });
-  };  
+  };
 };
 
 export const makeCreateOrderLineBaseUseCase = ({
@@ -35,48 +37,70 @@ export const makeCreateOrderLineBaseUseCase = ({
   validateModel,
   repository,
 }: TBaseUseCase<TOrderLine>) => {
-  return (modelData: TOrderLine) => {
+  return (modelData: Partial<TOrderLine>) => {
     if (repository.createModel === undefined) {
       throw new Error(
         "Repository method of createModel was not defined in orderLine usecase",
       );
     }
 
+    if (generateId === undefined) {
+      throw new Error("Please provide a generateId method");
+    }
+
     const createOrderLine = makeOrderLine({
-      generateId,
       validateModel,
     });
 
+    // Generate ID
+    modelData.id = generateId();
+    // Set CreatedAt
+    const sysDate = new Date();
+    modelData.createdAt = sysDate;
+    // Set UpdatedAt
+    modelData.updatedAt = sysDate;
+    // Run validation, check exist, column validation will be handled by zod
+    // Check if a record with the same id exists
+    // Check if the realtionships are valid, i.e primary keys match etc
+    // Other validation, such as max, min, length, mandatory checks will be handled by zod
     const orderLine = createOrderLine(modelData);
 
     return repository.createModel({
-      model: "orderLine",
+      model: "customerOrderLine",
       modelData: orderLine,
     });
-  };  
+  };
 };
 
 export const makeUpdateOrderLineBaseUseCase = ({
-  generateId,
   validateModel,
   repository,
 }: TBaseUseCase<TOrderLine>) => {
-  return (modelData: TOrderLine) => {
+  return async (modelData: TOrderLine) => {
     if (repository.updateModel === undefined) {
       throw new Error(
         "Repository method of updateModel was not defined in orderLine usecase",
       );
     }
 
-    const orderLine = checkOrderLineChanged({
-      generateId,
+    if (repository.readModel === undefined) {
+      throw new Error(
+        "Repository method of readModel was not defined in orderLine usecase",
+      );
+    }
+
+    const orderLine = await checkOrderLineChanged({
       validateModel,
       repository,
       modelData,
     });
 
-    repository.updateModel({
-      model: "orderLine",
+    // Set UpdatedAt
+    const sysDate = new Date();
+    modelData.updatedAt = sysDate;
+
+    return repository.updateModel({
+      model: "OrderLine",
       key: orderLine.id,
       modelData: orderLine,
     });
@@ -84,50 +108,46 @@ export const makeUpdateOrderLineBaseUseCase = ({
 };
 
 export const makeDeleteOrderLineBaseUseCase = ({
-  generateId,
   validateModel,
   repository,
 }: TBaseUseCase<TOrderLine>) => {
-  return (modelData: TOrderLine) => {
+  return async (modelData: TOrderLine) => {
     if (repository.deleteModel === undefined) {
       throw new Error(
         "Repository method of deleteModel was not defined in orderLine usecase",
       );
     }
 
-    const orderLine = checkOrderLineChanged({
-      generateId,
+    const orderLine = await checkOrderLineChanged({
       validateModel,
       repository,
       modelData,
     });
 
-    repository.deleteModel({
-      model: "orderLine",
+    return repository.deleteModel({
+      model: "OrderLine",
       key: orderLine.id,
     });
   };
 };
 
-const checkOrderLineChanged = ({
-  generateId,
+const checkOrderLineChanged = async ({
   validateModel,
   repository,
   modelData,
 }: TBaseUseCaseCheckChanged<TOrderLine>) => {
   const createOrderLine = makeOrderLine({
-    generateId,
     validateModel,
   });
   const readOrderLine = makeReadOrderLineBaseUseCase({
     repository,
   });
   const newOrderLine = createOrderLine(modelData);
-  const oldOrderLine = JSON.parse(readOrderLine({
+  const oldOrderLine = await readOrderLine({
     keys: { id: newOrderLine.id },
-  })[0],
-  ) as TOrderLine
-  
-  if(newOrderLine.updatedAt !== oldOrderLine.updatedAt) throw new Error("OrderLine is being modified by another user")
+  });
+
+  if (newOrderLine.updatedAt.toISOString() !== oldOrderLine[0].updatedAt.toISOString())
+    throw new Error("OrderLine is being modified by another user");
   return newOrderLine;
 };

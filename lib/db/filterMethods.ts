@@ -1,11 +1,17 @@
-import { TValue } from "../../types/repositoryTypes.js";
-import { camelToSnakeCase } from "../codeGen/textUtils.js";
+import { TRawData } from "../../types/makeModelParams.js";
+import {
+  camelToSnakeCase,
+  formatDateToSqlString,
+} from "../codeGen/textUtils.js";
 
-export const generateKeyWhere = (keys: Record<string, TValue>) => {
+export const generateKeyWhere = (keys: TRawData) => {
   return Object.entries(keys)
     .map(([key, value]) => {
       if (value instanceof Date) {
-        return `${camelToSnakeCase(key)} = ${value.toISOString()}`;
+        return `${camelToSnakeCase(key)} = '${formatDateToSqlString(value)}'`;
+      }
+      if (typeof value === "string") {
+        return `${camelToSnakeCase(key)} = '${value}'`;
       }
       return `${camelToSnakeCase(key)} = ${value}`;
     })
