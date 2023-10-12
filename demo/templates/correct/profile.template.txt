@@ -1,25 +1,15 @@
 // Generated Code, Do not modify
-import { makeModelParams } from "@five12days/core";
+import { makeModelParams, TRawData } from "@five12days/core";
 
 export type TProfile = {
-  id?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
   profileId: number;
 };
-
-export const makeProfile = ({
-  generateId,
-  validateModel,
-}: makeModelParams<TProfile>) => {
-  return (modelData: TProfile) => {
-    const model = {
-      id: modelData.id === undefined ? generateId() : modelData.id,
-      createdAt: modelData.createdAt,
-      updatedAt: modelData.updatedAt,
-      profileId: modelData.profileId,
-    };
-    validateModel(model);
-    return model;
+export const makeProfile = ({ validateModel }: makeModelParams<TProfile>) => {
+  return (modelData: TRawData) => {
+    const validatedModel = validateModel(modelData);
+    return validatedModel;
   };
 };

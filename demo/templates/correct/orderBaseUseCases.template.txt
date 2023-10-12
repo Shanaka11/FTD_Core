@@ -24,7 +24,7 @@ export const makeReadOrderBaseUseCase = ({
       );
 
     return repository.readModel({
-      model: "customerOrder",
+      model: "order",
       key: keys === undefined ? undefined : isIdPresent(keys) ? keys.id : keys,
       columns: columns,
       filter: filter,
@@ -100,7 +100,7 @@ export const makeUpdateOrderBaseUseCase = ({
     modelData.updatedAt = sysDate;
 
     return repository.updateModel({
-      model: "customerOrder",
+      model: "Order",
       key: order.id,
       modelData: order,
     });
@@ -125,7 +125,7 @@ export const makeDeleteOrderBaseUseCase = ({
     });
 
     return repository.deleteModel({
-      model: "customerOrder",
+      model: "Order",
       key: order.id,
     });
   };

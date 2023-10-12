@@ -13,7 +13,9 @@ export type TProfileKey = {
   profileId: number;
 };
 
-export const makeReadProfileBaseUseCase = ({ repository }: TMakeGetModelUseCase) => {
+export const makeReadProfileBaseUseCase = ({
+  repository,
+}: TMakeGetModelUseCase<TProfile>) => {
   return ({ keys, columns, filter }: TGetModelUseCase<TProfileKey>) => {
     if (repository.readModel === undefined)
       throw new Error(
@@ -26,7 +28,7 @@ export const makeReadProfileBaseUseCase = ({ repository }: TMakeGetModelUseCase)
       columns: columns,
       filter: filter,
     });
-  };  
+  };
 };
 
 export const makeCreateProfileBaseUseCase = ({
@@ -34,48 +36,70 @@ export const makeCreateProfileBaseUseCase = ({
   validateModel,
   repository,
 }: TBaseUseCase<TProfile>) => {
-  return (modelData: TProfile) => {
+  return (modelData: Partial<TProfile>) => {
     if (repository.createModel === undefined) {
       throw new Error(
         "Repository method of createModel was not defined in profile usecase",
       );
     }
 
+    if (generateId === undefined) {
+      throw new Error("Please provide a generateId method");
+    }
+
     const createProfile = makeProfile({
-      generateId,
       validateModel,
     });
 
+    // Generate ID
+    modelData.id = generateId();
+    // Set CreatedAt
+    const sysDate = new Date();
+    modelData.createdAt = sysDate;
+    // Set UpdatedAt
+    modelData.updatedAt = sysDate;
+    // Run validation, check exist, column validation will be handled by zod
+    // Check if a record with the same id exists
+    // Check if the realtionships are valid, i.e primary keys match etc
+    // Other validation, such as max, min, length, mandatory checks will be handled by zod
     const profile = createProfile(modelData);
 
     return repository.createModel({
-      model: "profile",
+      model: "customerProfile",
       modelData: profile,
     });
-  };  
+  };
 };
 
 export const makeUpdateProfileBaseUseCase = ({
-  generateId,
   validateModel,
   repository,
 }: TBaseUseCase<TProfile>) => {
-  return (modelData: TProfile) => {
+  return async (modelData: TProfile) => {
     if (repository.updateModel === undefined) {
       throw new Error(
         "Repository method of updateModel was not defined in profile usecase",
       );
     }
 
-    const profile = checkProfileChanged({
-      generateId,
+    if (repository.readModel === undefined) {
+      throw new Error(
+        "Repository method of readModel was not defined in profile usecase",
+      );
+    }
+
+    const profile = await checkProfileChanged({
       validateModel,
       repository,
       modelData,
     });
 
-    repository.updateModel({
-      model: "profile",
+    // Set UpdatedAt
+    const sysDate = new Date();
+    modelData.updatedAt = sysDate;
+
+    return repository.updateModel({
+      model: "Profile",
       key: profile.id,
       modelData: profile,
     });
@@ -83,50 +107,46 @@ export const makeUpdateProfileBaseUseCase = ({
 };
 
 export const makeDeleteProfileBaseUseCase = ({
-  generateId,
   validateModel,
   repository,
 }: TBaseUseCase<TProfile>) => {
-  return (modelData: TProfile) => {
+  return async (modelData: TProfile) => {
     if (repository.deleteModel === undefined) {
       throw new Error(
         "Repository method of deleteModel was not defined in profile usecase",
       );
     }
 
-    const profile = checkProfileChanged({
-      generateId,
+    const profile = await checkProfileChanged({
       validateModel,
       repository,
       modelData,
     });
 
-    repository.deleteModel({
-      model: "profile",
+    return repository.deleteModel({
+      model: "Profile",
       key: profile.id,
     });
   };
 };
 
-const checkProfileChanged = ({
-  generateId,
+const checkProfileChanged = async ({
   validateModel,
   repository,
   modelData,
 }: TBaseUseCaseCheckChanged<TProfile>) => {
   const createProfile = makeProfile({
-    generateId,
     validateModel,
   });
   const readProfile = makeReadProfileBaseUseCase({
     repository,
   });
   const newProfile = createProfile(modelData);
-  const oldProfile = JSON.parse(readProfile({
+  const oldProfile = await readProfile({
     keys: { id: newProfile.id },
-  })[0],
-  ) as TProfile
-  
-  if(newProfile.updatedAt !== oldProfile.updatedAt) throw new Error("Profile is being modified by another user")
+  });
+
+  if (newProfile.updatedAt.toISOString() !== oldProfile[0].updatedAt.toISOString())
+    throw new Error("Profile is being modified by another user");
   return newProfile;
 };

@@ -36,10 +36,7 @@ export const makeReadModel =
       where = generateWhereClause(filter);
     }
     const queryString = generateSelectQueryString(model, columns, where);
-    // Connect to the db
-    // Execute the query
     return camelcaseKeys(
       (await executeQuery(queryString)) as RowDataPacket[],
     ) as T[];
-    // Close the connection db
   };

@@ -1,78 +1,125 @@
 import {
+  executeTransaction,
+  generateId,
   makeCreateModel,
   makeDeleteModel,
   makeReadModel,
   makeUpdateModel,
+  TExecuteQuery,
   TGetModelUseCase,
-  generateId,
+  TRawData,
 } from "@five12days/core";
 
-import { TProfile } from "./profile.gen";
+import { TProfile } from "./profile.gen.js";
 import {
   makeCreateProfileBaseUseCase,
   makeDeleteProfileBaseUseCase,
   makeReadProfileBaseUseCase,
   makeUpdateProfileBaseUseCase,
   TProfileKey,
-} from "./profileBaseUseCases.gen";
+} from "./profileBaseUseCases.gen.js";
 
-const executeQuery = (query: string) => [query];
-const validateModel = () => true;
+const validateModel = (modelData: TRawData) => {
+  return modelData as TProfile;
+};
 
-export const readProfileUseCase = ({
-  keys,
-  columns,
-  filter,
-}: TGetModelUseCase<TProfileKey>) => {
+// READ
+export const readProfileUseCase_ = async (
+  { keys, columns, filter }: TGetModelUseCase<TProfileKey>,
+  executeQuery: TExecuteQuery,
+) => {
+  // Add business logic that should be executed before the core method
   const readProfileBaseUseCase = makeReadProfileBaseUseCase({
     repository: { readModel: makeReadModel(executeQuery) },
   });
-  const profiles = readProfileBaseUseCase({ keys, columns, filter });
+  const profiles = await readProfileBaseUseCase({
+    keys,
+    columns,
+    filter,
+  });
   // Add business logic that should be executed after the core method
 
   return profiles;
 };
 
-export const makeCreateProfileUseCase = (profileData: TProfile) => {
+export const readProfileUseCase = async (data: TGetModelUseCase<TProfileKey>) => {
+  const retData = await executeTransaction<
+    TGetModelUseCase<TProfileKey>,
+    TProfile[]
+  >(data, readProfileUseCase_);
+  return retData;
+};
+
+// CREATE
+export const createProfileUseCase_ = async (
+  profileData: Partial<TProfile>,
+  executeQuery: TExecuteQuery,
+) => {
   // Add business logic that should be executed before the core method
   const createProfileBaseUseCase = makeCreateProfileBaseUseCase({
     generateId,
     validateModel,
-    repository: { 
+    repository: {
       readModel: makeReadModel(executeQuery),
       createModel: makeCreateModel(executeQuery),
     },
   });
 
-  const createdProfile = createProfileBaseUseCase(profileData);
+  const createdProfile = await createProfileBaseUseCase(profileData);
   // Add business logic that should be executed after the core method
 
   return createdProfile;
 };
 
-export const makeUpdateProfileUseCase = (profileData: TProfile) => {
+export const createProfileUseCase = async (data: Partial<TProfile>) => {
+  const retData = await executeTransaction<Partial<TProfile>, boolean>(
+    data,
+    createProfileUseCase_,
+  );
+
+  return retData;
+};
+
+// UPDATE
+export const updateProfileUseCase_ = async (
+  profileData: TProfile,
+  executeQuery: TExecuteQuery,
+) => {
   // Add business logic that should be executed before the core method
   const updateProfileBaseUseCase = makeUpdateProfileBaseUseCase({
     generateId,
     validateModel,
-    repository: { 
+    repository: {
       readModel: makeReadModel(executeQuery),
       updateModel: makeUpdateModel(executeQuery),
     },
   });
 
-  const updatedProfile = updateProfileBaseUseCase(profileData);
+  const updatedProfile = await updateProfileBaseUseCase(profileData);
   // Add business logic that should be executed after the core method
 
   return updatedProfile;
 };
 
-export const makeDeleteProfileUseCase = (profileData: TProfile) => {
+export const updateProfileUseCase = async (data: TProfile) => {
+  const retData = await executeTransaction<TProfile, boolean>(
+    data,
+    updateProfileUseCase_,
+  );
+
+  return retData;
+};
+
+// DELETE
+export const deleteProfileUseCase_ = async (
+  profileData: TProfile,
+  executeQuery: TExecuteQuery,
+) => {
   // Add business logic that should be executed before the core method
   const deleteProfileBaseUseCase = makeDeleteProfileBaseUseCase({
     generateId,
     validateModel,
-    repository: { 
+    repository: {
       readModel: makeReadModel(executeQuery),
       deleteModel: makeDeleteModel(executeQuery),
     },
@@ -82,4 +129,13 @@ export const makeDeleteProfileUseCase = (profileData: TProfile) => {
   // Add business logic that should be executed after the core method
 
   return deletedProfile;
+};
+
+export const deleteProfileUseCase = async (data: TProfile) => {
+  const retData = await executeTransaction<TProfile, boolean>(
+    data,
+    deleteProfileUseCase_,
+  );
+
+  return retData;
 };

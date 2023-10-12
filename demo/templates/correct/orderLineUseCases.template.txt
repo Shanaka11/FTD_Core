@@ -1,78 +1,125 @@
 import {
+  executeTransaction,
+  generateId,
   makeCreateModel,
   makeDeleteModel,
   makeReadModel,
   makeUpdateModel,
+  TExecuteQuery,
   TGetModelUseCase,
-  generateId,
+  TRawData,
 } from "@five12days/core";
 
-import { TOrderLine } from "./orderLine.gen";
+import { TOrderLine } from "./orderLine.gen.js";
 import {
   makeCreateOrderLineBaseUseCase,
   makeDeleteOrderLineBaseUseCase,
   makeReadOrderLineBaseUseCase,
   makeUpdateOrderLineBaseUseCase,
   TOrderLineKey,
-} from "./orderLineBaseUseCases.gen";
+} from "./orderLineBaseUseCases.gen.js";
 
-const executeQuery = (query: string) => [query];
-const validateModel = () => true;
+const validateModel = (modelData: TRawData) => {
+  return modelData as TOrderLine;
+};
 
-export const readOrderLineUseCase = ({
-  keys,
-  columns,
-  filter,
-}: TGetModelUseCase<TOrderLineKey>) => {
+// READ
+export const readOrderLineUseCase_ = async (
+  { keys, columns, filter }: TGetModelUseCase<TOrderLineKey>,
+  executeQuery: TExecuteQuery,
+) => {
+  // Add business logic that should be executed before the core method
   const readOrderLineBaseUseCase = makeReadOrderLineBaseUseCase({
     repository: { readModel: makeReadModel(executeQuery) },
   });
-  const orderLines = readOrderLineBaseUseCase({ keys, columns, filter });
+  const orderLines = await readOrderLineBaseUseCase({
+    keys,
+    columns,
+    filter,
+  });
   // Add business logic that should be executed after the core method
 
   return orderLines;
 };
 
-export const makeCreateOrderLineUseCase = (orderLineData: TOrderLine) => {
+export const readOrderLineUseCase = async (data: TGetModelUseCase<TOrderLineKey>) => {
+  const retData = await executeTransaction<
+    TGetModelUseCase<TOrderLineKey>,
+    TOrderLine[]
+  >(data, readOrderLineUseCase_);
+  return retData;
+};
+
+// CREATE
+export const createOrderLineUseCase_ = async (
+  orderLineData: Partial<TOrderLine>,
+  executeQuery: TExecuteQuery,
+) => {
   // Add business logic that should be executed before the core method
   const createOrderLineBaseUseCase = makeCreateOrderLineBaseUseCase({
     generateId,
     validateModel,
-    repository: { 
+    repository: {
       readModel: makeReadModel(executeQuery),
       createModel: makeCreateModel(executeQuery),
     },
   });
 
-  const createdOrderLine = createOrderLineBaseUseCase(orderLineData);
+  const createdOrderLine = await createOrderLineBaseUseCase(orderLineData);
   // Add business logic that should be executed after the core method
 
   return createdOrderLine;
 };
 
-export const makeUpdateOrderLineUseCase = (orderLineData: TOrderLine) => {
+export const createOrderLineUseCase = async (data: Partial<TOrderLine>) => {
+  const retData = await executeTransaction<Partial<TOrderLine>, boolean>(
+    data,
+    createOrderLineUseCase_,
+  );
+
+  return retData;
+};
+
+// UPDATE
+export const updateOrderLineUseCase_ = async (
+  orderLineData: TOrderLine,
+  executeQuery: TExecuteQuery,
+) => {
   // Add business logic that should be executed before the core method
   const updateOrderLineBaseUseCase = makeUpdateOrderLineBaseUseCase({
     generateId,
     validateModel,
-    repository: { 
+    repository: {
       readModel: makeReadModel(executeQuery),
       updateModel: makeUpdateModel(executeQuery),
     },
   });
 
-  const updatedOrderLine = updateOrderLineBaseUseCase(orderLineData);
+  const updatedOrderLine = await updateOrderLineBaseUseCase(orderLineData);
   // Add business logic that should be executed after the core method
 
   return updatedOrderLine;
 };
 
-export const makeDeleteOrderLineUseCase = (orderLineData: TOrderLine) => {
+export const updateOrderLineUseCase = async (data: TOrderLine) => {
+  const retData = await executeTransaction<TOrderLine, boolean>(
+    data,
+    updateOrderLineUseCase_,
+  );
+
+  return retData;
+};
+
+// DELETE
+export const deleteOrderLineUseCase_ = async (
+  orderLineData: TOrderLine,
+  executeQuery: TExecuteQuery,
+) => {
   // Add business logic that should be executed before the core method
   const deleteOrderLineBaseUseCase = makeDeleteOrderLineBaseUseCase({
     generateId,
     validateModel,
-    repository: { 
+    repository: {
       readModel: makeReadModel(executeQuery),
       deleteModel: makeDeleteModel(executeQuery),
     },
@@ -82,4 +129,13 @@ export const makeDeleteOrderLineUseCase = (orderLineData: TOrderLine) => {
   // Add business logic that should be executed after the core method
 
   return deletedOrderLine;
+};
+
+export const deleteOrderLineUseCase = async (data: TOrderLine) => {
+  const retData = await executeTransaction<TOrderLine, boolean>(
+    data,
+    deleteOrderLineUseCase_,
+  );
+
+  return retData;
 };
