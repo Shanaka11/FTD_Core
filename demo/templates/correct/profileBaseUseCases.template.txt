@@ -65,7 +65,7 @@ export const makeCreateProfileBaseUseCase = ({
     const profile = createProfile(modelData);
 
     return repository.createModel({
-      model: "customerProfile",
+      model: "profile",
       modelData: profile,
     });
   };
