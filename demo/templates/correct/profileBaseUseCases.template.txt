@@ -99,7 +99,7 @@ export const makeUpdateProfileBaseUseCase = ({
     modelData.updatedAt = sysDate;
 
     return repository.updateModel({
-      model: "Profile",
+      model: "profile",
       key: profile.id,
       modelData: profile,
     });
@@ -124,7 +124,7 @@ export const makeDeleteProfileBaseUseCase = ({
     });
 
     return repository.deleteModel({
-      model: "Profile",
+      model: "profile",
       key: profile.id,
     });
   };

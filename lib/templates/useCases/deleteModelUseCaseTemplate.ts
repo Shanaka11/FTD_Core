@@ -16,7 +16,7 @@ export const DELETE_MODEL_USECASE_TEMPLATE = `export const makeDelete{MODEL}Base
     });
 
     return repository.deleteModel({
-      model: "{MODEL}",
+      model: "{MODELVAR}",
       key: {MODELVAR}.id,
     });
   };

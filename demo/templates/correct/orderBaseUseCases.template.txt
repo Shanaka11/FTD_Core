@@ -100,7 +100,7 @@ export const makeUpdateOrderBaseUseCase = ({
     modelData.updatedAt = sysDate;
 
     return repository.updateModel({
-      model: "Order",
+      model: "order",
       key: order.id,
       modelData: order,
     });
@@ -125,7 +125,7 @@ export const makeDeleteOrderBaseUseCase = ({
     });
 
     return repository.deleteModel({
-      model: "Order",
+      model: "order",
       key: order.id,
     });
   };

@@ -100,7 +100,7 @@ export const makeUpdateOrderLineBaseUseCase = ({
     modelData.updatedAt = sysDate;
 
     return repository.updateModel({
-      model: "OrderLine",
+      model: "orderLine",
       key: orderLine.id,
       modelData: orderLine,
     });
@@ -125,7 +125,7 @@ export const makeDeleteOrderLineBaseUseCase = ({
     });
 
     return repository.deleteModel({
-      model: "OrderLine",
+      model: "orderLine",
       key: orderLine.id,
     });
   };
