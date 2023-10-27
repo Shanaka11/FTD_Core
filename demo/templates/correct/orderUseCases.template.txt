@@ -8,9 +8,10 @@ import {
   TExecuteQuery,
   TGetModelUseCase,
   TRawData,
+  validateModel,
 } from "@five12days/core";
 
-import { TOrder } from "./order.gen.js";
+import { orderSchema, TOrder } from "./order.gen.js";
 import {
   makeCreateOrderBaseUseCase,
   makeDeleteOrderBaseUseCase,
@@ -18,10 +19,6 @@ import {
   makeUpdateOrderBaseUseCase,
   TOrderKey,
 } from "./orderBaseUseCases.gen.js";
-
-const validateModel = (modelData: TRawData) => {
-  return modelData as TOrder;
-};
 
 // READ
 export const readOrderUseCase_ = async (
