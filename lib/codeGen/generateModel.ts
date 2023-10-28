@@ -22,6 +22,7 @@ export const generateModel = (modelSchema: tModel) => {
       MODELVAR: nameSimplized,
       TYPE_ATTRIBUTES: generateTypes(attributes),
       MODEL_ATTRIBUTES: generateAttributes(attributes),
+      ZOD_SCHEMA: generateZodSchema(attributes),
     },
     MAKE_CREATE_MODEL_TEMPLATE,
   );
@@ -44,4 +45,29 @@ const generateTypes = (attributes: tAattributes) => {
     .join(`;\n${indent(1)}`);
 
   return type;
+};
+
+export const generateZodSchema = (attributes: tAattributes) => {
+  const schema = Object.entries(attributes)
+    .map(([key, value]) => {
+      let retString = `${simplize(key)}: `;
+
+      retString += `z.${simplize(value.type)}`;
+      if (
+        value.flags === "AMI-" ||
+        value.flags === "AMIU" ||
+        value.flags === "KMI-"
+      ) {
+        retString += `({ required_error: "${key} cannot be null" })`;
+      } else {
+        retString += `().optional()`;
+      }
+      if (value.type === "String") {
+        retString += `.max(${value.maxLength})`;
+      }
+      return retString;
+    })
+    .join(`,\n${indent(1)}`);
+
+  return schema;
 };

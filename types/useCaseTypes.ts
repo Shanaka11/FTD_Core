@@ -1,5 +1,3 @@
-import { AnyZodObject } from "zod";
-
 import { TRawData } from "./makeModelParams";
 import { TRepository } from "./repositoryTypes";
 
@@ -15,7 +13,7 @@ export const isIdPresent = <T extends object>(
 
 export type TBaseUseCase<T> = {
   generateId?: () => string;
-  validateModel: <T>(schema: AnyZodObject, data: TRawData) => T;
+  validateModel: (data: TRawData) => T;
   repository: TRepository<T>;
 };
 

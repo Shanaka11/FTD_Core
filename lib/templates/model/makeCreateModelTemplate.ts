@@ -1,12 +1,16 @@
 export const MAKE_CREATE_MODEL_TEMPLATE = `// Generated Code, Do not modify
 import { makeModelParams, TRawData } from "@five12days/core";
+import { z } from "zod";
 
-export type {TNAME} = {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  {TYPE_ATTRIBUTES};
-};
+export const {MODELVAR}Schema = z.object({
+  id: z.string({ required_error: "Id cannot be null" }),
+  createdAt: z.date({ required_error: "CreatedAt cannot be null" }),
+  updatedAt: z.date({ required_error: "UpdatedAt cannot be null" }),
+  {ZOD_SCHEMA},
+});
+
+export type TOrder = z.infer<typeof {MODELVAR}Schema>;
+
 export const make{MODEL} = ({ validateModel }: makeModelParams<{TNAME}>) => {
   return (modelData: TRawData) => {
     const validatedModel = validateModel(modelData);
@@ -14,31 +18,3 @@ export const make{MODEL} = ({ validateModel }: makeModelParams<{TNAME}>) => {
   };
 };
 `;
-/*
-export const MAKE_CREATE_MODEL_TEMPLATE = `// Generated Code, Do not modify
-import { makeModelParams } from "@five12days/core";
-
-export type {TNAME} = {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  {TYPE_ATTRIBUTES};
-};
-
-export const make{MODEL} = ({
-  generateId,
-  validateModel,
-}: makeModelParams<{TNAME}>) => {
-  return (modelData: {TNAME}) => {
-    const model = {
-      id: modelData.id === undefined ? generateId() : modelData.id,
-      createdAt: modelData.createdAt,
-      updatedAt: modelData.updatedAt,
-      {MODEL_ATTRIBUTES},
-    };
-    validateModel(model);
-    return model;
-  };
-};
-`;
-*/
