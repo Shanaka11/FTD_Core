@@ -20,6 +20,10 @@ import {
   TOrderKey,
 } from "./orderBaseUseCases.gen.js";
 
+const validateOrderModel = (data: TRawData) => {
+  return validateModel<TOrder>(orderSchema, data);
+};
+
 // READ
 export const readOrderUseCase_ = async (
   { keys, columns, filter }: TGetModelUseCase<TOrderKey>,
@@ -55,7 +59,7 @@ export const createOrderUseCase_ = async (
   // Add business logic that should be executed before the core method
   const createOrderBaseUseCase = makeCreateOrderBaseUseCase({
     generateId,
-    validateModel,
+    validateModel: validateOrderModel,
     repository: {
       readModel: makeReadModel(executeQuery),
       createModel: makeCreateModel(executeQuery),
@@ -85,7 +89,7 @@ export const updateOrderUseCase_ = async (
   // Add business logic that should be executed before the core method
   const updateOrderBaseUseCase = makeUpdateOrderBaseUseCase({
     generateId,
-    validateModel,
+    validateModel: validateOrderModel,
     repository: {
       readModel: makeReadModel(executeQuery),
       updateModel: makeUpdateModel(executeQuery),
@@ -115,7 +119,7 @@ export const deleteOrderUseCase_ = async (
   // Add business logic that should be executed before the core method
   const deleteOrderBaseUseCase = makeDeleteOrderBaseUseCase({
     generateId,
-    validateModel,
+    validateModel: validateOrderModel,
     repository: {
       readModel: makeReadModel(executeQuery),
       deleteModel: makeDeleteModel(executeQuery),

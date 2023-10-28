@@ -15,7 +15,7 @@ export type TOrder = z.infer<typeof orderSchema>;
 
 export const makeOrder = ({ validateModel }: makeModelParams<TOrder>) => {
   return (modelData: TRawData) => {
-    const validatedModel = validateModel(orderSchema, modelData);
+    const validatedModel = validateModel(modelData);
     return validatedModel;
   };
 };
