@@ -2,7 +2,7 @@
 import { makeModelParams, TRawData } from "@five12days/core";
 import { z } from "zod";
 
-export const orderSchema = z.object({
+export const customerOrderSchema = z.object({
   id: z.string({ required_error: "Id cannot be null" }),
   createdAt: z.date({ required_error: "CreatedAt cannot be null" }),
   updatedAt: z.date({ required_error: "UpdatedAt cannot be null" }),
@@ -11,9 +11,9 @@ export const orderSchema = z.object({
   date: z.date().optional(),
 });
 
-export type TOrder = z.infer<typeof orderSchema>;
+export type TCustomerOrder = z.infer<typeof customerOrderSchema>;
 
-export const makeOrder = ({ validateModel }: makeModelParams<TOrder>) => {
+export const makeCustomerOrder = ({ validateModel }: makeModelParams<TCustomerOrder>) => {
   return (modelData: TRawData) => {
     const validatedModel = validateModel(modelData);
     return validatedModel;

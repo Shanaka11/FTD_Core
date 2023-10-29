@@ -154,7 +154,7 @@ describe("Code Generation Checks", () => {
 
     // Check if the files are generated
     // Check src/Order/order/order.gen.ts
-    compareFileSet(path.join(process.cwd(), "src/Order/order"));
+    compareFileSet(path.join(process.cwd(), "src/Order/customerOrder"));
 
     // Check src/Order/orderLine/orderLine.gen.ts
     compareFileSet(path.join(process.cwd(), "src/Order/orderLine"));
@@ -165,7 +165,7 @@ describe("Code Generation Checks", () => {
     // remove the generated files
     // Remove model files
     afterAll(() => {
-      removeFileSet(path.join(process.cwd(), "src/Order/order"));
+      removeFileSet(path.join(process.cwd(), "src/Order/customerOrder"));
       removeFileSet(path.join(process.cwd(), "src/Order/orderLine"));
       removeFileSet(path.join(process.cwd(), "src/User/profile"));
     });
@@ -184,7 +184,7 @@ describe("Code Generation Checks", () => {
     // Files should only be generated in the src/order/ folder and other folders should not be changed
     // Check if Order and Order Line files are generated
     // Check src/Order/order/order.gen.ts
-    compareFileSet(path.join(process.cwd(), "src/Order/order"));
+    compareFileSet(path.join(process.cwd(), "src/Order/customerOrder"));
     // Check src/Order/orderLine/orderLine.gen.ts
     compareFileSet(path.join(process.cwd(), "src/Order/orderLine"));
     // Check if profile is not generated
@@ -192,7 +192,7 @@ describe("Code Generation Checks", () => {
 
     // remove the generated files
     afterAll(() => {
-      removeFileSet(path.join(process.cwd(), "src/Order/order"));
+      removeFileSet(path.join(process.cwd(), "src/Order/customerOrder"));
       removeFileSet(path.join(process.cwd(), "src/Order/orderLine"));
     });
   });

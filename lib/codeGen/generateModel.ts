@@ -50,6 +50,7 @@ const generateTypes = (attributes: tAattributes) => {
 export const generateZodSchema = (attributes: tAattributes) => {
   const schema = Object.entries(attributes)
     .map(([key, value]) => {
+      let required = false;
       let retString = `${simplize(key)}: `;
 
       retString += `z.${simplize(value.type)}`;
@@ -58,13 +59,18 @@ export const generateZodSchema = (attributes: tAattributes) => {
         value.flags === "AMIU" ||
         value.flags === "KMI-"
       ) {
+        required = true;
         retString += `({ required_error: "${key} cannot be null" })`;
       } else {
-        retString += `().optional()`;
+        retString += `()`;
       }
+
       if (value.type === "String") {
         retString += `.max(${value.maxLength})`;
       }
+
+      if (!required) retString += `.optional()`;
+
       return retString;
     })
     .join(`,\n${indent(1)}`);

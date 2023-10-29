@@ -1,0 +1,153 @@
+// Generated Code, Do not modify
+import {
+  isIdPresent,
+  TBaseUseCase,
+  TBaseUseCaseCheckChanged,
+  TGetModelUseCase,
+  TMakeGetModelUseCase,
+} from "@five12days/core";
+
+import { makeCustomerOrder, TCustomerOrder } from "./customerOrder.gen.js";
+
+export type TCustomerOrderKey = {
+  orderNo: number;
+  totalAmount: number;
+};
+
+export const makeReadCustomerOrderBaseUseCase = ({
+  repository,
+}: TMakeGetModelUseCase<TCustomerOrder>) => {
+  return ({ keys, columns, filter }: TGetModelUseCase<TCustomerOrderKey>) => {
+    if (repository.readModel === undefined)
+      throw new Error(
+        "Repository method of getModel was not defined in customerOrder usecase",
+      );
+
+    return repository.readModel({
+      model: "customerOrder",
+      key: keys === undefined ? undefined : isIdPresent(keys) ? keys.id : keys,
+      columns: columns,
+      filter: filter,
+    });
+  };
+};
+
+export const makeCreateCustomerOrderBaseUseCase = ({
+  generateId,
+  validateModel,
+  repository,
+}: TBaseUseCase<TCustomerOrder>) => {
+  return (modelData: Partial<TCustomerOrder>) => {
+    if (repository.createModel === undefined) {
+      throw new Error(
+        "Repository method of createModel was not defined in customerOrder usecase",
+      );
+    }
+
+    if (generateId === undefined) {
+      throw new Error("Please provide a generateId method");
+    }
+
+    const createCustomerOrder = makeCustomerOrder({
+      validateModel,
+    });
+
+    // Generate ID
+    modelData.id = generateId();
+    // Set CreatedAt
+    const sysDate = new Date();
+    modelData.createdAt = sysDate;
+    // Set UpdatedAt
+    modelData.updatedAt = sysDate;
+    // Run validation, check exist, column validation will be handled by zod
+    // Check if a record with the same id exists
+    // Check if the realtionships are valid, i.e primary keys match etc
+    // Other validation, such as max, min, length, mandatory checks will be handled by zod
+    const customerOrder = createCustomerOrder(modelData);
+
+    return repository.createModel({
+      model: "customerOrder",
+      modelData: customerOrder,
+    });
+  };
+};
+
+export const makeUpdateCustomerOrderBaseUseCase = ({
+  validateModel,
+  repository,
+}: TBaseUseCase<TCustomerOrder>) => {
+  return async (modelData: TCustomerOrder) => {
+    if (repository.updateModel === undefined) {
+      throw new Error(
+        "Repository method of updateModel was not defined in customerOrder usecase",
+      );
+    }
+
+    if (repository.readModel === undefined) {
+      throw new Error(
+        "Repository method of readModel was not defined in customerOrder usecase",
+      );
+    }
+
+    const customerOrder = await checkCustomerOrderChanged({
+      validateModel,
+      repository,
+      modelData,
+    });
+
+    // Set UpdatedAt
+    const sysDate = new Date();
+    modelData.updatedAt = sysDate;
+
+    return repository.updateModel({
+      model: "customerOrder",
+      key: customerOrder.id,
+      modelData: customerOrder,
+    });
+  };
+};
+
+export const makeDeleteCustomerOrderBaseUseCase = ({
+  validateModel,
+  repository,
+}: TBaseUseCase<TCustomerOrder>) => {
+  return async (modelData: TCustomerOrder) => {
+    if (repository.deleteModel === undefined) {
+      throw new Error(
+        "Repository method of deleteModel was not defined in customerOrder usecase",
+      );
+    }
+
+    const customerOrder = await checkCustomerOrderChanged({
+      validateModel,
+      repository,
+      modelData,
+    });
+
+    return repository.deleteModel({
+      model: "customerOrder",
+      key: customerOrder.id,
+    });
+  };
+};
+
+const checkCustomerOrderChanged = async ({
+  validateModel,
+  repository,
+  modelData,
+}: TBaseUseCaseCheckChanged<TCustomerOrder>) => {
+  const createCustomerOrder = makeCustomerOrder({
+    validateModel,
+  });
+  const readCustomerOrder = makeReadCustomerOrderBaseUseCase({
+    repository,
+  });
+  const newCustomerOrder = createCustomerOrder(modelData);
+  const oldCustomerOrder = await readCustomerOrder({
+    keys: { id: newCustomerOrder.id },
+  });
+
+  if (newCustomerOrder.updatedAt.toISOString() !== oldCustomerOrder[0].updatedAt.toISOString())
+    throw new Error("CustomerOrder is being modified by another user");
+  return newCustomerOrder;
+};

@@ -9,7 +9,7 @@ export const {MODELVAR}Schema = z.object({
   {ZOD_SCHEMA},
 });
 
-export type TOrder = z.infer<typeof {MODELVAR}Schema>;
+export type {TNAME} = z.infer<typeof {MODELVAR}Schema>;
 
 export const make{MODEL} = ({ validateModel }: makeModelParams<{TNAME}>) => {
   return (modelData: TRawData) => {

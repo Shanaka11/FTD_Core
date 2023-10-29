@@ -1,16 +1,20 @@
 // Generated Code, Do not modify
 import { makeModelParams, TRawData } from "@five12days/core";
+import { z } from "zod";
 
-export type TOrderLine = {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  orderNo: number;
-  lineNo: number;
-  itemNo: string;
-  itemDescription?: string;
-  amount: number;
-};
+export const orderLineSchema = z.object({
+  id: z.string({ required_error: "Id cannot be null" }),
+  createdAt: z.date({ required_error: "CreatedAt cannot be null" }),
+  updatedAt: z.date({ required_error: "UpdatedAt cannot be null" }),
+  orderNo: z.number({ required_error: "OrderNo cannot be null" }),
+  lineNo: z.number({ required_error: "LineNo cannot be null" }),
+  itemNo: z.string({ required_error: "ItemNo cannot be null" }).max(20),
+  itemDescription: z.string().max(100).optional(),
+  amount: z.number({ required_error: "Amount cannot be null" }),
+});
+
+export type TOrderLine = z.infer<typeof orderLineSchema>;
+
 export const makeOrderLine = ({ validateModel }: makeModelParams<TOrderLine>) => {
   return (modelData: TRawData) => {
     const validatedModel = validateModel(modelData);

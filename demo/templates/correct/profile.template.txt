@@ -1,12 +1,16 @@
 // Generated Code, Do not modify
 import { makeModelParams, TRawData } from "@five12days/core";
+import { z } from "zod";
 
-export type TProfile = {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  profileId: number;
-};
+export const profileSchema = z.object({
+  id: z.string({ required_error: "Id cannot be null" }),
+  createdAt: z.date({ required_error: "CreatedAt cannot be null" }),
+  updatedAt: z.date({ required_error: "UpdatedAt cannot be null" }),
+  profileId: z.number({ required_error: "ProfileId cannot be null" }),
+});
+
+export type TProfile = z.infer<typeof profileSchema>;
+
 export const makeProfile = ({ validateModel }: makeModelParams<TProfile>) => {
   return (modelData: TRawData) => {
     const validatedModel = validateModel(modelData);
