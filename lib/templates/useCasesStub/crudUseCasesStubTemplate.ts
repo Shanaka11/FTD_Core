@@ -8,9 +8,10 @@ export const CRUD_USECASE_STUB_TEMPLATE = `import {
   TExecuteQuery,
   TGetModelUseCase,
   TRawData,
+  validateModel,
 } from "@five12days/core";
 
-import { {TNAME} } from "./{MODELVAR}.gen.js";
+import { {MODELVAR}Schema, {TNAME} } from "./{MODELVAR}.gen.js";
 import {
   makeCreate{MODEL}BaseUseCase,
   makeDelete{MODEL}BaseUseCase,
@@ -19,8 +20,8 @@ import {
   {TNAME}Key,
 } from "./{MODELVAR}BaseUseCases.gen.js";
 
-const validateModel = (modelData: TRawData) => {
-  return modelData as {TNAME};
+const validate{MODEL}Model = (data: TRawData) => {
+  return validateModel<{TNAME}>({MODELVAR}Schema, data);
 };
 
 // READ
@@ -58,7 +59,7 @@ export const create{MODEL}UseCase_ = async (
   // Add business logic that should be executed before the core method
   const create{MODEL}BaseUseCase = makeCreate{MODEL}BaseUseCase({
     generateId,
-    validateModel,
+    validateModel: validate{MODEL}Model,
     repository: {
       readModel: makeReadModel(executeQuery),
       createModel: makeCreateModel(executeQuery),
@@ -88,7 +89,7 @@ export const update{MODEL}UseCase_ = async (
   // Add business logic that should be executed before the core method
   const update{MODEL}BaseUseCase = makeUpdate{MODEL}BaseUseCase({
     generateId,
-    validateModel,
+    validateModel: validate{MODEL}Model,
     repository: {
       readModel: makeReadModel(executeQuery),
       updateModel: makeUpdateModel(executeQuery),
@@ -118,7 +119,7 @@ export const delete{MODEL}UseCase_ = async (
   // Add business logic that should be executed before the core method
   const delete{MODEL}BaseUseCase = makeDelete{MODEL}BaseUseCase({
     generateId,
-    validateModel,
+    validateModel: validate{MODEL}Model,
     repository: {
       readModel: makeReadModel(executeQuery),
       deleteModel: makeDeleteModel(executeQuery),

@@ -26,7 +26,7 @@ export const UPDATE_MODEL_USECASE_TEMPLATE = `export const makeUpdate{MODEL}Base
     modelData.updatedAt = sysDate;
 
     return repository.updateModel({
-      model: "{MODEL}",
+      model: "{MODELVAR}",
       key: {MODELVAR}.id,
       modelData: {MODELVAR},
     });

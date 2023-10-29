@@ -1,20 +1,21 @@
-export const MAKE_CREATE_MODEL_TEMPLATE = `// Generated Code, Do not modify
+// Generated Code, Do not modify
 import { makeModelParams, TRawData } from "@five12days/core";
 import { z } from "zod";
 
-export const {MODELVAR}Schema = z.object({
+export const customerOrderSchema = z.object({
   id: z.string({ required_error: "Id cannot be null" }),
   createdAt: z.date({ required_error: "CreatedAt cannot be null" }),
   updatedAt: z.date({ required_error: "UpdatedAt cannot be null" }),
-  {ZOD_SCHEMA},
+  orderNo: z.number({ required_error: "OrderNo cannot be null" }),
+  totalAmount: z.number({ required_error: "TotalAmount cannot be null" }),
+  date: z.date().optional(),
 });
 
-export type {TNAME} = z.infer<typeof {MODELVAR}Schema>;
+export type TCustomerOrder = z.infer<typeof customerOrderSchema>;
 
-export const make{MODEL} = ({ validateModel }: makeModelParams<{TNAME}>) => {
+export const makeCustomerOrder = ({ validateModel }: makeModelParams<TCustomerOrder>) => {
   return (modelData: TRawData) => {
     const validatedModel = validateModel(modelData);
     return validatedModel;
   };
 };
-`;

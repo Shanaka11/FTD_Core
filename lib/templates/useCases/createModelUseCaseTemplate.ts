@@ -32,7 +32,7 @@ export const CREATE_MODEL_USECASE_TEMPLATE = `export const makeCreate{MODEL}Base
     const {MODELVAR} = create{MODEL}(modelData);
 
     return repository.createModel({
-      model: "customer{MODEL}",
+      model: "{MODELVAR}",
       modelData: {MODELVAR},
     });
   };

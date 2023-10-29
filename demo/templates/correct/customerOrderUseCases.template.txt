@@ -1,0 +1,142 @@
+import {
+  executeTransaction,
+  generateId,
+  makeCreateModel,
+  makeDeleteModel,
+  makeReadModel,
+  makeUpdateModel,
+  TExecuteQuery,
+  TGetModelUseCase,
+  TRawData,
+  validateModel,
+} from "@five12days/core";
+
+import { customerOrderSchema, TCustomerOrder } from "./customerOrder.gen.js";
+import {
+  makeCreateCustomerOrderBaseUseCase,
+  makeDeleteCustomerOrderBaseUseCase,
+  makeReadCustomerOrderBaseUseCase,
+  makeUpdateCustomerOrderBaseUseCase,
+  TCustomerOrderKey,
+} from "./customerOrderBaseUseCases.gen.js";
+
+const validateCustomerOrderModel = (data: TRawData) => {
+  return validateModel<TCustomerOrder>(customerOrderSchema, data);
+};
+
+// READ
+export const readCustomerOrderUseCase_ = async (
+  { keys, columns, filter }: TGetModelUseCase<TCustomerOrderKey>,
+  executeQuery: TExecuteQuery,
+) => {
+  // Add business logic that should be executed before the core method
+  const readCustomerOrderBaseUseCase = makeReadCustomerOrderBaseUseCase({
+    repository: { readModel: makeReadModel(executeQuery) },
+  });
+  const customerOrders = await readCustomerOrderBaseUseCase({
+    keys,
+    columns,
+    filter,
+  });
+  // Add business logic that should be executed after the core method
+
+  return customerOrders;
+};
+
+export const readCustomerOrderUseCase = async (data: TGetModelUseCase<TCustomerOrderKey>) => {
+  const retData = await executeTransaction<
+    TGetModelUseCase<TCustomerOrderKey>,
+    TCustomerOrder[]
+  >(data, readCustomerOrderUseCase_);
+  return retData;
+};
+
+// CREATE
+export const createCustomerOrderUseCase_ = async (
+  customerOrderData: Partial<TCustomerOrder>,
+  executeQuery: TExecuteQuery,
+) => {
+  // Add business logic that should be executed before the core method
+  const createCustomerOrderBaseUseCase = makeCreateCustomerOrderBaseUseCase({
+    generateId,
+    validateModel: validateCustomerOrderModel,
+    repository: {
+      readModel: makeReadModel(executeQuery),
+      createModel: makeCreateModel(executeQuery),
+    },
+  });
+
+  const createdCustomerOrder = await createCustomerOrderBaseUseCase(customerOrderData);
+  // Add business logic that should be executed after the core method
+
+  return createdCustomerOrder;
+};
+
+export const createCustomerOrderUseCase = async (data: Partial<TCustomerOrder>) => {
+  const retData = await executeTransaction<Partial<TCustomerOrder>, boolean>(
+    data,
+    createCustomerOrderUseCase_,
+  );
+
+  return retData;
+};
+
+// UPDATE
+export const updateCustomerOrderUseCase_ = async (
+  customerOrderData: TCustomerOrder,
+  executeQuery: TExecuteQuery,
+) => {
+  // Add business logic that should be executed before the core method
+  const updateCustomerOrderBaseUseCase = makeUpdateCustomerOrderBaseUseCase({
+    generateId,
+    validateModel: validateCustomerOrderModel,
+    repository: {
+      readModel: makeReadModel(executeQuery),
+      updateModel: makeUpdateModel(executeQuery),
+    },
+  });
+
+  const updatedCustomerOrder = await updateCustomerOrderBaseUseCase(customerOrderData);
+  // Add business logic that should be executed after the core method
+
+  return updatedCustomerOrder;
+};
+
+export const updateCustomerOrderUseCase = async (data: TCustomerOrder) => {
+  const retData = await executeTransaction<TCustomerOrder, boolean>(
+    data,
+    updateCustomerOrderUseCase_,
+  );
+
+  return retData;
+};
+
+// DELETE
+export const deleteCustomerOrderUseCase_ = async (
+  customerOrderData: TCustomerOrder,
+  executeQuery: TExecuteQuery,
+) => {
+  // Add business logic that should be executed before the core method
+  const deleteCustomerOrderBaseUseCase = makeDeleteCustomerOrderBaseUseCase({
+    generateId,
+    validateModel: validateCustomerOrderModel,
+    repository: {
+      readModel: makeReadModel(executeQuery),
+      deleteModel: makeDeleteModel(executeQuery),
+    },
+  });
+
+  const deletedCustomerOrder = deleteCustomerOrderBaseUseCase(customerOrderData);
+  // Add business logic that should be executed after the core method
+
+  return deletedCustomerOrder;
+};
+
+export const deleteCustomerOrderUseCase = async (data: TCustomerOrder) => {
+  const retData = await executeTransaction<TCustomerOrder, boolean>(
+    data,
+    deleteCustomerOrderUseCase_,
+  );
+
+  return retData;
+};

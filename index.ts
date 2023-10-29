@@ -10,6 +10,7 @@ import { makeReadModel } from "./lib/db/crudRepository/readModel.js";
 import { makeUpdateModel } from "./lib/db/crudRepository/updateModel.js";
 import { generateCoreFiles } from "./lib/generateCoreFiles.js";
 import { generateId } from "./lib/generateId.js";
+import { validateModelZod as validateModel } from "./lib/validation/zodValidation.js";
 import { makeModelParams, TRawData } from "./types/makeModelParams.js";
 import {
   TExecuteQuery,
@@ -71,4 +72,5 @@ export {
   generateId,
   makeExecuteQuery,
   executeTransaction,
+  validateModel,
 };

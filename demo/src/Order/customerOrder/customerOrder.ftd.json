@@ -1,5 +1,5 @@
 {
-  "name": "Order",
+  "name": "CustomerOrder",
   "attributes": {
     "OrderNo": { "type": "Number", "flags": "KMI-" },
     "TotalAmount": { "type": "Number", "flags": "KMI-" },
