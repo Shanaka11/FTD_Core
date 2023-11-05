@@ -27,11 +27,14 @@ const createStringFromTemplate = (
 };
 
 const camelToSnakeCase = (str: string) => {
+  // If the first letter is capital we will assume its in snake case
+  if (str.charAt(0) === str.charAt(0).toUpperCase()) return str;
   return str.replace(/([A-Z])/g, "_$1").toUpperCase();
 };
 
-const snakeToCamel = (str: string): string =>
-  str.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
+const snakeToCamel = (str: string): string => {
+  return str.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
+};
 
 const arrayToCommaSeparatedString = (values: TValue[]) => {
   return values.join(", ");
