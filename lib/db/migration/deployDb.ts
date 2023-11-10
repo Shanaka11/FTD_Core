@@ -100,6 +100,40 @@ export const createAndDeployTable = (
   console.log(query);
 };
 
+export const updateAndDeployTable = (
+  tableName: string,
+  columns: tAattributes,
+  deployedColumns: Set<string>,
+) => {
+  // For now we do not allow to drop columns
+  const queryTemplate = `ALTER TABLE {TABLE_NAME}\n{COLUMNS}\n`;
+  const fullAttSet = Object.assign(baseModelColumns, columns);
+
+  const columnText = Object.entries(fullAttSet)
+    .map(([key, properties]) => {
+      const columnName = camelToSnakeCase(simplize(key));
+      if (deployedColumns.has(columnName)) {
+        return `MODIFY COLUMN ${camelToSnakeCase(
+          simplize(key),
+        )} ${generateColumnAttString(properties)}`;
+      } else {
+        return `ADD ${camelToSnakeCase(
+          simplize(key),
+        )} ${generateColumnAttString(properties)}`;
+      }
+    })
+    .join(`,\n`);
+
+  const query = createStringFromTemplate(
+    {
+      TABLE_NAME: tableName,
+      COLUMNS: columnText,
+    },
+    queryTemplate,
+  );
+  console.log(query);
+};
+
 const generateColumnAttString = (attribute: tAttributeItem) => {
   let attString = "";
   if (attribute.type === "String")

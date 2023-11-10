@@ -8,7 +8,6 @@ import { makeCreateModel } from "./lib/db/crudRepository/createModel.js";
 import { makeDeleteModel } from "./lib/db/crudRepository/deleteModel.js";
 import { makeReadModel } from "./lib/db/crudRepository/readModel.js";
 import { makeUpdateModel } from "./lib/db/crudRepository/updateModel.js";
-import { createAndDeployTable } from "./lib/db/migration/deployDb.js";
 import { generateCoreFiles } from "./lib/generateCoreFiles.js";
 import { generateId } from "./lib/generateId.js";
 import { validateModelZod as validateModel } from "./lib/validation/zodValidation.js";
@@ -52,12 +51,21 @@ if (options.init && !options.generate) {
 }
 
 if (options.Test) {
-  const temp: tAattributes = {
-    OrderNo: { type: "Number", flags: "KMI-" },
-    TotalAmount: { type: "Number", flags: "AMIU" },
-    Date: { type: "Date", flags: "A-I-" },
-  };
-  createAndDeployTable("CUSTOMER_ORDER2", temp);
+  // const temp: tAattributes = {
+  //   OrderNo: { type: "Number", flags: "KMI-" },
+  //   TotalAmount: { type: "Number", flags: "AMIU" },
+  //   Date: { type: "Date", flags: "A-I-" },
+  //   Customer: { type: "String", maxLength: 21, flags: "A-IU" },
+  // };
+  // const deployedCols = new Set<string>();
+  // deployedCols.add("ORDER_NO");
+  // deployedCols.add("ID");
+  // deployedCols.add("UPDATED_AT");
+  // deployedCols.add("CREATED_AT");
+  // deployedCols.add("TOTAL_AMOUNT");
+  // deployedCols.add("DATE");
+  // deployedCols.add("CUSTOMER");
+  // updateAndDeployTable("CUSTOMER_ORDER2", temp, deployedCols);
   console.log("Tets");
 }
 
