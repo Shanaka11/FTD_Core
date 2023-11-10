@@ -1,7 +1,7 @@
 import { tAattributes } from "../../types/ftdSchema";
 
 export const baseModelColumns: tAattributes = {
-  id: { type: "String", maxLength: 36, flags: "KMI-" },
-  createdAt: { type: "Date", flags: "AMI-" },
-  updatedAt: { type: "Date", flags: "AMIU" },
+  Id: { type: "String", maxLength: 36, flags: "KMI-" },
+  CreatedAt: { type: "Date", flags: "AMI-" },
+  UpdatedAt: { type: "Date", flags: "AMIU" },
 };

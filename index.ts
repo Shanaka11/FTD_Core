@@ -8,9 +8,11 @@ import { makeCreateModel } from "./lib/db/crudRepository/createModel.js";
 import { makeDeleteModel } from "./lib/db/crudRepository/deleteModel.js";
 import { makeReadModel } from "./lib/db/crudRepository/readModel.js";
 import { makeUpdateModel } from "./lib/db/crudRepository/updateModel.js";
+import { createAndDeployTable } from "./lib/db/migration/deployDb.js";
 import { generateCoreFiles } from "./lib/generateCoreFiles.js";
 import { generateId } from "./lib/generateId.js";
 import { validateModelZod as validateModel } from "./lib/validation/zodValidation.js";
+import { tAattributes } from "./types/ftdSchema.js";
 import { makeModelParams, TRawData } from "./types/makeModelParams.js";
 import {
   TExecuteQuery,
@@ -50,6 +52,12 @@ if (options.init && !options.generate) {
 }
 
 if (options.Test) {
+  const temp: tAattributes = {
+    OrderNo: { type: "Number", flags: "KMI-" },
+    TotalAmount: { type: "Number", flags: "AMIU" },
+    Date: { type: "Date", flags: "A-I-" },
+  };
+  createAndDeployTable("CUSTOMER_ORDER2", temp);
   console.log("Tets");
 }
 

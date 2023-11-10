@@ -6,13 +6,15 @@ import { generateModel } from "./codeGen/generateModel.js";
 import { generateUseCase } from "./codeGen/generateUseCase.js";
 import { generateUseCaseStubs } from "./codeGen/generateUseCaseStubs.js";
 import { simplize } from "./codeGen/textUtils.js";
+import { findFilesWithExtension } from "./common/findFilesWithExtention.js";
+import { srcPath } from "./common/srcPath.js";
 
 // import { fileURLToPath } from "url";
 
 export const generateCoreFiles = (dirPath?: string) => {
   try {
     if (dirPath != undefined) {
-      generateCoreFiles_(path.join(process.cwd(), "src", dirPath));
+      generateCoreFiles_(path.join(srcPath, dirPath));
       return;
     }
     // Generate Model File
@@ -20,7 +22,7 @@ export const generateCoreFiles = (dirPath?: string) => {
     // As a start do not use the config file
     // All files will be generated in this iteration
     // Search for files in the src folder (Fore now we assume sources are in the src/<Models> folder, this can be a src/server/<model> or server/<model> depending on whats defined as the src in the config file)
-    generateCoreFiles_(path.join(process.cwd(), "src"));
+    generateCoreFiles_(srcPath);
   } catch (err) {
     if (err instanceof Error) {
       // e is narrowed to Error!
@@ -87,26 +89,4 @@ const generateCoreFiles_ = (dirPath: string) => {
       );
     }
   });
-};
-
-const findFilesWithExtension = (rootDir: string, extension: string) => {
-  const fileList: string[] = [];
-
-  const traverseDir = (currentDir: string) => {
-    const files = fs.readdirSync(currentDir);
-
-    for (const file of files) {
-      const filePath = path.join(currentDir, file);
-      const stat = fs.statSync(filePath);
-
-      if (stat.isDirectory()) {
-        traverseDir(filePath);
-      } else if (file.endsWith(extension)) {
-        fileList.push(filePath);
-      }
-    }
-  };
-
-  traverseDir(rootDir);
-  return fileList;
 };
