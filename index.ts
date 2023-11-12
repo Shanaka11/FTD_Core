@@ -8,10 +8,10 @@ import { makeCreateModel } from "./lib/db/crudRepository/createModel.js";
 import { makeDeleteModel } from "./lib/db/crudRepository/deleteModel.js";
 import { makeReadModel } from "./lib/db/crudRepository/readModel.js";
 import { makeUpdateModel } from "./lib/db/crudRepository/updateModel.js";
+import { deployDb } from "./lib/db/migration/deployDb.js";
 import { generateCoreFiles } from "./lib/generateCoreFiles.js";
 import { generateId } from "./lib/generateId.js";
 import { validateModelZod as validateModel } from "./lib/validation/zodValidation.js";
-import { tAattributes } from "./types/ftdSchema.js";
 import { makeModelParams, TRawData } from "./types/makeModelParams.js";
 import {
   TExecuteQuery,
@@ -33,6 +33,7 @@ program
   .description("An example CLI for managing a directory")
   .option("-gen, --generate  [value]", "Generate core code from schema")
   .option("-init, --init", "Create the default ftdConfig.json file")
+  .option("-deploy", "Deploy the tables to the db")
   .option("-test", "test scripts")
   .parse(process.argv);
 
@@ -48,6 +49,12 @@ if (options.generate != undefined) {
 
 if (options.init && !options.generate) {
   createDefaultConfig();
+}
+
+if (options.Deploy && !options.generate) {
+  await deployDb();
+  console.log("Db Deployment Completed");
+  process.exit(0);
 }
 
 if (options.Test) {

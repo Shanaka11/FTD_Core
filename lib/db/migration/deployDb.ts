@@ -1,5 +1,5 @@
 import fs from "fs";
-import path from "path";
+// import path from "path";
 import { RowDataPacket } from "mysql2";
 
 import { tAattributes, tAttributeItem } from "../../../types/ftdSchema.js";
@@ -20,42 +20,54 @@ import { makeExecuteQuery } from "../connecter/mysql/executeQuery.js";
 
 const DB = "dev";
 
+// When foreign keys are introduced, maybe we have to figure out the deployment order
 // Finally, Automatically detect changed model files and deploy tables only related to that
 export const deployDb = async () => {
   // Get the model files
-  const extension = ".ftd.json";
-  const result = findFilesWithExtension(srcPath, extension);
-  // Try making this async ?
-  const tables = await getDeployedTables();
-  result.map((filePath) => {
-    const data: string = fs.readFileSync(filePath, "utf-8");
-    const modelSchema: unknown = JSON.parse(data);
-    if (isTModel(modelSchema)) {
-      const directory = path.dirname(filePath);
-      const { name, attributes } = modelSchema;
+  try {
+    const extension = ".ftd.json";
+    const result = findFilesWithExtension(srcPath, extension);
+    const tables = await getDeployedTables();
 
-      const tableName = camelToSnakeCase(simplize(name));
-      // Check if the table exist if exist then we should use alter table else create table
-      if (tables.get(tableName) === undefined) {
-        // Alter table
-        // Check if the column exist, if exist then update it, else add it
+    for (const filePath of result) {
+      const data = fs.readFileSync(filePath, "utf-8");
+      const modelSchema: unknown = JSON.parse(data);
+
+      if (isTModel(modelSchema)) {
+        const { name, attributes } = modelSchema;
+        const tableName = camelToSnakeCase(simplize(name));
+        if (tables.get(tableName) !== undefined) {
+          console.log(`${tableName}: Updating`);
+          await updateAndDeployTable(
+            tableName,
+            attributes,
+            tables.get(tableName),
+          );
+          console.log(`${tableName}: Updated`);
+        } else {
+          console.log(`${tableName}: Creating`);
+          await createAndDeployTable(tableName, attributes);
+          console.log(`${tableName}: Created`);
+        }
       } else {
-        // Create table
-        createAndDeployTable(tableName, attributes);
+        const filename = filePath.replace(/^.*[\\/]/, "");
+        throw new Error(
+          `Schema error, Please check ${simplize(filename)} for errors.`,
+        );
       }
-      console.log(tableName, attributes, directory);
-    } else {
-      const filename = filePath.replace(/^.*[\\/]/, "");
-      throw new Error(
-        `Schema error, Please check ${simplize(filename)} for errors.`,
-      );
     }
-  });
+  } catch (e) {
+    if (e instanceof Error) {
+      console.log(e.message);
+      return Promise.reject(new Error("Db Deplyment failed"));
+    }
+  }
 };
 
 const getDeployedTables = async () => {
   const tables = new Map<string, Set<string>>();
-  const executeQuery = makeExecuteQuery(await getConnection());
+  const connection = await getConnection();
+  const executeQuery = makeExecuteQuery(connection);
   const query = `SELECT TABLE_NAME, COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '${DB}'`;
   const dbTables = (await executeQuery(query)) as RowDataPacket[];
 
@@ -63,20 +75,21 @@ const getDeployedTables = async () => {
     const tableName = table["TABLE_NAME"] as string;
     const columnName = table["COLUMN_NAME"] as string;
     const columns = tables.get(tableName);
+
     if (columns === undefined) {
       tables.set(tableName, new Set<string>().add(columnName));
     } else {
-      tables.set(tableName, columns);
+      tables.set(tableName, columns.add(columnName));
     }
   });
   return tables;
 };
 
-export const createAndDeployTable = (
+export const createAndDeployTable = async (
   tableName: string,
   columns: tAattributes,
 ) => {
-  const queryTemplate = `CREATE TABLE {TABLE_NAME} (\n{COLUMNS}\n)`;
+  const queryTemplate = `CREATE TABLE {TABLE_NAME} (\n{COLUMNS},\nPRIMARY KEY(ID),\n{INDEX})`;
   const fullAttSet = Object.assign(baseModelColumns, columns);
 
   const columnText = Object.entries(fullAttSet)
@@ -87,32 +100,36 @@ export const createAndDeployTable = (
     })
     .join(`,\n`);
 
+  // Model Key
+  const index = `${createModelKeyIndex(columns, false)}`;
+
   const query = createStringFromTemplate(
     {
       TABLE_NAME: tableName,
       COLUMNS: columnText,
+      INDEX: index,
     },
     queryTemplate,
   );
-  // Primary Key, Model Key
-  //   const indexes = "";
   // Foreign Key constraints (One to One, One to Many, on_Delete behaviour)
-  console.log(query);
+  const executeQuery = makeExecuteQuery(await getConnection());
+  await executeQuery(query);
 };
 
-export const updateAndDeployTable = (
+export const updateAndDeployTable = async (
   tableName: string,
   columns: tAattributes,
-  deployedColumns: Set<string>,
+  deployedColumns?: Set<string>,
 ) => {
   // For now we do not allow to drop columns
-  const queryTemplate = `ALTER TABLE {TABLE_NAME}\n{COLUMNS}\n`;
-  const fullAttSet = Object.assign(baseModelColumns, columns);
+  const queryTemplate = `ALTER TABLE {TABLE_NAME}\n{COLUMNS},\n{INDEX}`;
+  // When modifiying tables we do not change the base columns
+  //   const fullAttSet = Object.assign(baseModelColumns, columns);
 
-  const columnText = Object.entries(fullAttSet)
+  const columnText = Object.entries(columns)
     .map(([key, properties]) => {
       const columnName = camelToSnakeCase(simplize(key));
-      if (deployedColumns.has(columnName)) {
+      if (deployedColumns?.has(columnName)) {
         return `MODIFY COLUMN ${camelToSnakeCase(
           simplize(key),
         )} ${generateColumnAttString(properties)}`;
@@ -124,14 +141,21 @@ export const updateAndDeployTable = (
     })
     .join(`,\n`);
 
+  // Model Key
+  const index = `${createModelKeyIndex(columns, true)}`;
+
   const query = createStringFromTemplate(
     {
       TABLE_NAME: tableName,
       COLUMNS: columnText,
+      INDEX: index,
     },
     queryTemplate,
   );
-  console.log(query);
+
+  // Foreign Key constraints (One to One, One to Many, on_Delete behaviour)
+  const executeQuery = makeExecuteQuery(await getConnection());
+  await executeQuery(query);
 };
 
 const generateColumnAttString = (attribute: tAttributeItem) => {
@@ -150,6 +174,25 @@ const generateColumnAttString = (attribute: tAttributeItem) => {
   return attString;
 };
 
+export const createModelKeyIndex = (columns: tAattributes, update: boolean) => {
+  const keyString = Object.entries(columns).reduce((acc, [key, value]) => {
+    if (value.flags === "KMI-") {
+      if (acc === ``) {
+        acc = camelToSnakeCase(simplize(key));
+      } else {
+        acc = acc + ", " + camelToSnakeCase(simplize(key));
+      }
+    }
+    return acc;
+  }, ``);
+
+  // When updating we should drop the existing modelKey constraint and create it again with the new fields
+  if (update) {
+    return `DROP CONSTRAINT MODEL_KEYS,\nADD CONSTRAINT MODEL_KEYS UNIQUE (${keyString})`;
+  }
+
+  return `UNIQUE INDEX MODEL_KEYS (${keyString})`;
+};
 // CREATE TABLE product_order (
 //     no INT NOT NULL AUTO_INCREMENT,
 //     product_category INT NOT NULL,
