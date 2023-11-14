@@ -11,7 +11,6 @@ import { makeCustomerOrder, TCustomerOrder } from "./customerOrder.gen.js";
 
 export type TCustomerOrderKey = {
   orderNo: number;
-  totalAmount: number;
 };
 
 export const makeReadCustomerOrderBaseUseCase = ({
