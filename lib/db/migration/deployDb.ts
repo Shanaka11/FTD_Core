@@ -10,9 +10,6 @@ import {
   simplize,
 } from "../../codeGen/textUtils.js";
 import { baseModelColumns } from "../../common/baseModelColumns.js";
-// For now assume we will deploy all tables every time
-// After that is done then figure out a way to deploy specific tables (flie path for a model file)
-
 import {
   findFilesByName,
   findFilesWithExtension,
@@ -21,18 +18,12 @@ import { srcPath } from "../../common/srcPath.js";
 import { getConnection } from "../connecter/mysql/connecter.js";
 import { makeExecuteQuery } from "../connecter/mysql/executeQuery.js";
 
-const DB = "dev";
-
 // When foreign keys are introduced, maybe we have to figure out the deployment order
 // Finally, Automatically detect changed model files and deploy tables only related to that
 export const deployDb = async (filename: string) => {
   // Get the model files
   try {
     const result = getFiles(filename);
-    for (const filePath of result) {
-      const lastModified = fs.statSync(filePath).mtime;
-      console.log(lastModified);
-    }
     const tables = await getDeployedTables();
 
     for (const filePath of result) {
@@ -74,7 +65,7 @@ const getDeployedTables = async () => {
   const tables = new Map<string, Set<string>>();
   const connection = await getConnection();
   const executeQuery = makeExecuteQuery(connection);
-  const query = `SELECT TABLE_NAME, COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '${DB}'`;
+  const query = `SELECT TABLE_NAME, COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '${process.env.DB_NAME}'`;
   const dbTables = (await executeQuery(query)) as RowDataPacket[];
 
   dbTables.forEach((table) => {
