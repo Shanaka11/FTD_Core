@@ -8,7 +8,8 @@ export const makeExecuteQuery =
     } catch (e) {
       // await pool.releas
       if (e instanceof Error) {
-        throw new Error(`DB Connection Error: ${e.message}`);
+        connection.release();
+        throw new Error(e.message);
       } else {
         throw e;
       }
