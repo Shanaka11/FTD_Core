@@ -6,7 +6,7 @@ import { generateModel } from "./codeGen/generateModel.js";
 import { generateUseCase } from "./codeGen/generateUseCase.js";
 import { generateUseCaseStubs } from "./codeGen/generateUseCaseStubs.js";
 import { simplize } from "./codeGen/textUtils.js";
-import { findFilesWithExtension } from "./common/findFilesWithExtention.js";
+import { findFilesWithExtension } from "./common/findFiles.js";
 import { srcPath } from "./common/srcPath.js";
 
 // import { fileURLToPath } from "url";

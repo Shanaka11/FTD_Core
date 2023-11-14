@@ -33,7 +33,7 @@ program
   .description("An example CLI for managing a directory")
   .option("-gen, --generate  [value]", "Generate core code from schema")
   .option("-init, --init", "Create the default ftdConfig.json file")
-  .option("-deploy", "Deploy the tables to the db")
+  .option("-deploy [value]", "Deploy the tables to the db")
   .option("-test", "test scripts")
   .parse(process.argv);
 
@@ -52,9 +52,15 @@ if (options.init && !options.generate) {
 }
 
 if (options.Deploy && !options.generate) {
-  await deployDb();
-  console.log("Db Deployment Completed");
-  process.exit(0);
+  if (options.Deploy === true) {
+    console.log(
+      "Please enter the model file to be deployed, if you want to deploy all files use the command -deploy all",
+    );
+  } else {
+    await deployDb(options.Deploy as string);
+    console.log("Db Deployment Completed");
+    process.exit(0);
+  }
 }
 
 if (options.Test) {
