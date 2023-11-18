@@ -53,7 +53,45 @@
       "minProperties": 1,
       "patternProperties": {
         "^[a-zA-Z0-9]+$": {
-          "type": "object"
+          "type": "object",
+          "required": [
+            "model",
+            "relationship",
+            "mappingFrom",
+            "mappingTo",
+            "onDelete"
+          ],
+          "properties": {
+            "model": {
+              "type": "string"
+            },
+            "relationship": {
+              "type": "string",
+              "enum": ["ONE_TO_ONE", "ONE_TO_MANY"]
+            },
+            "mapping": {
+              "type": "object",
+              "required": ["from", "to"],
+              "properties": {
+                "from": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "to": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "onDelete": {
+              "type": "string",
+              "enum": ["SET NULL", "RESTRICT", "CASCADE"]
+            }
+          }
         }
       }
     }
