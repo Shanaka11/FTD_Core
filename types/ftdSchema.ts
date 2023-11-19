@@ -14,7 +14,23 @@ export type tAttributeItem = {
 
 export type tAattributes = Record<string, tAttributeItem>;
 
+type tRelationship = Record<string, tRelationshipAttr>;
+
+type tOnDelete = "CASCADE" | "RESTRICT" | "SET NULL";
+type tRelationshipType = "ONE_TO_ONE" | "ONE_TO_MANY" | "MANY_TO_MANY";
+type tRelationshipMapping = {
+  from: string[];
+  to: string[];
+};
+type tRelationshipAttr = {
+  model: string;
+  relationship: tRelationshipType;
+  mapping: tRelationshipMapping;
+  onDelete: tOnDelete;
+};
+
 export type tModel = {
   name: string;
   attributes: tAattributes;
+  relationships?: tRelationship;
 };
