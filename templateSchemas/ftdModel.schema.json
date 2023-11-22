@@ -67,7 +67,7 @@
             },
             "relationship": {
               "type": "string",
-              "enum": ["ONE_TO_ONE", "ONE_TO_MANY", "MANY_TO_MANY"]
+              "enum": ["ONE_TO_ONE", "ONE_TO_MANY"]
             },
             "mapping": {
               "type": "object",

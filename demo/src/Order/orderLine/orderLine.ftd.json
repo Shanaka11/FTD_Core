@@ -9,11 +9,11 @@
   },
   "relationships": {
     "OrderRef": {
-      "model": "order",
+      "model": "CustomerOrder",
       "relationship": "ONE_TO_ONE",
       "mapping": {
-        "from": ["orderNo"],
-        "to": ["orderNo"]
+        "from": ["OrderNo"],
+        "to": ["OrderNo"]
       },
       "onDelete": "CASCADE"
     }

@@ -10,10 +10,14 @@ import { makeCreateModel } from "./lib/db/crudRepository/createModel.js";
 import { makeDeleteModel } from "./lib/db/crudRepository/deleteModel.js";
 import { makeReadModel } from "./lib/db/crudRepository/readModel.js";
 import { makeUpdateModel } from "./lib/db/crudRepository/updateModel.js";
-import { deployDb } from "./lib/db/migration/deployDb.js";
+import {
+  deployDb,
+  initializedForeignKeyConstraintCreation,
+} from "./lib/db/migration/deployDb.js";
 import { generateCoreFiles } from "./lib/generateCoreFiles.js";
 import { generateId } from "./lib/generateId.js";
 import { validateModelZod as validateModel } from "./lib/validation/zodValidation.js";
+import { tAattributes, tRelationship } from "./types/ftdSchema.js";
 import { makeModelParams, TRawData } from "./types/makeModelParams.js";
 import {
   TExecuteQuery,
@@ -66,6 +70,38 @@ if (options.Deploy && !options.generate) {
 }
 
 if (options.Test) {
+  const map = new Map<string, tRelationship>();
+  const attrMap = new Map<string, tAattributes>();
+
+  const rel1: tRelationship = {
+    orderRef: {
+      model: "customerOrder",
+      relationship: "ONE_TO_ONE",
+      mapping: {
+        from: ["OrderNo"],
+        to: ["Id"],
+      },
+      onDelete: "CASCADE",
+    },
+    profileRef: {
+      model: "Profile",
+      relationship: "ONE_TO_ONE",
+      mapping: {
+        from: ["ProfileId"],
+        to: ["Id"],
+      },
+      onDelete: "RESTRICT",
+    },
+  };
+
+  const attr: tAattributes = {
+    OrderNo: { type: "Number", flags: "KMI-" },
+    ProfileId: { type: "Number", flags: "AMI-" },
+  };
+
+  map.set("OrderLine", rel1);
+  attrMap.set("OrderLine", attr);
+  await initializedForeignKeyConstraintCreation(map, attrMap);
   // const temp: tAattributes = {
   //   OrderNo: { type: "Number", flags: "KMI-" },
   //   TotalAmount: { type: "Number", flags: "AMIU" },
