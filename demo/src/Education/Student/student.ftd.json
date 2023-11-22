@@ -1,0 +1,7 @@
+{
+  "name": "Student",
+  "attributes": {
+    "StudentId": { "type": "Number", "flags": "KMI-" },
+    "Name": { "type": "String", "maxLength": 100, "flags": "AMIU" }
+  }
+}

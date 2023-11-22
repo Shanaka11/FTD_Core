@@ -222,13 +222,12 @@ export const initializedForeignKeyConstraintCreation = async (
     const [tableName, relationships] = tableRelationShips;
     const attributes = attributeMap.get(tableName);
     if (attributes) {
-      querySet.push(
-        await createAndDeployForeignKeyConstraintsForTable(
-          tableName,
-          relationships,
-          attributes,
-        ),
+      const tempQuery = await createAndDeployForeignKeyConstraintsForTable(
+        tableName,
+        relationships,
+        attributes,
       );
+      querySet.push(tempQuery);
     }
   }
   // console.log(querySet.join(";"));
@@ -306,7 +305,10 @@ const createAndDeployForeignKeyConstraintsForTable = async (
     },
     baseQuery,
   );
-  return dropQuery + ";" + query;
+  if (dropForeignKeysString.length > 0) {
+    return dropQuery + ";" + query;
+  }
+  return query;
 };
 
 const getDeployedIndexForTable = async (tableName: string) => {
@@ -317,7 +319,7 @@ const getDeployedIndexForTable = async (tableName: string) => {
 
   const indexes = (await executeQuery(query)) as { Key_name: string }[];
   indexes.forEach((index) => indexSet.add(index.Key_name));
-
+  connection.release();
   return indexSet;
 };
 
@@ -330,6 +332,7 @@ const getDeployedForeginKeysForTable = async (tableName: string) => {
   const foreignKeys = (await executeQuery(checkDeployedForeignKeysQuery)) as {
     CONSTRAINT_NAME: string;
   }[];
+  connection.release();
   const foreignKeySet = new Set<string>();
 
   foreignKeys.forEach((foreignKey) =>
