@@ -12,3 +12,6 @@ test.json
 demo/src/Order/customerOrder/customerOrderUseCases.ts
 demo/src/Order/orderLine/orderLineUseCases.ts
 demo/src/User/profile/profileUseCases.ts
+demo/src/Education/Course/courseUseCases.ts
+demo/src/Education/Enrolment/enrolmentUseCases.ts
+demo/src/Education/Student/studentUseCases.ts
