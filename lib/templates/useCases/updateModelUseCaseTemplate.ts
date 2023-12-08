@@ -1,6 +1,7 @@
 export const UPDATE_MODEL_USECASE_TEMPLATE = `export const makeUpdate{MODEL}BaseUseCase = ({
   validateModel,
   repository,
+  executeQuery,
 }: TBaseUseCase<{TNAME}>) => {
   return async (modelData: {TNAME}) => {
     if (repository.updateModel === undefined) {
@@ -19,7 +20,10 @@ export const UPDATE_MODEL_USECASE_TEMPLATE = `export const makeUpdate{MODEL}Base
       validateModel,
       repository,
       modelData,
+      executeQuery,
     });
+
+    validateRelationships_({MODELVAR}, executeQuery, "MODIFY");
 
     // Set UpdatedAt
     const sysDate = new Date();

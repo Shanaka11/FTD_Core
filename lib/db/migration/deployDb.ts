@@ -231,10 +231,12 @@ export const initializedForeignKeyConstraintCreation = async (
     }
   }
   // console.log(querySet.join(";"));
-  const connection = await getAdminConnection();
-  const executeQuery = makeExecuteQuery(connection);
-  await executeQuery(querySet.join(";"));
-  connection.destroy();
+  if (querySet.length > 0) {
+    const connection = await getAdminConnection();
+    const executeQuery = makeExecuteQuery(connection);
+    await executeQuery(querySet.join(";"));
+    connection.destroy();
+  }
 };
 
 const createAndDeployForeignKeyConstraintsForTable = async (

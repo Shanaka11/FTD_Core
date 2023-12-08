@@ -2,6 +2,7 @@ export const CREATE_MODEL_USECASE_TEMPLATE = `export const makeCreate{MODEL}Base
   generateId,
   validateModel,
   repository,
+  executeQuery,
 }: TBaseUseCase<{TNAME}>) => {
   return (modelData: Partial<{TNAME}>) => {
     if (repository.createModel === undefined) {
@@ -30,6 +31,8 @@ export const CREATE_MODEL_USECASE_TEMPLATE = `export const makeCreate{MODEL}Base
     // Check if the realtionships are valid, i.e primary keys match etc
     // Other validation, such as max, min, length, mandatory checks will be handled by zod
     const {MODELVAR} = create{MODEL}(modelData);
+
+    validateRelationships_({MODELVAR}, executeQuery, "INSERT");
 
     return repository.createModel({
       model: "{MODELVAR}",

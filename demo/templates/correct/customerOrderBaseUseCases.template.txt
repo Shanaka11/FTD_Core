@@ -3,11 +3,14 @@ import {
   isIdPresent,
   TBaseUseCase,
   TBaseUseCaseCheckChanged,
+  TExecuteQuery,
   TGetModelUseCase,
   TMakeGetModelUseCase,
 } from "@five12days/core";
 
+
 import { makeCustomerOrder, TCustomerOrder } from "./customerOrder.gen.js";
+import { readCustomerOrderUseCase_ } from "./customerOrderUseCases.js";
 
 export type TCustomerOrderKey = {
   orderNo: number;
@@ -15,6 +18,7 @@ export type TCustomerOrderKey = {
 
 export const makeReadCustomerOrderBaseUseCase = ({
   repository,
+  executeQuery,
 }: TMakeGetModelUseCase<TCustomerOrder>) => {
   return ({ keys, columns, filter }: TGetModelUseCase<TCustomerOrderKey>) => {
     if (repository.readModel === undefined)
@@ -35,6 +39,7 @@ export const makeCreateCustomerOrderBaseUseCase = ({
   generateId,
   validateModel,
   repository,
+  executeQuery,
 }: TBaseUseCase<TCustomerOrder>) => {
   return (modelData: Partial<TCustomerOrder>) => {
     if (repository.createModel === undefined) {
@@ -64,6 +69,8 @@ export const makeCreateCustomerOrderBaseUseCase = ({
     // Other validation, such as max, min, length, mandatory checks will be handled by zod
     const customerOrder = createCustomerOrder(modelData);
 
+    validateRelationships_(customerOrder, executeQuery, "INSERT");
+
     return repository.createModel({
       model: "customerOrder",
       modelData: customerOrder,
@@ -74,6 +81,7 @@ export const makeCreateCustomerOrderBaseUseCase = ({
 export const makeUpdateCustomerOrderBaseUseCase = ({
   validateModel,
   repository,
+  executeQuery,
 }: TBaseUseCase<TCustomerOrder>) => {
   return async (modelData: TCustomerOrder) => {
     if (repository.updateModel === undefined) {
@@ -92,7 +100,10 @@ export const makeUpdateCustomerOrderBaseUseCase = ({
       validateModel,
       repository,
       modelData,
+      executeQuery,
     });
+
+    validateRelationships_(customerOrder, executeQuery, "MODIFY");
 
     // Set UpdatedAt
     const sysDate = new Date();
@@ -109,6 +120,7 @@ export const makeUpdateCustomerOrderBaseUseCase = ({
 export const makeDeleteCustomerOrderBaseUseCase = ({
   validateModel,
   repository,
+  executeQuery,
 }: TBaseUseCase<TCustomerOrder>) => {
   return async (modelData: TCustomerOrder) => {
     if (repository.deleteModel === undefined) {
@@ -121,6 +133,7 @@ export const makeDeleteCustomerOrderBaseUseCase = ({
       validateModel,
       repository,
       modelData,
+      executeQuery,
     });
 
     return repository.deleteModel({
@@ -134,12 +147,14 @@ const checkCustomerOrderChanged = async ({
   validateModel,
   repository,
   modelData,
+  executeQuery,
 }: TBaseUseCaseCheckChanged<TCustomerOrder>) => {
   const createCustomerOrder = makeCustomerOrder({
     validateModel,
   });
   const readCustomerOrder = makeReadCustomerOrderBaseUseCase({
     repository,
+    executeQuery
   });
   const newCustomerOrder = createCustomerOrder(modelData);
   const oldCustomerOrder = await readCustomerOrder({
@@ -149,4 +164,44 @@ const checkCustomerOrderChanged = async ({
   if (newCustomerOrder.updatedAt.toISOString() !== oldCustomerOrder[0].updatedAt.toISOString())
     throw new Error("CustomerOrder is being modified by another user");
   return newCustomerOrder;
+};
+
+
+const validateRelationships_ = async (
+  customerOrder: TCustomerOrder,
+  executeQuery: TExecuteQuery,
+  action: 'INSERT' | 'MODIFY'
+) => {
+  // Check if a model exist for the same keys
+  await checkCustomerOrderExist_(
+    { orderNo: customerOrder.orderNo }, // Generate from keys
+    executeQuery,
+    action === "INSERT" ? "TRIGGER_WHEN_EXIST" : "TRIGGER_WHEN_NOT_EXIST",
+  );
+
+  // Check relationships
+  
+};
+
+export const checkCustomerOrderExist_ = async (
+  customerOrder: TCustomerOrderKey,
+  executeQuery: TExecuteQuery,
+  triggerException:
+    | "TRIGGER_WHEN_EXIST"
+    | "TRIGGER_WHEN_NOT_EXIST"
+    | "DO_NO_TRIGGER" = "DO_NO_TRIGGER",
+) => {
+  const existingCustomerOrder = await readCustomerOrderUseCase_(
+    { keys: { orderNo: customerOrder.orderNo } }, // Generate from keys
+    executeQuery,
+  );
+
+  if (existingCustomerOrder.length > 0) {
+    if (triggerException === "TRIGGER_WHEN_EXIST")
+      throw new Error("CustomerOrder already exists");
+    return true;
+  }
+  if (triggerException === "TRIGGER_WHEN_NOT_EXIST")
+    throw new Error("CustomerOrder does not exist");
+  return false;
 };

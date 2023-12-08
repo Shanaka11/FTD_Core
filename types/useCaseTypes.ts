@@ -1,5 +1,5 @@
 import { TRawData } from "./makeModelParams";
-import { TRepository } from "./repositoryTypes";
+import { TExecuteQuery, TRepository } from "./repositoryTypes";
 
 export type TModelKey = {
   id: string;
@@ -15,10 +15,12 @@ export type TBaseUseCase<T> = {
   generateId?: () => string;
   validateModel: (data: TRawData) => T;
   repository: TRepository<T>;
+  executeQuery: TExecuteQuery;
 };
 
 export type TMakeGetModelUseCase<T> = {
   repository: TRepository<T>;
+  executeQuery: TExecuteQuery;
 };
 
 export type TGetModelUseCase<T> = {

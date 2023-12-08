@@ -1,5 +1,6 @@
 export const READ_MODEL_USECASE_TEMPLATE = `export const makeRead{MODEL}BaseUseCase = ({
   repository,
+  executeQuery,
 }: TMakeGetModelUseCase<{TNAME}>) => {
   return ({ keys, columns, filter }: TGetModelUseCase<{TNAME}Key>) => {
     if (repository.readModel === undefined)

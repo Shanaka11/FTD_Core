@@ -3,11 +3,14 @@ import {
   isIdPresent,
   TBaseUseCase,
   TBaseUseCaseCheckChanged,
+  TExecuteQuery,
   TGetModelUseCase,
   TMakeGetModelUseCase,
 } from "@five12days/core";
 
+
 import { makeProfile, TProfile } from "./profile.gen.js";
+import { readProfileUseCase_ } from "./profileUseCases.js";
 
 export type TProfileKey = {
   profileId: number;
@@ -15,6 +18,7 @@ export type TProfileKey = {
 
 export const makeReadProfileBaseUseCase = ({
   repository,
+  executeQuery,
 }: TMakeGetModelUseCase<TProfile>) => {
   return ({ keys, columns, filter }: TGetModelUseCase<TProfileKey>) => {
     if (repository.readModel === undefined)
@@ -35,6 +39,7 @@ export const makeCreateProfileBaseUseCase = ({
   generateId,
   validateModel,
   repository,
+  executeQuery,
 }: TBaseUseCase<TProfile>) => {
   return (modelData: Partial<TProfile>) => {
     if (repository.createModel === undefined) {
@@ -64,6 +69,8 @@ export const makeCreateProfileBaseUseCase = ({
     // Other validation, such as max, min, length, mandatory checks will be handled by zod
     const profile = createProfile(modelData);
 
+    validateRelationships_(profile, executeQuery, "INSERT");
+
     return repository.createModel({
       model: "profile",
       modelData: profile,
@@ -74,6 +81,7 @@ export const makeCreateProfileBaseUseCase = ({
 export const makeUpdateProfileBaseUseCase = ({
   validateModel,
   repository,
+  executeQuery,
 }: TBaseUseCase<TProfile>) => {
   return async (modelData: TProfile) => {
     if (repository.updateModel === undefined) {
@@ -92,7 +100,10 @@ export const makeUpdateProfileBaseUseCase = ({
       validateModel,
       repository,
       modelData,
+      executeQuery,
     });
+
+    validateRelationships_(profile, executeQuery, "MODIFY");
 
     // Set UpdatedAt
     const sysDate = new Date();
@@ -109,6 +120,7 @@ export const makeUpdateProfileBaseUseCase = ({
 export const makeDeleteProfileBaseUseCase = ({
   validateModel,
   repository,
+  executeQuery,
 }: TBaseUseCase<TProfile>) => {
   return async (modelData: TProfile) => {
     if (repository.deleteModel === undefined) {
@@ -121,6 +133,7 @@ export const makeDeleteProfileBaseUseCase = ({
       validateModel,
       repository,
       modelData,
+      executeQuery,
     });
 
     return repository.deleteModel({
@@ -134,12 +147,14 @@ const checkProfileChanged = async ({
   validateModel,
   repository,
   modelData,
+  executeQuery,
 }: TBaseUseCaseCheckChanged<TProfile>) => {
   const createProfile = makeProfile({
     validateModel,
   });
   const readProfile = makeReadProfileBaseUseCase({
     repository,
+    executeQuery
   });
   const newProfile = createProfile(modelData);
   const oldProfile = await readProfile({
@@ -149,4 +164,44 @@ const checkProfileChanged = async ({
   if (newProfile.updatedAt.toISOString() !== oldProfile[0].updatedAt.toISOString())
     throw new Error("Profile is being modified by another user");
   return newProfile;
+};
+
+
+const validateRelationships_ = async (
+  profile: TProfile,
+  executeQuery: TExecuteQuery,
+  action: 'INSERT' | 'MODIFY'
+) => {
+  // Check if a model exist for the same keys
+  await checkProfileExist_(
+    { profileId: profile.profileId }, // Generate from keys
+    executeQuery,
+    action === "INSERT" ? "TRIGGER_WHEN_EXIST" : "TRIGGER_WHEN_NOT_EXIST",
+  );
+
+  // Check relationships
+  
+};
+
+export const checkProfileExist_ = async (
+  profile: TProfileKey,
+  executeQuery: TExecuteQuery,
+  triggerException:
+    | "TRIGGER_WHEN_EXIST"
+    | "TRIGGER_WHEN_NOT_EXIST"
+    | "DO_NO_TRIGGER" = "DO_NO_TRIGGER",
+) => {
+  const existingProfile = await readProfileUseCase_(
+    { keys: { profileId: profile.profileId } }, // Generate from keys
+    executeQuery,
+  );
+
+  if (existingProfile.length > 0) {
+    if (triggerException === "TRIGGER_WHEN_EXIST")
+      throw new Error("Profile already exists");
+    return true;
+  }
+  if (triggerException === "TRIGGER_WHEN_NOT_EXIST")
+    throw new Error("Profile does not exist");
+  return false;
 };

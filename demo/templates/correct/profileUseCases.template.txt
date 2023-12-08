@@ -32,6 +32,7 @@ export const readProfileUseCase_ = async (
   // Add business logic that should be executed before the core method
   const readProfileBaseUseCase = makeReadProfileBaseUseCase({
     repository: { readModel: makeReadModel(executeQuery) },
+    executeQuery,
   });
   const profiles = await readProfileBaseUseCase({
     keys,
@@ -62,8 +63,9 @@ export const createProfileUseCase_ = async (
     validateModel: validateProfileModel,
     repository: {
       readModel: makeReadModel(executeQuery),
-      createModel: makeCreateModel(executeQuery),
+      createModel: makeCreateModel(executeQuery),      
     },
+    executeQuery,
   });
 
   const createdProfile = await createProfileBaseUseCase(profileData);
@@ -92,8 +94,9 @@ export const updateProfileUseCase_ = async (
     validateModel: validateProfileModel,
     repository: {
       readModel: makeReadModel(executeQuery),
-      updateModel: makeUpdateModel(executeQuery),
+      updateModel: makeUpdateModel(executeQuery),      
     },
+    executeQuery,
   });
 
   const updatedProfile = await updateProfileBaseUseCase(profileData);
@@ -122,8 +125,9 @@ export const deleteProfileUseCase_ = async (
     validateModel: validateProfileModel,
     repository: {
       readModel: makeReadModel(executeQuery),
-      deleteModel: makeDeleteModel(executeQuery),
+      deleteModel: makeDeleteModel(executeQuery),      
     },
+    executeQuery,
   });
 
   const deletedProfile = deleteProfileBaseUseCase(profileData);
