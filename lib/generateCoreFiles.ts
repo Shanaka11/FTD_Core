@@ -10,19 +10,19 @@ import { findFilesWithExtension } from "./common/findFiles.js";
 import { srcPath } from "./common/srcPath.js";
 
 // import { fileURLToPath } from "url";
+export const modelMap = new Map<string, string>();
 
 export const generateCoreFiles = (dirPath?: string) => {
   try {
-    if (dirPath != undefined) {
-      generateCoreFiles_(path.join(srcPath, dirPath));
-      return;
-    }
     // Generate Model File
     // Generate UseCases and Stubs
     // As a start do not use the config file
     // All files will be generated in this iteration
     // Search for files in the src folder (Fore now we assume sources are in the src/<Models> folder, this can be a src/server/<model> or server/<model> depending on whats defined as the src in the config file)
-    generateCoreFiles_(srcPath);
+    generateCoreFiles_(srcPath, dirPath === undefined);
+    if (dirPath !== undefined) {
+      generateCoreFiles_(path.join(srcPath, dirPath));
+    }
   } catch (err) {
     if (err instanceof Error) {
       // e is narrowed to Error!
@@ -33,60 +33,76 @@ export const generateCoreFiles = (dirPath?: string) => {
   }
 };
 
-const generateCoreFiles_ = (dirPath: string) => {
+const generateCoreFiles_ = (dirPath: string, generate: boolean = true) => {
+  // console.log(dirPath);
   const rootFolder = dirPath; // Replace with your root folder path
   const extension = ".ftd.json";
   const result = findFilesWithExtension(rootFolder, extension);
-  // Try making this async ?
+  generateFolderStructure(result);
+  // Try making this async
   result.forEach((filePath) => {
-    const data: string = fs.readFileSync(filePath, "utf-8");
-    const modelData: unknown = JSON.parse(data);
-    if (isTModel(modelData)) {
-      const directory = path.dirname(filePath);
-      // Model
-      const modelCode = generateModel(modelData);
-      fs.writeFileSync(
-        `${directory}/${simplize(modelData.name)}.gen.ts`,
-        modelCode,
-      );
-      console.log(`${simplize(modelData.name)}.gen.ts Created successfully.`);
+    if (generate) {
+      const data: string = fs.readFileSync(filePath, "utf-8");
+      const modelData: unknown = JSON.parse(data);
+      if (isTModel(modelData)) {
+        const directory = path.dirname(filePath);
+        // Model
+        const modelCode = generateModel(modelData);
+        fs.writeFileSync(
+          `${directory}/${simplize(modelData.name)}.gen.ts`,
+          modelCode,
+        );
+        console.log(`${simplize(modelData.name)}.gen.ts Created successfully.`);
 
-      // Usecases
-      const useCaseCode = generateUseCase(modelData);
-      fs.writeFileSync(
-        `${directory}/${simplize(modelData.name)}BaseUseCases.gen.ts`,
-        useCaseCode,
-      );
-      console.log(
-        `${simplize(modelData.name)}BaseUseCases.gen.ts Created successfully.`,
-      );
-
-      // Usecase stubs
-      // Check if a file exists if so do not overwright it
-      const stubExists = fs.existsSync(
-        `${directory}/${simplize(modelData.name)}UseCases.ts`,
-      );
-      if (stubExists) {
+        // Usecases
+        const useCaseCode = generateUseCase(modelData);
+        fs.writeFileSync(
+          `${directory}/${simplize(modelData.name)}BaseUseCases.gen.ts`,
+          useCaseCode,
+        );
         console.log(
           `${simplize(
             modelData.name,
-          )}UseCases.ts Already exists, no file was generated.`,
+          )}BaseUseCases.gen.ts Created successfully.`,
         );
-      } else {
-        const useCaseStubCode = generateUseCaseStubs(modelData);
-        fs.writeFileSync(
+
+        // Usecase stubs
+        // Check if a file exists if so do not overwright it
+        const stubExists = fs.existsSync(
           `${directory}/${simplize(modelData.name)}UseCases.ts`,
-          useCaseStubCode,
         );
-        console.log(
-          `${simplize(modelData.name)}UseCases.ts Created successfully.`,
+        if (stubExists) {
+          console.log(
+            `${simplize(
+              modelData.name,
+            )}UseCases.ts Already exists, no file was generated.`,
+          );
+        } else {
+          const useCaseStubCode = generateUseCaseStubs(modelData);
+          fs.writeFileSync(
+            `${directory}/${simplize(modelData.name)}UseCases.ts`,
+            useCaseStubCode,
+          );
+          console.log(
+            `${simplize(modelData.name)}UseCases.ts Created successfully.`,
+          );
+        }
+      } else {
+        const filename = filePath.replace(/^.*[\\/]/, "");
+        throw new Error(
+          `Schema error, Please check ${simplize(filename)} for errors.`,
         );
       }
-    } else {
-      const filename = filePath.replace(/^.*[\\/]/, "");
-      throw new Error(
-        `Schema error, Please check ${simplize(filename)} for errors.`,
-      );
     }
+  });
+};
+
+const generateFolderStructure = (filePaths: string[]) => {
+  filePaths.forEach((filePath) => {
+    const relativePath = path.dirname(filePath.split(`${srcPath}/`)[1]);
+    const lastSlashIndex = relativePath.lastIndexOf("/");
+    const model =
+      lastSlashIndex !== -1 ? relativePath.slice(lastSlashIndex + 1) : filePath;
+    modelMap.set(simplize(model), relativePath);
   });
 };

@@ -1,6 +1,7 @@
 export const DELETE_MODEL_USECASE_TEMPLATE = `export const makeDelete{MODEL}BaseUseCase = ({
   validateModel,
   repository,
+  executeQuery,
 }: TBaseUseCase<{TNAME}>) => {
   return async (modelData: {TNAME}) => {
     if (repository.deleteModel === undefined) {
@@ -13,6 +14,7 @@ export const DELETE_MODEL_USECASE_TEMPLATE = `export const makeDelete{MODEL}Base
       validateModel,
       repository,
       modelData,
+      executeQuery,
     });
 
     return repository.deleteModel({

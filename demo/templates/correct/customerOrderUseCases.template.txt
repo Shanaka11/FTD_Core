@@ -32,6 +32,7 @@ export const readCustomerOrderUseCase_ = async (
   // Add business logic that should be executed before the core method
   const readCustomerOrderBaseUseCase = makeReadCustomerOrderBaseUseCase({
     repository: { readModel: makeReadModel(executeQuery) },
+    executeQuery,
   });
   const customerOrders = await readCustomerOrderBaseUseCase({
     keys,
@@ -62,8 +63,9 @@ export const createCustomerOrderUseCase_ = async (
     validateModel: validateCustomerOrderModel,
     repository: {
       readModel: makeReadModel(executeQuery),
-      createModel: makeCreateModel(executeQuery),
+      createModel: makeCreateModel(executeQuery),      
     },
+    executeQuery,
   });
 
   const createdCustomerOrder = await createCustomerOrderBaseUseCase(customerOrderData);
@@ -92,8 +94,9 @@ export const updateCustomerOrderUseCase_ = async (
     validateModel: validateCustomerOrderModel,
     repository: {
       readModel: makeReadModel(executeQuery),
-      updateModel: makeUpdateModel(executeQuery),
+      updateModel: makeUpdateModel(executeQuery),      
     },
+    executeQuery,
   });
 
   const updatedCustomerOrder = await updateCustomerOrderBaseUseCase(customerOrderData);
@@ -122,8 +125,9 @@ export const deleteCustomerOrderUseCase_ = async (
     validateModel: validateCustomerOrderModel,
     repository: {
       readModel: makeReadModel(executeQuery),
-      deleteModel: makeDeleteModel(executeQuery),
+      deleteModel: makeDeleteModel(executeQuery),      
     },
+    executeQuery,
   });
 
   const deletedCustomerOrder = deleteCustomerOrderBaseUseCase(customerOrderData);

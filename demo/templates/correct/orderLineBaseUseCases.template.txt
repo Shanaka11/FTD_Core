@@ -3,11 +3,14 @@ import {
   isIdPresent,
   TBaseUseCase,
   TBaseUseCaseCheckChanged,
+  TExecuteQuery,
   TGetModelUseCase,
   TMakeGetModelUseCase,
 } from "@five12days/core";
 
+import { checkCustomerOrderExist_ } from "../customerOrder/customerOrderBaseUseCases.gen.js";
 import { makeOrderLine, TOrderLine } from "./orderLine.gen.js";
+import { readOrderLineUseCase_ } from "./orderLineUseCases.js";
 
 export type TOrderLineKey = {
   orderNo: number;
@@ -16,6 +19,7 @@ export type TOrderLineKey = {
 
 export const makeReadOrderLineBaseUseCase = ({
   repository,
+  executeQuery,
 }: TMakeGetModelUseCase<TOrderLine>) => {
   return ({ keys, columns, filter }: TGetModelUseCase<TOrderLineKey>) => {
     if (repository.readModel === undefined)
@@ -36,6 +40,7 @@ export const makeCreateOrderLineBaseUseCase = ({
   generateId,
   validateModel,
   repository,
+  executeQuery,
 }: TBaseUseCase<TOrderLine>) => {
   return (modelData: Partial<TOrderLine>) => {
     if (repository.createModel === undefined) {
@@ -65,6 +70,8 @@ export const makeCreateOrderLineBaseUseCase = ({
     // Other validation, such as max, min, length, mandatory checks will be handled by zod
     const orderLine = createOrderLine(modelData);
 
+    validateRelationships_(orderLine, executeQuery, "INSERT");
+
     return repository.createModel({
       model: "orderLine",
       modelData: orderLine,
@@ -75,6 +82,7 @@ export const makeCreateOrderLineBaseUseCase = ({
 export const makeUpdateOrderLineBaseUseCase = ({
   validateModel,
   repository,
+  executeQuery,
 }: TBaseUseCase<TOrderLine>) => {
   return async (modelData: TOrderLine) => {
     if (repository.updateModel === undefined) {
@@ -93,7 +101,10 @@ export const makeUpdateOrderLineBaseUseCase = ({
       validateModel,
       repository,
       modelData,
+      executeQuery,
     });
+
+    validateRelationships_(orderLine, executeQuery, "MODIFY");
 
     // Set UpdatedAt
     const sysDate = new Date();
@@ -110,6 +121,7 @@ export const makeUpdateOrderLineBaseUseCase = ({
 export const makeDeleteOrderLineBaseUseCase = ({
   validateModel,
   repository,
+  executeQuery,
 }: TBaseUseCase<TOrderLine>) => {
   return async (modelData: TOrderLine) => {
     if (repository.deleteModel === undefined) {
@@ -122,6 +134,7 @@ export const makeDeleteOrderLineBaseUseCase = ({
       validateModel,
       repository,
       modelData,
+      executeQuery,
     });
 
     return repository.deleteModel({
@@ -135,12 +148,14 @@ const checkOrderLineChanged = async ({
   validateModel,
   repository,
   modelData,
+  executeQuery,
 }: TBaseUseCaseCheckChanged<TOrderLine>) => {
   const createOrderLine = makeOrderLine({
     validateModel,
   });
   const readOrderLine = makeReadOrderLineBaseUseCase({
     repository,
+    executeQuery
   });
   const newOrderLine = createOrderLine(modelData);
   const oldOrderLine = await readOrderLine({
@@ -150,4 +165,63 @@ const checkOrderLineChanged = async ({
   if (newOrderLine.updatedAt.toISOString() !== oldOrderLine[0].updatedAt.toISOString())
     throw new Error("OrderLine is being modified by another user");
   return newOrderLine;
+};
+
+
+const validateRelationships_ = async (
+  orderLine: TOrderLine,
+  executeQuery: TExecuteQuery,
+  action: 'INSERT' | 'MODIFY'
+) => {
+  // Check if a model exist for the same keys
+  await checkOrderLineExist_(
+    { orderNo: orderLine.orderNo, lineNo: orderLine.lineNo }, // Generate from keys
+    executeQuery,
+    action === "INSERT" ? "TRIGGER_WHEN_EXIST" : "TRIGGER_WHEN_NOT_EXIST",
+  );
+
+  // Check relationships
+  // Check the parent
+  await checkCustomerOrderExist_(
+    { orderNo: orderLine.orderNo },
+    executeQuery,
+    "TRIGGER_WHEN_NOT_EXIST",
+  );
+
+  // Check the children
+  const orderLines = await readOrderLineUseCase_(
+    {
+      filter: "OrderNo eq " + orderLine.orderNo
+    },
+    executeQuery,
+  );
+  if (orderLines.length > 0) {
+    throw new Error(
+      "orderLine with the " + "OrderNo = " + orderLine.orderNo + " already exist",
+    );
+  }
+  
+};
+
+export const checkOrderLineExist_ = async (
+  orderLine: TOrderLineKey,
+  executeQuery: TExecuteQuery,
+  triggerException:
+    | "TRIGGER_WHEN_EXIST"
+    | "TRIGGER_WHEN_NOT_EXIST"
+    | "DO_NO_TRIGGER" = "DO_NO_TRIGGER",
+) => {
+  const existingOrderLine = await readOrderLineUseCase_(
+    { keys: { orderNo: orderLine.orderNo, lineNo: orderLine.lineNo } }, // Generate from keys
+    executeQuery,
+  );
+
+  if (existingOrderLine.length > 0) {
+    if (triggerException === "TRIGGER_WHEN_EXIST")
+      throw new Error("OrderLine already exists");
+    return true;
+  }
+  if (triggerException === "TRIGGER_WHEN_NOT_EXIST")
+    throw new Error("OrderLine does not exist");
+  return false;
 };

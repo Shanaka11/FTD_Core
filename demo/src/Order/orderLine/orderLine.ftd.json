@@ -6,5 +6,16 @@
     "ItemNo": { "type": "String", "maxLength": 20, "flags": "AMIU" },
     "ItemDescription": { "type": "String", "maxLength": 100, "flags": "A-IU" },
     "Amount": { "type": "Number", "flags": "AMIU" }
+  },
+  "relationships": {
+    "OrderRef": {
+      "model": "CustomerOrder",
+      "relationship": "ONE_TO_ONE",
+      "mapping": {
+        "from": ["OrderNo"],
+        "to": ["OrderNo"]
+      },
+      "onDelete": "CASCADE"
+    }
   }
 }

@@ -2,12 +2,14 @@ export const CHECK_ORDER_CHANGED_TEMPLATE = `const check{MODEL}Changed = async (
   validateModel,
   repository,
   modelData,
+  executeQuery,
 }: TBaseUseCaseCheckChanged<{TNAME}>) => {
   const create{MODEL} = make{MODEL}({
     validateModel,
   });
   const read{MODEL} = makeRead{MODEL}BaseUseCase({
     repository,
+    executeQuery
   });
   const new{MODEL} = create{MODEL}(modelData);
   const old{MODEL} = await read{MODEL}({
