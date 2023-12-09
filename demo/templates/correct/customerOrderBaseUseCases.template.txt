@@ -1,5 +1,6 @@
 // Generated Code, Do not modify
 import {
+  checkIfFieldUpdated,
   isIdPresent,
   TBaseUseCase,
   TBaseUseCaseCheckChanged,
@@ -160,6 +161,9 @@ const checkCustomerOrderChanged = async ({
   const oldCustomerOrder = await readCustomerOrder({
     keys: { id: newCustomerOrder.id },
   });
+
+  // Check if the not updatable attributes were updated
+  checkIfFieldUpdated("orderNo", newCustomerOrder.orderNo, oldCustomerOrder[0].orderNo)
 
   if (newCustomerOrder.updatedAt.toISOString() !== oldCustomerOrder[0].updatedAt.toISOString())
     throw new Error("CustomerOrder is being modified by another user");

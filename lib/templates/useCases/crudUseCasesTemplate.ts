@@ -1,5 +1,5 @@
+import { CHECK_MODEL_CHANGED_TEMPLATE } from "./checkModelChangedTemplate.js";
 import { CHECK_MODEL_EXISTS_TEMPLATE } from "./checkModelExistsTemplate.js";
-import { CHECK_ORDER_CHANGED_TEMPLATE } from "./checkOrderChangedTemplate.js";
 import { CREATE_MODEL_USECASE_TEMPLATE } from "./createModelUseCaseTemplate.js";
 import { DELETE_MODEL_USECASE_TEMPLATE } from "./deleteModelUseCaseTemplate.js";
 import { READ_MODEL_USECASE_TEMPLATE } from "./readModelUseCaseTemplate.js";
@@ -8,6 +8,7 @@ import { VALIDATE_RELATIONSHIPS_TEMPLATE } from "./validateRelationshipsTemplate
 
 export const CURD_USECASES_TEMPLATE = `// Generated Code, Do not modify
 import {
+  checkIfFieldUpdated,
   isIdPresent,
   TBaseUseCase,
   TBaseUseCaseCheckChanged,
@@ -30,7 +31,7 @@ ${UPDATE_MODEL_USECASE_TEMPLATE}
 
 ${DELETE_MODEL_USECASE_TEMPLATE}
 
-${CHECK_ORDER_CHANGED_TEMPLATE}
+${CHECK_MODEL_CHANGED_TEMPLATE}
 
 ${VALIDATE_RELATIONSHIPS_TEMPLATE}
 

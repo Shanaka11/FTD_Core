@@ -1,5 +1,6 @@
 // Generated Code, Do not modify
 import {
+  checkIfFieldUpdated,
   isIdPresent,
   TBaseUseCase,
   TBaseUseCaseCheckChanged,
@@ -161,6 +162,10 @@ const checkOrderLineChanged = async ({
   const oldOrderLine = await readOrderLine({
     keys: { id: newOrderLine.id },
   });
+
+  // Check if the not updatable attributes were updated
+  
+    checkIfFieldUpdated("lineNo", newOrderLine.lineNo, oldOrderLine[0].lineNo)
 
   if (newOrderLine.updatedAt.toISOString() !== oldOrderLine[0].updatedAt.toISOString())
     throw new Error("OrderLine is being modified by another user");

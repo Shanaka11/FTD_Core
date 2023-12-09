@@ -3,6 +3,7 @@ import { Command } from "commander";
 
 import "dotenv/config";
 
+import { checkIfFieldUpdated } from "./lib/common/checkIfFieldUpdated.js";
 import { createDefaultConfig } from "./lib/createDefaultConfig.js";
 import { makeExecuteQuery } from "./lib/db/connecter/mysql/executeQuery.js";
 import { executeTransaction } from "./lib/db/connecter/mysql/executeTransaction.js";
@@ -140,4 +141,5 @@ export {
   makeExecuteQuery,
   executeTransaction,
   validateModel,
+  checkIfFieldUpdated,
 };

@@ -1,5 +1,6 @@
 // Generated Code, Do not modify
 import {
+  checkIfFieldUpdated,
   isIdPresent,
   TBaseUseCase,
   TBaseUseCaseCheckChanged,
@@ -160,6 +161,9 @@ const checkProfileChanged = async ({
   const oldProfile = await readProfile({
     keys: { id: newProfile.id },
   });
+
+  // Check if the not updatable attributes were updated
+  checkIfFieldUpdated("profileId", newProfile.profileId, oldProfile[0].profileId)
 
   if (newProfile.updatedAt.toISOString() !== oldProfile[0].updatedAt.toISOString())
     throw new Error("Profile is being modified by another user");

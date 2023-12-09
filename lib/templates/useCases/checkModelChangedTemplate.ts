@@ -1,4 +1,4 @@
-export const CHECK_ORDER_CHANGED_TEMPLATE = `const check{MODEL}Changed = async ({
+export const CHECK_MODEL_CHANGED_TEMPLATE = `const check{MODEL}Changed = async ({
   validateModel,
   repository,
   modelData,
@@ -15,6 +15,9 @@ export const CHECK_ORDER_CHANGED_TEMPLATE = `const check{MODEL}Changed = async (
   const old{MODEL} = await read{MODEL}({
     keys: { id: new{MODEL}.id },
   });
+
+  // Check if the not updatable attributes were updated
+  {CHECK_UPDATE}
 
   if (new{MODEL}.updatedAt.toISOString() !== old{MODEL}[0].updatedAt.toISOString())
     throw new Error("{MODEL} is being modified by another user");
