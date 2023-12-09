@@ -32,6 +32,10 @@ export const generateUseCase = (modelSchema: tModel) => {
       : "";
 
   const modelFilterString = generateKeyString(nameSimplized, attributes);
+  const modelCheckUpdateString = generateCheckUpdateString(
+    nameCapitalized,
+    attributes,
+  );
   const content = createStringFromTemplate(
     {
       MODEL: nameCapitalized,
@@ -44,6 +48,7 @@ export const generateUseCase = (modelSchema: tModel) => {
           : "",
       VALIDATION: validationBlocks,
       FILTERSTRING: modelFilterString,
+      CHECK_UPDATE: modelCheckUpdateString,
     },
     CURD_USECASES_TEMPLATE,
   );
@@ -254,5 +259,30 @@ const generateKeyString = (modelName: string, attributes: tAattributes) => {
       return `${retString}, ${simplize(item[0])}: ${modelName}.${simplize(
         item[0],
       )}`;
+    }, "");
+};
+
+const generateCheckUpdateString = (
+  modelName: string,
+  attributes: tAattributes,
+) => {
+  const templateString = `checkIfFieldUpdated("{COLUMN}", new${modelName}.{COLUMN}, old${modelName}[0].{COLUMN})`;
+
+  return Object.entries(attributes)
+    .filter(
+      ([, attribute]) =>
+        attribute.flags === "AMI-" || attribute.flags === "KMI-",
+    )
+    .reduce((retString, item) => {
+      if (retString.length === 0) {
+        return createStringFromTemplate(
+          { COLUMN: simplize(item[0]) },
+          templateString,
+        );
+      }
+      return `\n${
+        indent(2) +
+        createStringFromTemplate({ COLUMN: simplize(item[0]) }, templateString)
+      }`;
     }, "");
 };
