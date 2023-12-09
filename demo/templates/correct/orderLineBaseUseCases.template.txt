@@ -61,7 +61,7 @@ export const makeCreateOrderLineBaseUseCase = ({
     // Generate ID
     modelData.id = generateId();
     // Set CreatedAt
-    const sysDate = new Date();
+    const sysDate = Date.now();
     modelData.createdAt = sysDate;
     // Set UpdatedAt
     modelData.updatedAt = sysDate;
@@ -108,7 +108,7 @@ export const makeUpdateOrderLineBaseUseCase = ({
     validateRelationships_(orderLine, executeQuery, "MODIFY");
 
     // Set UpdatedAt
-    const sysDate = new Date();
+    const sysDate = Date.now();
     modelData.updatedAt = sysDate;
 
     return repository.updateModel({
@@ -167,7 +167,7 @@ const checkOrderLineChanged = async ({
   
     checkIfFieldUpdated("lineNo", newOrderLine.lineNo, oldOrderLine[0].lineNo)
 
-  if (newOrderLine.updatedAt.toISOString() !== oldOrderLine[0].updatedAt.toISOString())
+  if (newOrderLine.updatedAt !== oldOrderLine[0].updatedAt)
     throw new Error("OrderLine is being modified by another user");
   return newOrderLine;
 };

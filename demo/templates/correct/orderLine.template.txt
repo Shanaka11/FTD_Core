@@ -4,8 +4,8 @@ import { z } from "zod";
 
 export const orderLineSchema = z.object({
   id: z.string({ required_error: "Id cannot be null" }),
-  createdAt: z.date({ required_error: "CreatedAt cannot be null" }),
-  updatedAt: z.date({ required_error: "UpdatedAt cannot be null" }),
+  createdAt: z.number({ required_error: "CreatedAt cannot be null" }),
+  updatedAt: z.number({ required_error: "UpdatedAt cannot be null" }),
   orderNo: z.number({ required_error: "OrderNo cannot be null" }),
   lineNo: z.number({ required_error: "LineNo cannot be null" }),
   itemNo: z.string({ required_error: "ItemNo cannot be null" }).max(20),

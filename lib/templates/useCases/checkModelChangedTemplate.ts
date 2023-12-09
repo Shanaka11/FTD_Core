@@ -19,7 +19,7 @@ export const CHECK_MODEL_CHANGED_TEMPLATE = `const check{MODEL}Changed = async (
   // Check if the not updatable attributes were updated
   {CHECK_UPDATE}
 
-  if (new{MODEL}.updatedAt.toISOString() !== old{MODEL}[0].updatedAt.toISOString())
+  if (new{MODEL}.updatedAt !== old{MODEL}[0].updatedAt)
     throw new Error("{MODEL} is being modified by another user");
   return new{MODEL};
 };`;
