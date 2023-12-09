@@ -60,7 +60,7 @@ export const makeCreateCustomerOrderBaseUseCase = ({
     // Generate ID
     modelData.id = generateId();
     // Set CreatedAt
-    const sysDate = new Date();
+    const sysDate = Date.now();
     modelData.createdAt = sysDate;
     // Set UpdatedAt
     modelData.updatedAt = sysDate;
@@ -107,7 +107,7 @@ export const makeUpdateCustomerOrderBaseUseCase = ({
     validateRelationships_(customerOrder, executeQuery, "MODIFY");
 
     // Set UpdatedAt
-    const sysDate = new Date();
+    const sysDate = Date.now();
     modelData.updatedAt = sysDate;
 
     return repository.updateModel({
@@ -165,7 +165,7 @@ const checkCustomerOrderChanged = async ({
   // Check if the not updatable attributes were updated
   checkIfFieldUpdated("orderNo", newCustomerOrder.orderNo, oldCustomerOrder[0].orderNo)
 
-  if (newCustomerOrder.updatedAt.toISOString() !== oldCustomerOrder[0].updatedAt.toISOString())
+  if (newCustomerOrder.updatedAt !== oldCustomerOrder[0].updatedAt)
     throw new Error("CustomerOrder is being modified by another user");
   return newCustomerOrder;
 };

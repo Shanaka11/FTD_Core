@@ -60,7 +60,7 @@ export const makeCreateProfileBaseUseCase = ({
     // Generate ID
     modelData.id = generateId();
     // Set CreatedAt
-    const sysDate = new Date();
+    const sysDate = Date.now();
     modelData.createdAt = sysDate;
     // Set UpdatedAt
     modelData.updatedAt = sysDate;
@@ -107,7 +107,7 @@ export const makeUpdateProfileBaseUseCase = ({
     validateRelationships_(profile, executeQuery, "MODIFY");
 
     // Set UpdatedAt
-    const sysDate = new Date();
+    const sysDate = Date.now();
     modelData.updatedAt = sysDate;
 
     return repository.updateModel({
@@ -165,7 +165,7 @@ const checkProfileChanged = async ({
   // Check if the not updatable attributes were updated
   checkIfFieldUpdated("profileId", newProfile.profileId, oldProfile[0].profileId)
 
-  if (newProfile.updatedAt.toISOString() !== oldProfile[0].updatedAt.toISOString())
+  if (newProfile.updatedAt !== oldProfile[0].updatedAt)
     throw new Error("Profile is being modified by another user");
   return newProfile;
 };

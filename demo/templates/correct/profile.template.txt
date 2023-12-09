@@ -4,8 +4,8 @@ import { z } from "zod";
 
 export const profileSchema = z.object({
   id: z.string({ required_error: "Id cannot be null" }),
-  createdAt: z.date({ required_error: "CreatedAt cannot be null" }),
-  updatedAt: z.date({ required_error: "UpdatedAt cannot be null" }),
+  createdAt: z.number({ required_error: "CreatedAt cannot be null" }),
+  updatedAt: z.number({ required_error: "UpdatedAt cannot be null" }),
   profileId: z.number({ required_error: "ProfileId cannot be null" }),
 });
 

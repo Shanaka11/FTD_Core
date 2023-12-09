@@ -22,7 +22,7 @@ export const CREATE_MODEL_USECASE_TEMPLATE = `export const makeCreate{MODEL}Base
     // Generate ID
     modelData.id = generateId();
     // Set CreatedAt
-    const sysDate = new Date();
+    const sysDate = Date.now();
     modelData.createdAt = sysDate;
     // Set UpdatedAt
     modelData.updatedAt = sysDate;
