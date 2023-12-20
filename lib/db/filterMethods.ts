@@ -5,86 +5,168 @@ import {
 } from "../codeGen/textUtils.js";
 
 export const generateKeyWhere = (keys: TRawData) => {
-  return Object.entries(keys)
+  const parameterArray: string[] = [];
+  const filterString = Object.entries(keys)
     .map(([key, value]) => {
       if (value instanceof Date) {
-        return `${camelToSnakeCase(key)} = '${formatDateToSqlString(value)}'`;
+        parameterArray.push(formatDateToSqlString(value));
+        return `${camelToSnakeCase(key)} = ?`;
       }
       if (typeof value === "string") {
-        return `${camelToSnakeCase(key)} = '${value}'`;
+        parameterArray.push(value);
+        return `${camelToSnakeCase(key)} = ?`;
       }
-      return `${camelToSnakeCase(key)} = ${value}`;
+      if (value !== undefined) parameterArray.push(value.toString());
+      return `${camelToSnakeCase(key)} = ?`;
     })
     .join(" AND ");
+  return {
+    filterString,
+    parameterArray,
+  };
 };
 
 export const generateWhereClause = (filter: string) => {
+  const parameterArray: string[] = [];
   const methodRegex = /(\w+)\(([^)]+)\)/g;
-  const temp1 = replaceOperators(filter);
-  const temp = temp1.replace(
+  // const temp1 = replaceOperators(filter);
+
+  const appendToParameterArray = (param: string) => {
+    parameterArray.push(param);
+  };
+  const temp = filter.replace(
     methodRegex,
     (match, methodName: string, args: string) => {
-      return executeMethod(methodName, args.split(", "));
+      const parameters = args.split(", ");
+      // Combine parameterArray with the sliced parameter array (1, -1)
+      return executeMethod(methodName, parameters, appendToParameterArray);
     },
   );
-  return `WHERE ${temp}`;
+  return { filterString: `WHERE ${temp}`, parameterArray };
 };
 
-const replaceOperators = (filter: string) => {
-  const replacements: Record<string, string> = {
-    eq: `=`,
-    gt: ">",
-    lt: `>`,
-    lte: "<=",
-    gte: ">=",
-    neq: "><",
-  };
+// const replaceOperators = (filter: string) => {
+//   const replacements: Record<string, string> = {
+//     eq: `=`,
+//     gt: ">",
+//     lt: `>`,
+//     lte: "<=",
+//     gte: ">=",
+//     neq: "><",
+//   };
 
-  const regexPattern = new RegExp(
-    `\\b(${Object.keys(replacements).join("|")})\\b|('[^']*')|(\\w+)`, // Exclude words inside single quotes
-    "g",
-  );
+//   const regexPattern = new RegExp(
+//     `\\b(${Object.keys(replacements).join("|")})\\b|('[^']*')|(\\w+)`, // Exclude words inside single quotes
+//     "g",
+//   );
 
-  return filter.replace(
-    regexPattern,
-    (match, operator, quotedValue, fieldName) => {
-      if (operator) {
-        return replacements[operator as string];
-      } else if (fieldName) {
-        // Convert field name to snake_case and uppercase
-        return camelToSnakeCase(fieldName as string);
-      }
-      return (quotedValue as string) || match; // Return unchanged if not an operator or field name
-    },
-  );
-};
+//   return filter.replace(
+//     regexPattern,
+//     (match, operator, quotedValue, fieldName) => {
+//       if (operator) {
+//         return replacements[operator as string];
+//       } else if (fieldName) {
+//         // Convert field name to snake_case and uppercase
+//         // Check if this is a relationship or a method if not sorround it with quotation marks
+//         checkForDangerousSql(fieldName as string);
+//         return camelToSnakeCase(fieldName as string);
+//       }
+//       return (quotedValue as string) || match; // Return unchanged if not an operator or field name
+//     },
+//   );
+// };
 
-const executeMethod = (method: string, args: string[]) => {
+const executeMethod = (
+  method: string,
+  args: string[],
+  addToParamArray: (param: string) => void,
+) => {
+  // Check if args have malformed strings
+  if (args.length > 0) {
+    checkForDangerousSql(args[0]);
+    // Create the parameter array by slicing the args array from 1 - end
+  }
   // Implement your methods here
   switch (method) {
-    case "STARTS_WITH":
-      return startsWith(args[0], args[1]);
-    case "ENDS_WITH":
-      return endsWith(args[0], args[1]);
-    case "LIKE":
-      return like(args[0], args[1]);
+    case "eq":
+      addToParamArray(args[1]);
+      return eq(args[0]);
+    case "lt":
+      addToParamArray(args[1]);
+      return lt(args[0]);
+    case "lte":
+      addToParamArray(args[1]);
+      return lte(args[0]);
+    case "gt":
+      addToParamArray(args[1]);
+      return gt(args[0]);
+    case "gte":
+      addToParamArray(args[1]);
+      return gte(args[0]);
+    case "neq":
+      addToParamArray(args[1]);
+      return neq(args[0]);
+    case "startsWith":
+      addToParamArray(`${args[1]}%`);
+      return startsWith(args[0]);
+    case "endsWith":
+      addToParamArray(`%${args[1]}`);
+      return endsWith(args[0]);
+    case "like":
+      addToParamArray(args[1]);
+      return like(args[0]);
+    case "between":
+      addToParamArray(args[1]);
+      addToParamArray(args[2]);
+      return between(args[0]);
     // Add more methods as needed
     default:
       throw new Error(`Unsupported method: ${method}`);
   }
 };
 
-const startsWith = (column: string, value: string) => {
-  return `${camelToSnakeCase(column)} LIKE '${value}%'`;
+const eq = (column: string) => {
+  return `${camelToSnakeCase(column)} = ?`;
 };
 
-const endsWith = (column: string, value: string) => {
-  return `${camelToSnakeCase(column)} LIKE '%${value}'`;
+const lt = (column: string) => {
+  return `${camelToSnakeCase(column)} < ?`;
 };
 
-const like = (column: string, value: string) => {
-  return `${camelToSnakeCase(column)} LIKE '${value}'`;
+const lte = (column: string) => {
+  return `${camelToSnakeCase(column)} <= ?`;
 };
 
+const gt = (column: string) => {
+  return `${camelToSnakeCase(column)} > ?`;
+};
+
+const gte = (column: string) => {
+  return `${camelToSnakeCase(column)} >= ?`;
+};
+
+const neq = (column: string) => {
+  return `${camelToSnakeCase(column)} >< ?`;
+};
+
+const startsWith = (column: string) => {
+  return `${camelToSnakeCase(column)} LIKE ?`;
+};
+
+const endsWith = (column: string) => {
+  return `${camelToSnakeCase(column)} LIKE ?`;
+};
+
+const like = (column: string) => {
+  return `${camelToSnakeCase(column)} LIKE ?`;
+};
+
+const between = (column: string) => {
+  return `${camelToSnakeCase(column)} BETWEEN ? AND ?`;
+};
+
+const checkForDangerousSql = (columnName: string) => {
+  if (columnName.includes(" ")) throw new Error("Invalid column name");
+};
 // Filter would look like this "filter=(Objstate eq 'Parked') and ((startswith(OrderNo,'13')) or (startswith(OrderNo,'14')) or (OrderNo eq '12'))" figure out a way to decode this and create a where statement
 // filter=(Objstate eq 'Parked') and ((startswith(OrderNo,'13')) or (startswith(OrderNo,'14')) or (OrderNo eq '12')) should be converted to WHERE objstate = 'Parked' AND (order_no like '13%' OR order_no = '12')

@@ -58,7 +58,7 @@ export const generateDeleteQueryString = (table: string, where: string) => {
 };
 const generateSqlColumnString = (columns?: string[]) => {
   if (columns === undefined) return "*";
-  return columns.map((column) => camelToSnakeCase(column)).join(", ");
+  return columns.map((column) => `${camelToSnakeCase(column)}`).join(", ");
 };
 
 const generateSqlColValuePair = (columns: string[], values: TValue[]) => {
@@ -66,12 +66,12 @@ const generateSqlColValuePair = (columns: string[], values: TValue[]) => {
     .map((column, index) => {
       const value = values[index];
       if (value === undefined) {
-        return `${camelToSnakeCase(column)} = NULL`;
+        return `'${camelToSnakeCase(column)}' = NULL`;
       }
       if (value instanceof Date) {
-        return `${camelToSnakeCase(column)} = ${value.toISOString()}`;
+        return `${camelToSnakeCase(column)} = '${value.toISOString()}'`;
       }
-      return `${camelToSnakeCase(column)} = ${value}`;
+      return `${camelToSnakeCase(column)} = '${value}'`;
     })
     .join(", ");
 };

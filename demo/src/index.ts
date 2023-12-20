@@ -23,20 +23,20 @@ const execute = async () => {
     // } else {
     //   console.log("Order not deleted");
     // }
-    const update = await updateCustomerOrderUseCase({
-      orderNo: 556,
-      createdAt: new Date("2023-10-11 07:00:17"),
-      updatedAt: new Date("2023-10-11 07:00:17"),
-      id: "c4a8801b-6a60-424b-a6b3-c8c69cbcc3db",
-      totalAmount: 1000,
-      date: new Date("2023-10-11 07:00:17"),
-    });
+    // const update = await updateCustomerOrderUseCase({
+    //   orderNo: 556,
+    //   createdAt: new Date("2023-10-11 07:00:17"),
+    //   updatedAt: new Date("2023-10-11 07:00:17"),
+    //   id: "c4a8801b-6a60-424b-a6b3-c8c69cbcc3db",
+    //   totalAmount: 1000,
+    //   date: new Date("2023-10-11 07:00:17"),
+    // });
 
-    if (update) {
-      console.log("Order Updated");
-    } else {
-      console.log("Order not updated");
-    }
+    // if (update) {
+    //   console.log("Order Updated");
+    // } else {
+    //   console.log("Order not updated");
+    // }
     // const create = await createOrderUseCase({
     //   orderNo: 556,
     //   date: new Date(),
@@ -48,10 +48,8 @@ const execute = async () => {
     // } else {
     //   console.log("Order not created");
     // }
-    // const data = await readOrderUseCase({
-    //   keys: {
-    //     id: "123",
-    //   },
+    // const data = await readCustomerOrderUseCase({
+    //   filter: "between(orderNo, 312, 314) or eq(id, 400)",
     // });
     // console.log(data);
     exit();

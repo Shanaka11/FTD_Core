@@ -2,43 +2,56 @@ import { generateWhereClause } from "../../lib/db/filterMethods";
 
 describe("Generation of filter strings", () => {
   it("With only a single search parameter", async () => {
-    const clientFilterString = `(objstate eq 'Parked')`;
-    const serverFilterString = generateWhereClause(clientFilterString);
+    const clientFilterString = `(eq(objstate, Parked))`;
+    const serverFilter = generateWhereClause(clientFilterString);
 
-    expect(serverFilterString).toBe(`WHERE (OBJSTATE = 'Parked')`);
+    expect(serverFilter.filterString).toBe(`WHERE (OBJSTATE = ?)`);
+    expect(serverFilter.parameterArray).toEqual(["Parked"]);
   });
 
   it("With multiple simple search parameters", async () => {
-    const clientFilterString = `objstate eq 'Parked' and orderNo eq '122A' and amount lt 1000`;
-    const serverFilterString = generateWhereClause(clientFilterString);
+    const clientFilterString = `eq(objstate, Parked) and eq(orderNo, 122A) and lt(amount, 1000)`;
+    const serverFilter = generateWhereClause(clientFilterString);
 
-    expect(serverFilterString).toBe(
-      `WHERE OBJSTATE = 'Parked' AND ORDER_NO = '122A' AND AMOUNT > 1000`,
+    expect(serverFilter.filterString).toBe(
+      `WHERE OBJSTATE = ? and ORDER_NO = ? and AMOUNT < ?`,
     );
+    expect(serverFilter.parameterArray).toEqual(["Parked", "122A", "1000"]);
   });
 
   it("With a single complex search parameter 'StartsWith'", async () => {
     const clientFilterString = `startsWith(orderNo, 14)`;
-    const serverFilterString = generateWhereClause(clientFilterString);
+    const serverFilter = generateWhereClause(clientFilterString);
 
-    expect(serverFilterString).toBe(`WHERE ORDER_NO LIKE '14%'`);
+    expect(serverFilter.filterString).toBe(`WHERE ORDER_NO LIKE ?`);
+    expect(serverFilter.parameterArray).toEqual(["14%"]);
   });
 
   it("With multiple complex search parameter 'StartsWith', 'EndsWith', 'LIKE'", async () => {
     const clientFilterString = `startsWith(orderNo, 14) and endsWith(customerNo, 15) and like(state, %1234%)`;
-    const serverFilterString = generateWhereClause(clientFilterString);
+    const serverFilter = generateWhereClause(clientFilterString);
 
-    expect(serverFilterString).toBe(
-      `WHERE ORDER_NO LIKE '14%' AND CUSTOMER_NO LIKE '%15' AND STATE LIKE '%1234%'`,
+    expect(serverFilter.filterString).toBe(
+      `WHERE ORDER_NO LIKE ? and CUSTOMER_NO LIKE ? and STATE LIKE ?`,
     );
+    expect(serverFilter.parameterArray).toEqual(["14%", "%15", "%1234%"]);
   });
 
   it("Complex search parameter", async () => {
-    const clientFilterString = `amount lte 1000 and (tax lte 10 or tax gte 100) startsWith(orderNo, 14) and endsWith(customerNo, 15) and like(state, %1234%) and site neq 'KDy'`;
-    const serverFilterString = generateWhereClause(clientFilterString);
+    const clientFilterString = `lte(amount, 1000) and (lte(tax, 10) or gte(tax, 100)) startsWith(orderNo, 14) and endsWith(customerNo, 15) and like(state, %1234%) and neq(site, Kdy)`;
+    const serverFilter = generateWhereClause(clientFilterString);
 
-    expect(serverFilterString).toBe(
-      `WHERE AMOUNT <= 1000 AND (TAX <= 10 OR TAX >= 100) ORDER_NO LIKE '14%' AND CUSTOMER_NO LIKE '%15' AND STATE LIKE '%1234%' AND SITE >< 'KDy'`,
+    expect(serverFilter.filterString).toBe(
+      `WHERE AMOUNT <= ? and (TAX <= ? or TAX >= ?) ORDER_NO LIKE ? and CUSTOMER_NO LIKE ? and STATE LIKE ? and SITE >< ?`,
     );
+    expect(serverFilter.parameterArray).toEqual([
+      "1000",
+      "10",
+      "100",
+      "14%",
+      "%15",
+      "%1234%",
+      "Kdy",
+    ]);
   });
 });

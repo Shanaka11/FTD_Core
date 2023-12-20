@@ -29,6 +29,9 @@ export type TRepository<T> = {
   deleteModel?: ({ model, key }: DeleteModelParams) => Promise<boolean>;
 };
 
-export type TExecuteQuery = (query: string) => Promise<TExecuteQueryResponse>;
+export type TExecuteQuery = (
+  query: string,
+  params?: string[],
+) => Promise<TExecuteQueryResponse>;
 
 export type TValue = string | number | Date | undefined;
