@@ -25,18 +25,25 @@ export const makeReadModel =
     // Check if the key is a string or object, if its a string  then its the ID, else it is the Keys
     // If either keys or the id is there then ignore rest of the filters
     let where = "";
+    let params: string[] = [];
     if (key != undefined) {
       if (typeof key === "string") {
-        where = `WHERE ID = '${key}'`;
+        where = `WHERE ID = ?`;
+        params.push(key);
       } else {
-        where = `WHERE ${generateKeyWhere(key)}`;
+        const keyWhere = generateKeyWhere(key);
+        where = `WHERE ${keyWhere.filterString}`;
+        params = keyWhere.parameterArray;
       }
     } else if (filter !== undefined) {
       // construct the where clause from the filter string
-      where = generateWhereClause(filter);
+      // Return the string with ? and the parameter array
+      const whereClause = generateWhereClause(filter);
+      where = whereClause.filterString;
+      params = whereClause.parameterArray;
     }
     const queryString = generateSelectQueryString(model, columns, where);
     return camelcaseKeys(
-      (await executeQuery(queryString)) as RowDataPacket[],
+      (await executeQuery(queryString, params)) as RowDataPacket[],
     ) as T[];
   };
