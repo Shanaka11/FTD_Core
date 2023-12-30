@@ -54,4 +54,18 @@ describe("Generation of filter strings", () => {
       "Kdy",
     ]);
   });
+  it("Filter string with incompatible methods", async () => {
+    const clientFilterString = `1ck(1, 2)`;
+
+    expect(() => generateWhereClause(clientFilterString)).toThrow(
+      "Unsupported method: 1ck",
+    );
+  });
+  it("Incompatible filter string", async () => {
+    const clientFilterString = `startsWith(OrderNo,'13') orderBy:OrderNo:ASC and (endsWith(OrderNo,'14') or contains(OrderNo,'12'))`;
+
+    expect(() => generateWhereClause(clientFilterString)).toThrow(
+      "Incorrect filter. Please check the filter parameter and try again.",
+    );
+  });
 });

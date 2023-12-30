@@ -29,11 +29,21 @@ export const generateKeyWhere = (keys: TRawData) => {
 export const generateWhereClause = (filter: string) => {
   const parameterArray: string[] = [];
   const methodRegex = /(\w+)\(([^)]+)\)/g;
+  const filterRegex = /^(\s*[\w]+\([^)]*\)|\s*and|\s*or|\s*\(\s*|\s*\)\s*)*$/;
   // const temp1 = replaceOperators(filter);
 
   const appendToParameterArray = (param: string) => {
     parameterArray.push(param);
   };
+  // Check if the filter string is valid i.e it should only contain method calls in addition to  ( ) AND OR
+
+  if (!filterRegex.test(filter)) {
+    throw new Error(
+      "Incorrect filter. Please check the filter parameter and try again.",
+    );
+  }
+  // Generate the string itself
+
   const temp = filter.replace(
     methodRegex,
     (match, methodName: string, args: string) => {
