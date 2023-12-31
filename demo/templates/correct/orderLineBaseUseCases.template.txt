@@ -22,7 +22,7 @@ export const makeReadOrderLineBaseUseCase = ({
   repository,
   executeQuery,
 }: TMakeGetModelUseCase<TOrderLine>) => {
-  return ({ keys, columns, filter }: TGetModelUseCase<TOrderLineKey>) => {
+  return ({ keys, columns, filter, orderBy }: TGetModelUseCase<TOrderLineKey>) => {
     if (repository.readModel === undefined)
       throw new Error(
         "Repository method of getModel was not defined in orderLine usecase",
@@ -33,6 +33,7 @@ export const makeReadOrderLineBaseUseCase = ({
       key: keys === undefined ? undefined : isIdPresent(keys) ? keys.id : keys,
       columns: columns,
       filter: filter,
+      orderBy: orderBy
     });
   };
 };

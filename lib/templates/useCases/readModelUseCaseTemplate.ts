@@ -2,7 +2,7 @@ export const READ_MODEL_USECASE_TEMPLATE = `export const makeRead{MODEL}BaseUseC
   repository,
   executeQuery,
 }: TMakeGetModelUseCase<{TNAME}>) => {
-  return ({ keys, columns, filter }: TGetModelUseCase<{TNAME}Key>) => {
+  return ({ keys, columns, filter, orderBy }: TGetModelUseCase<{TNAME}Key>) => {
     if (repository.readModel === undefined)
       throw new Error(
         "Repository method of getModel was not defined in {MODELVAR} usecase",
@@ -13,6 +13,7 @@ export const READ_MODEL_USECASE_TEMPLATE = `export const makeRead{MODEL}BaseUseC
       key: keys === undefined ? undefined : isIdPresent(keys) ? keys.id : keys,
       columns: columns,
       filter: filter,
+      orderBy: orderBy
     });
   };
 };`;

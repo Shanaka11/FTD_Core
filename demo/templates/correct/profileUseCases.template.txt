@@ -26,7 +26,7 @@ const validateProfileModel = (data: TRawData) => {
 
 // READ
 export const readProfileUseCase_ = async (
-  { keys, columns, filter }: TGetModelUseCase<TProfileKey>,
+  { keys, columns, filter, orderBy }: TGetModelUseCase<TProfileKey>,
   executeQuery: TExecuteQuery,
 ) => {
   // Add business logic that should be executed before the core method
@@ -38,6 +38,7 @@ export const readProfileUseCase_ = async (
     keys,
     columns,
     filter,
+    orderBy,
   });
   // Add business logic that should be executed after the core method
 

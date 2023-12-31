@@ -29,22 +29,64 @@ export const generateKeyWhere = (keys: TRawData) => {
 export const generateWhereClause = (filter: string) => {
   const parameterArray: string[] = [];
   const methodRegex = /(\w+)\(([^)]+)\)/g;
+  const filterRegex = /^(\s*[\w]+\([^)]*\)|\s*and|\s*or|\s*\(\s*|\s*\)\s*)*$/;
   // const temp1 = replaceOperators(filter);
 
   const appendToParameterArray = (param: string) => {
     parameterArray.push(param);
   };
+
+  // Check if the filter string is valid i.e it should only contain method calls in addition to  ( ) AND OR
+  if (!filterRegex.test(filter)) {
+    throw new Error(
+      "Incorrect filter. Please check the filter parameter and try again.",
+    );
+  }
+
+  // Generate the where clause
   const temp = filter.replace(
     methodRegex,
     (match, methodName: string, args: string) => {
       const parameters = args.split(", ");
-      // Combine parameterArray with the sliced parameter array (1, -1)
       return executeMethod(methodName, parameters, appendToParameterArray);
     },
   );
   return { filterString: `WHERE ${temp}`, parameterArray };
 };
 
+export const generateOrderByClause = (orderBy: string) => {
+  // orderNo,customer:DESC,amount => ORDER BY ORDER_NO, CUSTOMER DESC, AMOUNT
+  // Check if the operation is correct it should either be ASC or DESC
+  // If the operation is not present then default it to ASC
+  // If no order by string provided then no need to generate
+  if (orderBy.length === 0) return "";
+
+  if (orderBy.includes(" "))
+    throw new Error(
+      "Incorrect orderBy clause. check for spaces and try again.",
+    );
+  // Check if the string contains any spaces, if so throw an error
+  const columns: string[] = orderBy.split(",");
+  const orderByClause: string[] = [];
+
+  columns.forEach((column) => {
+    // check if it is asc
+    const columnOrderBy = column.split(":");
+    if (columnOrderBy.length === 1) {
+      orderByClause.push(camelToSnakeCase(columnOrderBy[0]));
+      return;
+    }
+
+    // Check if its desc
+    if (columnOrderBy[1] !== "DESC")
+      throw new Error(
+        "Ordering is wrong, It should be DESC. Please check the parameter and try again.",
+      );
+
+    orderByClause.push(`${camelToSnakeCase(columnOrderBy[0])} DESC`);
+  });
+  return `ORDER BY ${orderByClause.join(", ")}`;
+};
 // const replaceOperators = (filter: string) => {
 //   const replacements: Record<string, string> = {
 //     eq: `=`,
