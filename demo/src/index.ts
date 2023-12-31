@@ -50,6 +50,7 @@ const execute = async () => {
     // }
     // const data = await readCustomerOrderUseCase({
     //   filter: "between(orderNo, 312, 314) or eq(id, 400)",
+    //   orderBy: "orderNo",
     // });
     // console.log(data);
     exit();

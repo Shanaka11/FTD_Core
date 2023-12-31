@@ -3,7 +3,11 @@ import type { RowDataPacket } from "mysql2";
 
 import { TRawData } from "../../../types/makeModelParams.js";
 import { TExecuteQuery } from "../../../types/repositoryTypes.js";
-import { generateKeyWhere, generateWhereClause } from "../filterMethods.js";
+import {
+  generateKeyWhere,
+  generateOrderByClause,
+  generateWhereClause,
+} from "../filterMethods.js";
 import { generateSelectQueryString } from "../generateQueryString.js";
 
 export type ReadModelParams = {
@@ -11,6 +15,7 @@ export type ReadModelParams = {
   key?: string | TRawData;
   columns?: string[];
   filter?: string;
+  orderBy?: string;
 };
 
 // Handle pagination as well
@@ -20,12 +25,13 @@ export type ReadModelParams = {
 // Read Models
 export const makeReadModel =
   <T>(executeQuery: TExecuteQuery) =>
-  async ({ model, key, columns, filter }: ReadModelParams) => {
+  async ({ model, key, columns, filter, orderBy }: ReadModelParams) => {
     // Create Query String
     // Check if the key is a string or object, if its a string  then its the ID, else it is the Keys
     // If either keys or the id is there then ignore rest of the filters
     let where = "";
     let params: string[] = [];
+    let orderByString = "";
     if (key != undefined) {
       if (typeof key === "string") {
         where = `WHERE ID = ?`;
@@ -42,7 +48,18 @@ export const makeReadModel =
       where = whereClause.filterString;
       params = whereClause.parameterArray;
     }
-    const queryString = generateSelectQueryString(model, columns, where);
+    // Generate order by and pass it the the query string here
+    if (orderBy != undefined) {
+      orderByString = generateOrderByClause(orderBy);
+    }
+
+    console.log(orderBy, orderByString);
+    const queryString = generateSelectQueryString(
+      model,
+      columns,
+      where,
+      orderByString,
+    );
     return camelcaseKeys(
       (await executeQuery(queryString, params)) as RowDataPacket[],
     ) as T[];

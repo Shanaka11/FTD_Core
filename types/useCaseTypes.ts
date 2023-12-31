@@ -27,6 +27,7 @@ export type TGetModelUseCase<T> = {
   keys?: TModelKey | T;
   filter?: string;
   columns?: string[];
+  orderBy?: string;
 };
 
 export type TBaseUseCaseCheckChanged<T> = {

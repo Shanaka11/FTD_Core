@@ -13,11 +13,13 @@ export const generateSelectQueryString = (
   table: string,
   columns?: string[],
   where?: string,
+  orderBy?: string,
 ) => {
   const mappingValues = {
     FIELDS: generateSqlColumnString(columns),
     TABLE_NAME: camelToSnakeCase(table),
     WHERE: where ?? "",
+    ORDER_BY: orderBy ?? "",
   };
   return createStringFromTemplate(mappingValues, SELECT_QUERY_TEMPLATE);
 };

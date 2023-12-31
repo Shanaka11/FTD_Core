@@ -21,7 +21,7 @@ export const makeReadProfileBaseUseCase = ({
   repository,
   executeQuery,
 }: TMakeGetModelUseCase<TProfile>) => {
-  return ({ keys, columns, filter }: TGetModelUseCase<TProfileKey>) => {
+  return ({ keys, columns, filter, orderBy }: TGetModelUseCase<TProfileKey>) => {
     if (repository.readModel === undefined)
       throw new Error(
         "Repository method of getModel was not defined in profile usecase",
@@ -32,6 +32,7 @@ export const makeReadProfileBaseUseCase = ({
       key: keys === undefined ? undefined : isIdPresent(keys) ? keys.id : keys,
       columns: columns,
       filter: filter,
+      orderBy: orderBy
     });
   };
 };
