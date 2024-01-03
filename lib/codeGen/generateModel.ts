@@ -53,7 +53,14 @@ export const generateZodSchema = (attributes: tAattributes) => {
       let required = false;
       let retString = `${simplize(key)}: `;
 
-      retString += `z.${simplize(value.type)}`;
+      if (value.type === "Timestamp") {
+        retString += `z.date`;
+      } else if (value.type === "BigNumber") {
+        retString += "z.number";
+      } else {
+        retString += `z.${simplize(value.type)}`;
+      }
+
       if (
         value.flags === "AMI-" ||
         value.flags === "AMIU" ||

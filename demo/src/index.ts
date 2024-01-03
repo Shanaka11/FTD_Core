@@ -38,11 +38,11 @@ const execute = async () => {
     // } else {
     //   console.log("Order not updated");
     // }
-    // const create = await createCustomerOrderUseCase({
-    //   orderNo: 601,
-    //   date: new Date("1957-11-19T12:30:00"),
-    //   totalAmount: 12000,
-    // });
+    const create = await createCustomerOrderUseCase({
+      orderNo: 603,
+      date: new Date("1991-11-19T12:30:00"),
+      totalAmount: 12000,
+    });
     // const create = await createProfileUseCase({
     //   profileId: 123,
     //   dateOfBirth: new Date("1957-11-19T12:30:00"),

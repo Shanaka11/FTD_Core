@@ -2,7 +2,7 @@
   "name": "CustomerOrder",
   "attributes": {
     "OrderNo": { "type": "Number", "flags": "KMI-" },
-    "TotalAmount": { "type": "Number", "flags": "AMIU" },
-    "Date": { "type": "TimeStamp", "flags": "A-I-" }
+    "TotalAmount": { "type": "BigNumber", "flags": "AMIU" },
+    "Date": { "type": "Timestamp", "flags": "A-I-" }
   }
 }

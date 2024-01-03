@@ -25,7 +25,7 @@
             },
             "type": {
               "type": "string",
-              "enum": ["String", "Number", "BigNumber", "Date", "TimeStamp"]
+              "enum": ["String", "Number", "BigNumber", "Date", "Timestamp"]
             },
             "maxLength": {
               "type": "number",

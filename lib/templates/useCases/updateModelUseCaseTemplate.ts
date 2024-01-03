@@ -26,8 +26,8 @@ export const UPDATE_MODEL_USECASE_TEMPLATE = `export const makeUpdate{MODEL}Base
     validateRelationships_({MODELVAR}, executeQuery, "MODIFY");
 
     // Set UpdatedAt
-    const sysDate = Date.now();
-    modelData.updatedAt = sysDate;
+    const sysDate = new Date();
+    modelData.updatedAt = sysDate.toISOString();
 
     return repository.updateModel({
       model: "{MODELVAR}",
