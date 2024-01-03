@@ -1,7 +1,7 @@
 type tAttributeFlags = "KMI-" | "AMIU" | "AMI-" | "A-I-" | "A-IU";
 // type tAttributeType = "String" | "Number" | "Date";
 type tAttributeItemNoString = {
-  type: "Number" | "Date";
+  type: "Number" | "BigNumber" | "Date" | "Timestamp";
 };
 type tAttributeItemString = {
   type: "String";

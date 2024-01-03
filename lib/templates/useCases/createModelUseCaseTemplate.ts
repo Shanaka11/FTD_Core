@@ -22,10 +22,10 @@ export const CREATE_MODEL_USECASE_TEMPLATE = `export const makeCreate{MODEL}Base
     // Generate ID
     modelData.id = generateId();
     // Set CreatedAt
-    const sysDate = Date.now();
-    modelData.createdAt = sysDate;
+    const sysDate = new Date();
+    modelData.createdAt = sysDate.toISOString();
     // Set UpdatedAt
-    modelData.updatedAt = sysDate;
+    modelData.updatedAt = modelData.createdAt;
     // Run validation, check exist, column validation will be handled by zod
     // Check if a record with the same id exists
     // Check if the realtionships are valid, i.e primary keys match etc

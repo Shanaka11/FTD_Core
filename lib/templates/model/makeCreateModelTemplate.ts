@@ -4,8 +4,8 @@ import { z } from "zod";
 
 export const {MODELVAR}Schema = z.object({
   id: z.string({ required_error: "Id cannot be null" }),
-  createdAt: z.number({ required_error: "CreatedAt cannot be null" }),
-  updatedAt: z.number({ required_error: "UpdatedAt cannot be null" }),
+  createdAt: z.string({ required_error: "CreatedAt cannot be null" }).max(30),
+  updatedAt: z.string({ required_error: "UpdatedAt cannot be null" }).max(30),
   {ZOD_SCHEMA},
 });
 
