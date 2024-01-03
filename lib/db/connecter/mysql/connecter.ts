@@ -27,7 +27,19 @@ export const getConnection = () => {
       port: parseInt(process.env.DB_PORT),
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
+      timezone: "+00:00", // UTC
     });
+
+    // connection.on("connection", async (connection) => {
+    //   await connection.query('SET time_zone="+00:00";', (err: unknown) => {
+    //     if (!!err && err instanceof Error) {
+    //       throw new Error(err.message);
+    //     }
+    //     return new Error(
+    //       "There was an error when setting the db connection timezone.",
+    //     );
+    //   });
+    // });
   }
   return connection.getConnection();
 };
@@ -56,6 +68,18 @@ export const getAdminConnection = () => {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     multipleStatements: true,
+    timezone: "utc",
+  });
+
+  connection.on("connection", async (connection) => {
+    await connection.query('SET time_zone="+00:00";', (err: unknown) => {
+      if (!!err && err instanceof Error) {
+        throw new Error(err.message);
+      }
+      return new Error(
+        "There was an error when setting the db connection timezone.",
+      );
+    });
   });
 
   return connection.getConnection();

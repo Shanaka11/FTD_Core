@@ -6,6 +6,7 @@ import {
   readCustomerOrderUseCase,
   updateCustomerOrderUseCase,
 } from "./Order/customerOrder/customerOrderUseCases.js";
+import { createProfileUseCase } from "./User/profile/profileUseCases.js";
 
 const execute = async () => {
   try {
@@ -37,12 +38,15 @@ const execute = async () => {
     // } else {
     //   console.log("Order not updated");
     // }
-    // const create = await createOrderUseCase({
-    //   orderNo: 556,
-    //   date: new Date(),
-    //   totalAmount: 12301,
+    // const create = await createCustomerOrderUseCase({
+    //   orderNo: 601,
+    //   date: new Date("1957-11-19T12:30:00"),
+    //   totalAmount: 12000,
     // });
-
+    // const create = await createProfileUseCase({
+    //   profileId: 123,
+    //   dateOfBirth: new Date("1957-11-19T12:30:00"),
+    // });
     // if (create) {
     //   console.log("Order Created");
     // } else {
@@ -52,7 +56,8 @@ const execute = async () => {
     //   filter: "between(orderNo, 312, 314) or eq(id, 400)",
     //   orderBy: "orderNo",
     // });
-    // console.log(data);
+    // console.log(data)
+    // console.log(data[0].date?.toLocaleString("en-US", { timeZone: "IST" }));
     exit();
   } catch (e) {
     throw e;

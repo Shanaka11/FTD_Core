@@ -1,6 +1,7 @@
 {
   "name": "Profile",
   "attributes": {
-    "ProfileId": { "type": "Number", "flags": "KMI-" }
+    "ProfileId": { "type": "Number", "flags": "KMI-" },
+    "DateOfBirth": { "type": "Date", "flags": "A-IU" }
   }
 }

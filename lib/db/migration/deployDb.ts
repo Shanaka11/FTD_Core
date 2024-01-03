@@ -182,7 +182,9 @@ const generateColumnAttString = (attribute: tAttributeItem) => {
   let attString = "";
   if (attribute.type === "String")
     attString += `VARCHAR(${attribute.maxLength})`;
-  if (attribute.type === "Date") attString += `DATETIME`;
+  if (attribute.type === "Date") attString += `DATE`;
+  if (attribute.type === "Timestamp") attString += "TIMESTAMP";
+  if (attribute.type === "BigNumber") attString += "BIGINT";
   if (attribute.type === "Number") attString += `INT`;
   if (
     attribute.flags === "AMI-" ||
