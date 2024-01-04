@@ -55,7 +55,11 @@ export const generateZodSchema = (attributes: tAattributes) => {
 
       if (value.type === "Timestamp") {
         retString += `z.date`;
-      } else if (value.type === "BigNumber") {
+      } else if (
+        value.type === "BigNumber" ||
+        value.type === "Decimal" ||
+        value.type === "Float"
+      ) {
         retString += "z.number";
       } else {
         retString += `z.${simplize(value.type)}`;
