@@ -186,6 +186,8 @@ const generateColumnAttString = (attribute: tAttributeItem) => {
   if (attribute.type === "Timestamp") attString += "TIMESTAMP";
   if (attribute.type === "BigNumber") attString += "BIGINT";
   if (attribute.type === "Number") attString += `INT`;
+  if (attribute.type === "Decimal") attString += `DECIMAL(12, 2)`;
+  if (attribute.type === "Float") attString += `FLOAT`;
   if (
     attribute.flags === "AMI-" ||
     attribute.flags === "AMIU" ||
