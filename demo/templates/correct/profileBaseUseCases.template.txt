@@ -10,8 +10,8 @@ import {
 } from "@five12days/core";
 
 
+import { readProfileUseCase_ } from "../useCases/profileUseCases.js";
 import { makeProfile, TProfile } from "./profile.gen.js";
-import { readProfileUseCase_ } from "./profileUseCases.js";
 
 export type TProfileKey = {
   profileId: number;

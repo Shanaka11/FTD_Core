@@ -152,6 +152,7 @@ const generateImportString = (
   if (commonPrefixIndex === targetParts.length) {
     importString += `./`;
   } else {
+    importString = "../";
     for (let i = sourceParts.length; i > commonPrefixIndex; i--) {
       importString += "../";
     }
@@ -162,7 +163,7 @@ const generateImportString = (
     importString += targetParts[i];
   }
 
-  return `import { ${functionName} } from "${importString}/${filename}"`;
+  return `import { ${functionName} } from "${importString}/gen/${filename}"`;
 };
 
 const generateValidationBlocks = (

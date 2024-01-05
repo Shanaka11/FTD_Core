@@ -8,6 +8,7 @@ import { generateUseCaseStubs } from "./codeGen/generateUseCaseStubs.js";
 import { simplize } from "./codeGen/textUtils.js";
 import { findFilesWithExtension } from "./common/findFiles.js";
 import { srcPath } from "./common/srcPath.js";
+import { writeFileSync } from "./common/writeGeneratedFile.js";
 
 // import { fileURLToPath } from "url";
 export const modelMap = new Map<string, string>();
@@ -48,16 +49,17 @@ const generateCoreFiles_ = (dirPath: string, generate: boolean = true) => {
         const directory = path.dirname(filePath);
         // Model
         const modelCode = generateModel(modelData);
-        fs.writeFileSync(
-          `${directory}/${simplize(modelData.name)}.gen.ts`,
+
+        writeFileSync(
+          `${directory}/gen/${simplize(modelData.name)}.gen.ts`,
           modelCode,
         );
         console.log(`${simplize(modelData.name)}.gen.ts Created successfully.`);
 
         // Usecases
         const useCaseCode = generateUseCase(modelData);
-        fs.writeFileSync(
-          `${directory}/${simplize(modelData.name)}BaseUseCases.gen.ts`,
+        writeFileSync(
+          `${directory}/gen/${simplize(modelData.name)}BaseUseCases.gen.ts`,
           useCaseCode,
         );
         console.log(
@@ -69,7 +71,7 @@ const generateCoreFiles_ = (dirPath: string, generate: boolean = true) => {
         // Usecase stubs
         // Check if a file exists if so do not overwright it
         const stubExists = fs.existsSync(
-          `${directory}/${simplize(modelData.name)}UseCases.ts`,
+          `${directory}/useCases/${simplize(modelData.name)}UseCases.ts`,
         );
         if (stubExists) {
           console.log(
@@ -79,8 +81,8 @@ const generateCoreFiles_ = (dirPath: string, generate: boolean = true) => {
           );
         } else {
           const useCaseStubCode = generateUseCaseStubs(modelData);
-          fs.writeFileSync(
-            `${directory}/${simplize(modelData.name)}UseCases.ts`,
+          writeFileSync(
+            `${directory}/useCases/${simplize(modelData.name)}UseCases.ts`,
             useCaseStubCode,
           );
           console.log(

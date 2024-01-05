@@ -5,8 +5,8 @@ import {
   deleteCustomerOrderUseCase,
   readCustomerOrderUseCase,
   updateCustomerOrderUseCase,
-} from "./Order/customerOrder/customerOrderUseCases.js";
-import { createProfileUseCase } from "./User/profile/profileUseCases.js";
+} from "./Order/customerOrder/useCases/customerOrderUseCases.js";
+import { createProfileUseCase } from "./User/profile/useCases/profileUseCases.js";
 
 const execute = async () => {
   try {
@@ -56,7 +56,7 @@ const execute = async () => {
     //   filter: "between(orderNo, 312, 314) or eq(id, 400)",
     //   orderBy: "orderNo",
     // });
-    // console.log(data)
+    // console.log(data);
     // console.log(data[0].date?.toLocaleString("en-US", { timeZone: "IST" }));
     exit();
   } catch (e) {

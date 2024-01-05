@@ -18,8 +18,8 @@ import {
 } from "@five12days/core";
 
 {IMPORTS}
+import { read{MODEL}UseCase_ } from "../useCases/{MODELVAR}UseCases.js";
 import { make{MODEL}, {TNAME} } from "./{MODELVAR}.gen.js";
-import { read{MODEL}UseCase_ } from "./{MODELVAR}UseCases.js";
 
 export {MODELTYPE}
 

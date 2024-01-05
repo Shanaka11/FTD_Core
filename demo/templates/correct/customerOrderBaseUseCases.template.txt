@@ -10,8 +10,8 @@ import {
 } from "@five12days/core";
 
 
+import { readCustomerOrderUseCase_ } from "../useCases/customerOrderUseCases.js";
 import { makeCustomerOrder, TCustomerOrder } from "./customerOrder.gen.js";
-import { readCustomerOrderUseCase_ } from "./customerOrderUseCases.js";
 
 export type TCustomerOrderKey = {
   orderNo: number;

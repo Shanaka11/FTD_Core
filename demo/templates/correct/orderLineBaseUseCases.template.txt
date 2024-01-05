@@ -9,9 +9,9 @@ import {
   TMakeGetModelUseCase,
 } from "@five12days/core";
 
-import { checkCustomerOrderExist_ } from "../customerOrder/customerOrderBaseUseCases.gen.js";
+import { checkCustomerOrderExist_ } from "../../customerOrder/gen/customerOrderBaseUseCases.gen.js";
+import { readOrderLineUseCase_ } from "../useCases/orderLineUseCases.js";
 import { makeOrderLine, TOrderLine } from "./orderLine.gen.js";
-import { readOrderLineUseCase_ } from "./orderLineUseCases.js";
 
 export type TOrderLineKey = {
   orderNo: number;
