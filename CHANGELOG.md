@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.2.0](https://github.com/Shanaka11/FTD_Core/compare/v1.1.3...v1.2.0) (2024-01-05)
+
+
+### Features
+
+* **CORE-37:** Added zod validation and schema generation ([#46](https://github.com/Shanaka11/FTD_Core/issues/46)) ([82f14c1](https://github.com/Shanaka11/FTD_Core/commit/82f14c167d07b7d701de7bc0e47fcb72055324fe))
+* **CORE-40:** Filter string generation ([#48](https://github.com/Shanaka11/FTD_Core/issues/48)) ([c5c96c6](https://github.com/Shanaka11/FTD_Core/commit/c5c96c62e66529659bdc9b4c976b0fedbaf7a944))
+* **CORE-41:** Migrations added ([#49](https://github.com/Shanaka11/FTD_Core/issues/49)) ([52b2eb3](https://github.com/Shanaka11/FTD_Core/commit/52b2eb38323ba57979b8116790907db745a87241))
+* **CORE-43:** Handled SQL injection voulnerablility ([#53](https://github.com/Shanaka11/FTD_Core/issues/53)) ([b509dd6](https://github.com/Shanaka11/FTD_Core/commit/b509dd62658783ec73bbd56e63ea56954bd6a19a))
+* **CORE-49, CORE-66:** Added timezone support ([#55](https://github.com/Shanaka11/FTD_Core/issues/55)) ([0357578](https://github.com/Shanaka11/FTD_Core/commit/03575781d6c43d43ef146b68d733974d85eb76b2))
+* **CORE-50:** Introduced a folder structure for the generated code ([#57](https://github.com/Shanaka11/FTD_Core/issues/57)) ([4bceb46](https://github.com/Shanaka11/FTD_Core/commit/4bceb4612664586b8b1b214727c31e531f54b98d))
+* **CORE-51:** Changed createdAt and updatedAt to numbers ([#52](https://github.com/Shanaka11/FTD_Core/issues/52)) ([1075596](https://github.com/Shanaka11/FTD_Core/commit/1075596abadc0a5b767cce7feb5d5bc58790949f))
+* **CORE-57:** Relationship validation ([#50](https://github.com/Shanaka11/FTD_Core/issues/50)) ([31941a3](https://github.com/Shanaka11/FTD_Core/commit/31941a3672a1af02d01ef3a3c70253dda5fa17dc))
+* **CORE-58:** Added data types Decimal and float to handle fractions ([#56](https://github.com/Shanaka11/FTD_Core/issues/56)) ([20addce](https://github.com/Shanaka11/FTD_Core/commit/20addceff0ea5804574d3b903c522429910285af))
+* **CORE-63:** Order By when reading data ([#54](https://github.com/Shanaka11/FTD_Core/issues/54)) ([cbed81b](https://github.com/Shanaka11/FTD_Core/commit/cbed81b095791e530952b09912ed15087b464929))
+* **CORE-64:** Handle update flags on the attribute definitions ([#51](https://github.com/Shanaka11/FTD_Core/issues/51)) ([7eb49b8](https://github.com/Shanaka11/FTD_Core/commit/7eb49b8c9b61c8ffa19d3fbf77ad02cace2dae80))
+* **CORE-67:** Updated the readme ([#58](https://github.com/Shanaka11/FTD_Core/issues/58)) ([9013232](https://github.com/Shanaka11/FTD_Core/commit/90132329b034fe8af300e1ae805e8f89ed7ca249))
+
 ## [1.1.3](https://github.com/Shanaka11/FTD_Core/compare/v1.1.2...v1.1.3) (2023-10-12)
 
 
