@@ -11,14 +11,14 @@ import {
   validateModel,
 } from "@five12days/core";
 
-import { profileSchema, TProfile } from "./profile.gen.js";
+import { profileSchema, TProfile } from "../gen/profile.gen.js";
 import {
   makeCreateProfileBaseUseCase,
   makeDeleteProfileBaseUseCase,
   makeReadProfileBaseUseCase,
   makeUpdateProfileBaseUseCase,
   TProfileKey,
-} from "./profileBaseUseCases.gen.js";
+} from "../gen/profileBaseUseCases.gen.js";
 
 const validateProfileModel = (data: TRawData) => {
   return validateModel<TProfile>(profileSchema, data);
