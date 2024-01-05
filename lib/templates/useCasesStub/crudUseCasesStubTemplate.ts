@@ -11,14 +11,14 @@ export const CRUD_USECASE_STUB_TEMPLATE = `import {
   validateModel,
 } from "@five12days/core";
 
-import { {MODELVAR}Schema, {TNAME} } from "./{MODELVAR}.gen.js";
+import { {MODELVAR}Schema, {TNAME} } from "../gen/{MODELVAR}.gen.js";
 import {
   makeCreate{MODEL}BaseUseCase,
   makeDelete{MODEL}BaseUseCase,
   makeRead{MODEL}BaseUseCase,
   makeUpdate{MODEL}BaseUseCase,
   {TNAME}Key,
-} from "./{MODELVAR}BaseUseCases.gen.js";
+} from "../gen/{MODELVAR}BaseUseCases.gen.js";
 
 const validate{MODEL}Model = (data: TRawData) => {
   return validateModel<{TNAME}>({MODELVAR}Schema, data);
