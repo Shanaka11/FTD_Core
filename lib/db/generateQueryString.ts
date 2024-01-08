@@ -14,12 +14,19 @@ export const generateSelectQueryString = (
   columns?: string[],
   where?: string,
   orderBy?: string,
+  page?: number,
+  pageSize?: number,
 ) => {
+  let pagination;
+  if (page !== undefined && pageSize !== undefined) {
+    pagination = `LIMIT ${pageSize} OFFSET ${page - 1}`;
+  }
   const mappingValues = {
     FIELDS: generateSqlColumnString(columns),
     TABLE_NAME: camelToSnakeCase(table),
     WHERE: where ?? "",
     ORDER_BY: orderBy ?? "",
+    PAGINATION: pagination ?? "",
   };
   return createStringFromTemplate(mappingValues, SELECT_QUERY_TEMPLATE);
 };
