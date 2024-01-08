@@ -21,7 +21,7 @@ export const makeReadCustomerOrderBaseUseCase = ({
   repository,
   executeQuery,
 }: TMakeGetModelUseCase<TCustomerOrder>) => {
-  return ({ keys, columns, filter, orderBy }: TGetModelUseCase<TCustomerOrderKey>) => {
+  return ({ keys, columns, filter, orderBy, page, pageSize }: TGetModelUseCase<TCustomerOrderKey>) => {
     if (repository.readModel === undefined)
       throw new Error(
         "Repository method of getModel was not defined in customerOrder usecase",
@@ -32,7 +32,9 @@ export const makeReadCustomerOrderBaseUseCase = ({
       key: keys === undefined ? undefined : isIdPresent(keys) ? keys.id : keys,
       columns: columns,
       filter: filter,
-      orderBy: orderBy
+      orderBy: orderBy,
+      page: page,
+      pageSize: pageSize
     });
   };
 };

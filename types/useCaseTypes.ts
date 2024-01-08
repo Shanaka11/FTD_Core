@@ -28,6 +28,8 @@ export type TGetModelUseCase<T> = {
   filter?: string;
   columns?: string[];
   orderBy?: string;
+  page?: number;
+  pageSize?: number;
 };
 
 export type TBaseUseCaseCheckChanged<T> = {

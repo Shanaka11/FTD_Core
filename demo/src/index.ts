@@ -53,8 +53,10 @@ const execute = async () => {
     //   console.log("Order not created");
     // }
     // const data = await readCustomerOrderUseCase({
-    //   filter: "between(orderNo, 312, 314) or eq(id, 400)",
+    //   filter: "between(orderNo, 601, 602)",
     //   orderBy: "orderNo",
+    //   page: 1,
+    //   pageSize: 1,
     // });
     // console.log(data);
     // console.log(data[0].date?.toLocaleString("en-US", { timeZone: "IST" }));

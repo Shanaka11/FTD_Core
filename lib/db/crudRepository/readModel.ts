@@ -16,6 +16,8 @@ export type ReadModelParams = {
   columns?: string[];
   filter?: string;
   orderBy?: string;
+  page?: number;
+  pageSize?: number;
 };
 
 // Handle pagination as well
@@ -25,7 +27,15 @@ export type ReadModelParams = {
 // Read Models
 export const makeReadModel =
   <T>(executeQuery: TExecuteQuery) =>
-  async ({ model, key, columns, filter, orderBy }: ReadModelParams) => {
+  async ({
+    model,
+    key,
+    columns,
+    filter,
+    orderBy,
+    page,
+    pageSize,
+  }: ReadModelParams) => {
     // Create Query String
     // Check if the key is a string or object, if its a string  then its the ID, else it is the Keys
     // If either keys or the id is there then ignore rest of the filters
@@ -53,12 +63,13 @@ export const makeReadModel =
       orderByString = generateOrderByClause(orderBy);
     }
 
-    console.log(orderBy, orderByString);
     const queryString = generateSelectQueryString(
       model,
       columns,
       where,
       orderByString,
+      page,
+      pageSize,
     );
     return camelcaseKeys(
       (await executeQuery(queryString, params)) as RowDataPacket[],

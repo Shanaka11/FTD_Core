@@ -26,7 +26,7 @@ const validateCustomerOrderModel = (data: TRawData) => {
 
 // READ
 export const readCustomerOrderUseCase_ = async (
-  { keys, columns, filter, orderBy }: TGetModelUseCase<TCustomerOrderKey>,
+  { keys, columns, filter, orderBy, page, pageSize }: TGetModelUseCase<TCustomerOrderKey>,
   executeQuery: TExecuteQuery,
 ) => {
   // Add business logic that should be executed before the core method
@@ -39,6 +39,8 @@ export const readCustomerOrderUseCase_ = async (
     columns,
     filter,
     orderBy,
+    page,
+    pageSize
   });
   // Add business logic that should be executed after the core method
 
