@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/Shanaka11/FTD_Core/compare/v1.2.0...v1.3.0) (2024-01-09)
+
+
+### Features
+
+* **CORE-69, CORE-70:** Added build scripts and instructions ([#61](https://github.com/Shanaka11/FTD_Core/issues/61)) ([1f0bb41](https://github.com/Shanaka11/FTD_Core/commit/1f0bb410191c351b0fd81d2b424e2c1678edd5d5))
+* **CORE-73:** Added pagination to read model methods ([#59](https://github.com/Shanaka11/FTD_Core/issues/59)) ([08eca62](https://github.com/Shanaka11/FTD_Core/commit/08eca622f43bb9f0992083ac9f666bb861bf7069))
+
 ## [1.2.0](https://github.com/Shanaka11/FTD_Core/compare/v1.1.3...v1.2.0) (2024-01-05)
 
 
