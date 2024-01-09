@@ -8,7 +8,8 @@
     "dev": "ts-node-esm src/index.ts",
     "test": "jest",
     "ftd-core": "ftd-core",
-    "permission": "chmod +x node_modules/.bin/ftd-core"
+    "permission": "chmod +x node_modules/.bin/ftd-core",
+    "build": "ftd-core -gen && tsc"
   },
   "dependencies": {
     "@five12days/core": "file:..",

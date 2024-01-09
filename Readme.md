@@ -89,6 +89,14 @@ A basic modle definitions should end with ```.ftd.json```. You can see a sample 
 - To execute uses cases as transactions (To execute multiple sql transactions atomically) you have to wrap your use cases in an executeTransaction method. You can see examples of these in the generated useCases file. Please check the methods that does not end with '_' as you can see methods that ends like that contains the implementation details and the methods that do not have it adds the transaction wrapper to it.
 - Whenever you create custom usecases make sure to include 'executeQuery' parameter as a part of its parameter list you can use this to execute your sql.
 
+## Deployment
+
+- When you are ready to make a production build make sure to change the build script in your package.json so that it starts with ```ftd-core -gen &&``` this will make sure that all files that needs to be generated are generated before doing the build. As an example, if you have simple typescript project the build script should look like the following.
+
+    ```
+    "build": "ftd-core -gen && tsc"
+    ```
+
 ## Limitations
 
 - As of now we can only use mysql databases with this solution
