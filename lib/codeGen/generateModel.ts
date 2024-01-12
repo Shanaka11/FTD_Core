@@ -61,6 +61,8 @@ export const generateZodSchema = (attributes: tAattributes) => {
         value.type === "Float"
       ) {
         retString += "z.number";
+      } else if (value.type === "Text") {
+        retString += `z.string`;
       } else {
         retString += `z.${simplize(value.type)}`;
       }

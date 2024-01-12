@@ -2,6 +2,6 @@
   "name": "Course",
   "attributes": {
     "CourseName": { "type": "String", "maxLength": 20, "flags": "KMI-" },
-    "Description": { "type": "String", "maxLength": 100, "flags": "A-IU" }
+    "Description": { "type": "Text", "flags": "A-IU" }
   }
 }
