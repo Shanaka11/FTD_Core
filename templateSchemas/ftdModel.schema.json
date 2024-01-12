@@ -27,6 +27,7 @@
               "type": "string",
               "enum": [
                 "String",
+                "Text",
                 "Number",
                 "BigNumber",
                 "Date",
