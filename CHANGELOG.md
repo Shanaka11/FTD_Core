@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/Shanaka11/FTD_Core/compare/v1.3.0...v1.4.0) (2024-01-12)
+
+
+### Features
+
+* **CORE-74:** Added text data type to handle large text data ([#62](https://github.com/Shanaka11/FTD_Core/issues/62)) ([5d63061](https://github.com/Shanaka11/FTD_Core/commit/5d63061925b697ab6e9e4daf0ba60c808b5cdd6e))
+
 ## [1.3.0](https://github.com/Shanaka11/FTD_Core/compare/v1.2.0...v1.3.0) (2024-01-09)
 
 
