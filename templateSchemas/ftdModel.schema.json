@@ -28,8 +28,9 @@
               "enum": [
                 "String",
                 "Text",
-                "email",
-                "url",
+                "Email",
+                "Url",
+                "Enum",
                 "Number",
                 "BigNumber",
                 "Date",
@@ -41,21 +42,64 @@
             "maxLength": {
               "type": "number",
               "minimum": 1
+            },
+            "enum": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
-          "if": {
-            "properties": {
-              "type": { "const": "String" }
+          "allOf": [
+            {
+              "if": {
+                "not": {
+                  "properties": {
+                    "type": { "const": "String" }
+                  }
+                }
+              },
+              "then": {
+                "not": {
+                  "required": ["maxLength"]
+                }
+              }
+            },
+            {
+              "if": {
+                "not": {
+                  "properties": {
+                    "type": { "const": "Enum" }
+                  }
+                }
+              },
+              "then": {
+                "not": {
+                  "required": ["enum"]
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "type": { "const": "String" }
+                }
+              },
+              "then": {
+                "required": ["maxLength"]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "type": { "const": "Enum" }
+                }
+              },
+              "then": {
+                "required": ["enum"]
+              }
             }
-          },
-          "then": {
-            "required": ["maxLength"]
-          },
-          "else": {
-            "not": {
-              "required": ["maxLength"]
-            }
-          }
+          ]
         }
       }
     },

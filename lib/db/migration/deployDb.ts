@@ -191,6 +191,12 @@ const generateColumnAttString = (attribute: tAttributeItem) => {
   if (attribute.type === "Number") attString += `INT`;
   if (attribute.type === "Decimal") attString += `DECIMAL(12, 2)`;
   if (attribute.type === "Float") attString += `FLOAT`;
+  if (attribute.type === "Enum") {
+    attString += `VARCHAR(${attribute.enum.reduce(
+      (max, str) => (str.length > max ? str.length : max),
+      0,
+    )})`;
+  }
   if (
     attribute.flags === "AMI-" ||
     attribute.flags === "AMIU" ||

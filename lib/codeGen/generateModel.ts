@@ -67,6 +67,8 @@ export const generateZodSchema = (attributes: tAattributes) => {
         value.type === "Url"
       ) {
         retString += `z.string`;
+      } else if (value.type === "Enum") {
+        retString += `z.enum`;
       } else {
         retString += `z.${simplize(value.type)}`;
       }
@@ -77,9 +79,21 @@ export const generateZodSchema = (attributes: tAattributes) => {
         value.flags === "KMI-"
       ) {
         required = true;
-        retString += `({ required_error: "${key} cannot be null" })`;
+        if (value.type === "Enum") {
+          retString += `([${value.enum
+            .map((enumItem) => `"${enumItem}"`)
+            .join(", ")}], { required_error: "${key} cannot be null" })`;
+        } else {
+          retString += `({ required_error: "${key} cannot be null" })`;
+        }
       } else {
-        retString += `()`;
+        if (value.type === "Enum") {
+          retString += `([${value.enum
+            .map((enumItem) => `"${enumItem}"`)
+            .join(", ")}])`;
+        } else {
+          retString += `()`;
+        }
       }
 
       if (value.type === "Email") {

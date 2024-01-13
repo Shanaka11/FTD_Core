@@ -16,10 +16,15 @@ type tAttributeItemString = {
   type: "String";
   maxLength: number;
 };
+
+type tAttributeItemEnum = {
+  type: "Enum";
+  enum: string[];
+};
 export type tAttributeItem = {
   label?: string;
   flags: tAttributeFlags;
-} & (tAttributeItemNoString | tAttributeItemString);
+} & (tAttributeItemNoString | tAttributeItemString | tAttributeItemEnum);
 
 export type tAattributes = Record<string, tAttributeItem>;
 
