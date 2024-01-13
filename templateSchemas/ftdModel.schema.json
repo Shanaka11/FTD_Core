@@ -63,13 +63,7 @@
       "patternProperties": {
         "^[a-zA-Z0-9]+$": {
           "type": "object",
-          "required": [
-            "model",
-            "relationship",
-            "mappingFrom",
-            "mappingTo",
-            "onDelete"
-          ],
+          "required": ["model", "relationship", "mapping", "onDelete"],
           "properties": {
             "model": {
               "type": "string"
