@@ -28,6 +28,8 @@
               "enum": [
                 "String",
                 "Text",
+                "email",
+                "url",
                 "Number",
                 "BigNumber",
                 "Date",

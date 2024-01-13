@@ -183,6 +183,8 @@ const generateColumnAttString = (attribute: tAttributeItem) => {
   if (attribute.type === "String")
     attString += `VARCHAR(${attribute.maxLength})`;
   if (attribute.type === "Text") attString += `TEXT`;
+  if (attribute.type === "Email") attString += `VARCHAR(255)`;
+  if (attribute.type === "Url") attString += `VARCHAR(255)`;
   if (attribute.type === "Date") attString += `DATE`;
   if (attribute.type === "Timestamp") attString += "TIMESTAMP";
   if (attribute.type === "BigNumber") attString += "BIGINT";

@@ -61,7 +61,11 @@ export const generateZodSchema = (attributes: tAattributes) => {
         value.type === "Float"
       ) {
         retString += "z.number";
-      } else if (value.type === "Text") {
+      } else if (
+        value.type === "Text" ||
+        value.type === "Email" ||
+        value.type === "Url"
+      ) {
         retString += `z.string`;
       } else {
         retString += `z.${simplize(value.type)}`;
@@ -76,6 +80,14 @@ export const generateZodSchema = (attributes: tAattributes) => {
         retString += `({ required_error: "${key} cannot be null" })`;
       } else {
         retString += `()`;
+      }
+
+      if (value.type === "Email") {
+        retString += `.email({ message: 'Invalid Email' }).max(255)`;
+      }
+
+      if (value.type === "Url") {
+        retString += `.url({ message: 'Invalid Url' }).max(255)`;
       }
 
       if (value.type === "String") {

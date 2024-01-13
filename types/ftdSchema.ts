@@ -8,7 +8,9 @@ type tAttributeItemNoString = {
     | "Float"
     | "Date"
     | "Timestamp"
-    | "Text";
+    | "Text"
+    | "Url"
+    | "Email";
 };
 type tAttributeItemString = {
   type: "String";
