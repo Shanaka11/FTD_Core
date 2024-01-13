@@ -33,6 +33,10 @@ This will use a defined schema to generate core functionality
     ```sh
         npm run ftd:init
     ```
+- Update the .gitignore files with the following line.
+   ```
+   *.gen.ts
+   ```
 - Define the schema files according to the definitions
 - You can generate the SQL table definitions and deploy them using the following command
     ```sh
