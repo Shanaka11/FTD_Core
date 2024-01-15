@@ -15,6 +15,7 @@ import {
   TExecuteQuery,
   TGetModelUseCase,
   TMakeGetModelUseCase,
+  TModelKey,
 } from "@five12days/core";
 
 {IMPORTS}

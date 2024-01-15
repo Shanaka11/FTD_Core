@@ -7,6 +7,7 @@ import {
   TExecuteQuery,
   TGetModelUseCase,
   TMakeGetModelUseCase,
+  TModelKey,
 } from "@five12days/core";
 
 
@@ -191,7 +192,7 @@ const validateRelationships_ = async (
 };
 
 export const checkProfileExist_ = async (
-  profile: TProfileKey,
+  profile: TProfileKey | TModelKey,
   executeQuery: TExecuteQuery,
   triggerException:
     | "TRIGGER_WHEN_EXIST"
@@ -199,7 +200,7 @@ export const checkProfileExist_ = async (
     | "DO_NO_TRIGGER" = "DO_NO_TRIGGER",
 ) => {
   const existingProfile = await readProfileUseCase_(
-    { keys: { profileId: profile.profileId } }, // Generate from keys
+    { keys: isIdPresent(profile) ? { id: profile.id } : { profileId: profile.profileId } }, // Generate from keys
     executeQuery,
   );
 
