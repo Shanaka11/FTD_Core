@@ -1,6 +1,0 @@
-{
-  "name": "NoPk",
-  "attributes": {
-    "CourseName": { "type": "String", "maxLength": 20, "flags": "AMI-" }
-  }
-}
