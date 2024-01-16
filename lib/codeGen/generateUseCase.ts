@@ -90,7 +90,9 @@ const resolveRelationships = (
   const sourceFilePath = modelMap.get(nameSimplized);
   const validationBlocks: string[] = [];
   if (sourceFilePath === undefined)
-    throw new Error(`Model definition incorrect, Name not defined`);
+    throw new Error(
+      `model ${nameSimplized} does not exist. Check the model name of the schema definition`,
+    );
 
   const importStringArray: string[] = [];
 
@@ -100,7 +102,7 @@ const resolveRelationships = (
     const targetFilePath = modelMap.get(modelName);
     if (targetFilePath === undefined)
       throw new Error(
-        `Model definition incorrect, Relationship definition has errors`,
+        `Model ${relationship.model} does not exist, Check the relationship definition's modelname`,
       );
     // Base usecase will have a checkExistcount method that will return how many records for the given key exist
     const importString = generateImportString(
