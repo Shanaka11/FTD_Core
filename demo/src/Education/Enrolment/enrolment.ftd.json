@@ -1,7 +1,7 @@
 {
   "name": "Enrolment",
   "attributes": {
-    "StudentId": { "type": "Number", "flags": "KMI-" },
+    "StudentId": { "type": "String", "maxLength": 100, "flags": "KMI-" },
     "CourseName": { "type": "String", "maxLength": 20, "flags": "KMI-" }
   },
   "relationships": {
@@ -10,7 +10,7 @@
       "relationship": "ONE_TO_MANY",
       "mapping": {
         "from": ["StudentId"],
-        "to": ["StudentId"]
+        "to": ["Id"]
       },
       "onDelete": "CASCADE"
     },

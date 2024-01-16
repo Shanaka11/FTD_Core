@@ -183,12 +183,20 @@ const generateColumnAttString = (attribute: tAttributeItem) => {
   if (attribute.type === "String")
     attString += `VARCHAR(${attribute.maxLength})`;
   if (attribute.type === "Text") attString += `TEXT`;
+  if (attribute.type === "Email") attString += `VARCHAR(255)`;
+  if (attribute.type === "Url") attString += `VARCHAR(255)`;
   if (attribute.type === "Date") attString += `DATE`;
   if (attribute.type === "Timestamp") attString += "TIMESTAMP";
   if (attribute.type === "BigNumber") attString += "BIGINT";
   if (attribute.type === "Number") attString += `INT`;
   if (attribute.type === "Decimal") attString += `DECIMAL(12, 2)`;
   if (attribute.type === "Float") attString += `FLOAT`;
+  if (attribute.type === "Enum") {
+    attString += `VARCHAR(${attribute.enum.reduce(
+      (max, str) => (str.length > max ? str.length : max),
+      0,
+    )})`;
+  }
   if (
     attribute.flags === "AMI-" ||
     attribute.flags === "AMIU" ||

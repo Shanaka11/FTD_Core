@@ -61,8 +61,14 @@ export const generateZodSchema = (attributes: tAattributes) => {
         value.type === "Float"
       ) {
         retString += "z.number";
-      } else if (value.type === "Text") {
+      } else if (
+        value.type === "Text" ||
+        value.type === "Email" ||
+        value.type === "Url"
+      ) {
         retString += `z.string`;
+      } else if (value.type === "Enum") {
+        retString += `z.enum`;
       } else {
         retString += `z.${simplize(value.type)}`;
       }
@@ -73,9 +79,29 @@ export const generateZodSchema = (attributes: tAattributes) => {
         value.flags === "KMI-"
       ) {
         required = true;
-        retString += `({ required_error: "${key} cannot be null" })`;
+        if (value.type === "Enum") {
+          retString += `([${value.enum
+            .map((enumItem) => `"${enumItem}"`)
+            .join(", ")}], { required_error: "${key} cannot be null" })`;
+        } else {
+          retString += `({ required_error: "${key} cannot be null" })`;
+        }
       } else {
-        retString += `()`;
+        if (value.type === "Enum") {
+          retString += `([${value.enum
+            .map((enumItem) => `"${enumItem}"`)
+            .join(", ")}])`;
+        } else {
+          retString += `()`;
+        }
+      }
+
+      if (value.type === "Email") {
+        retString += `.email({ message: 'Invalid Email' }).max(255)`;
+      }
+
+      if (value.type === "Url") {
+        retString += `.url({ message: 'Invalid Url' }).max(255)`;
       }
 
       if (value.type === "String") {

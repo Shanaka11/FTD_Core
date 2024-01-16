@@ -57,17 +57,27 @@ export const generateUseCase = (modelSchema: tModel) => {
 
 const createModelKeyType = (tName: string, attributes: tAattributes) => {
   let content = `type ${tName}Key = {\n`;
+  let count = 0;
   content += indent(1);
-  content += Object.entries(attributes)
+  // Check if attributes is empty if so return an empty type
+  const attributeArray = Object.entries(attributes);
+
+  content += attributeArray
     .filter(([, attribute]) => {
       return attribute.flags === "KMI-";
     })
     .map(([key, attribute]) => {
+      count++;
       return `${simplize(key)}${decodeAttributeType(attribute)}`;
     })
     .join(`;\n${indent(1)}`);
-  content += `;\n};`;
 
+  if (count === 0) {
+    content += `\n};`;
+    return content;
+  }
+
+  content += `;\n};`;
   return content;
 };
 

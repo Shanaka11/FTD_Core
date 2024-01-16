@@ -7,6 +7,7 @@ import {
   TExecuteQuery,
   TGetModelUseCase,
   TMakeGetModelUseCase,
+  TModelKey,
 } from "@five12days/core";
 
 import { checkCustomerOrderExist_ } from "../../customerOrder/gen/customerOrderBaseUseCases.gen.js";
@@ -212,7 +213,7 @@ const validateRelationships_ = async (
 };
 
 export const checkOrderLineExist_ = async (
-  orderLine: TOrderLineKey,
+  orderLine: TOrderLineKey | TModelKey,
   executeQuery: TExecuteQuery,
   triggerException:
     | "TRIGGER_WHEN_EXIST"
@@ -220,7 +221,7 @@ export const checkOrderLineExist_ = async (
     | "DO_NO_TRIGGER" = "DO_NO_TRIGGER",
 ) => {
   const existingOrderLine = await readOrderLineUseCase_(
-    { keys: { orderNo: orderLine.orderNo, lineNo: orderLine.lineNo } }, // Generate from keys
+    { keys: isIdPresent(orderLine) ? { id: orderLine.id } : { orderNo: orderLine.orderNo, lineNo: orderLine.lineNo } }, // Generate from keys
     executeQuery,
   );
 
