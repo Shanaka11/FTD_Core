@@ -114,7 +114,7 @@ export const createAndDeployTable = async (
   columns: tAattributes,
 ) => {
   const queryTemplate = `CREATE TABLE {TABLE_NAME} (\n{COLUMNS},\nPRIMARY KEY(ID)\n{INDEX})`;
-  const fullAttSet = Object.assign(baseModelColumns, columns);
+  const fullAttSet = Object.assign(columns, baseModelColumns);
 
   const columnText = Object.entries(fullAttSet)
     .map(([key, properties]) => {
