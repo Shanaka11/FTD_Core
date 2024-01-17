@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/Shanaka11/FTD_Core/compare/v1.4.1...v1.4.2) (2024-01-17)
+
+
+### Bug Fixes
+
+* Db Migration errors ([#78](https://github.com/Shanaka11/FTD_Core/issues/78)) ([d798aee](https://github.com/Shanaka11/FTD_Core/commit/d798aeebb19e7fbe4cbfbebe2ab7fb9342527995))
+
 ## [1.4.1](https://github.com/Shanaka11/FTD_Core/compare/v1.4.0...v1.4.1) (2024-01-16)
 
 
