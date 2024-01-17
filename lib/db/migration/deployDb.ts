@@ -25,7 +25,10 @@ import {
   getAdminConnection,
   getConnection,
 } from "../connecter/mysql/connecter.js";
-import { makeExecuteQuery } from "../connecter/mysql/executeQuery.js";
+import {
+  makeExecuteMultipleQueries,
+  makeExecuteQuery,
+} from "../connecter/mysql/executeQuery.js";
 
 // When foreign keys are introduced, maybe we have to figure out the deployment order
 // Finally, Automatically detect changed model files and deploy tables only related to that
@@ -127,8 +130,8 @@ export const createAndDeployTable = async (
   const query = createStringFromTemplate(
     {
       TABLE_NAME: tableName,
-      COLUMNS: columnText + (index !== "" ? "," : ""),
-      INDEX: index,
+      COLUMNS: columnText,
+      INDEX: (index !== "" ? "," : "") + index,
     },
     queryTemplate,
   );
@@ -264,7 +267,7 @@ export const initializedForeignKeyConstraintCreation = async (
   // console.log(querySet.join(";"));
   if (querySet.length > 0) {
     const connection = await getAdminConnection();
-    const executeQuery = makeExecuteQuery(connection);
+    const executeQuery = makeExecuteMultipleQueries(connection);
     await executeQuery(querySet.join(";"));
     connection.destroy();
   }
