@@ -33,7 +33,10 @@ const camelToSnakeCase = (str: string) => {
 };
 
 const snakeToCamel = (str: string): string => {
-  return str.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
+  if (str.charAt(0) === str.charAt(0).toLowerCase()) return str;
+  return str
+    .toLowerCase()
+    .replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
 };
 
 const arrayToCommaSeparatedString = (values: TValue[]) => {
