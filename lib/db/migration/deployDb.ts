@@ -11,6 +11,7 @@ import {
 import { isTModel } from "../../../types/validateSchemaType.js";
 import {
   camelToSnakeCase,
+  capitalize,
   createStringFromTemplate,
   simplize,
   snakeToCamel,
@@ -44,33 +45,34 @@ export const deployDb = async (filename: string) => {
       const data = fs.readFileSync(filePath, "utf-8");
       const modelSchema: unknown = JSON.parse(data);
 
-      if (isTModel(modelSchema)) {
-        const { name, attributes, relationships } = modelSchema;
-
-        if (relationships !== undefined) {
-          relationshipMap.set(name, relationships);
-          attributeMap.set(name, attributes);
-        }
-
-        const tableName = camelToSnakeCase(simplize(name));
-        if (tables.get(tableName) !== undefined) {
-          console.log(`${tableName}: Updating`);
-          await updateAndDeployTable(
-            tableName,
-            attributes,
-            tables.get(tableName),
-          );
-          console.log(`${tableName}: Updated`);
-        } else {
-          console.log(`${tableName}: Creating`);
-          await createAndDeployTable(tableName, attributes);
-          console.log(`${tableName}: Created`);
-        }
-      } else {
+      if (!isTModel(modelSchema)) {
         const filename = filePath.replace(/^.*[\\/]/, "");
         throw new Error(
           `Schema error, Please check ${simplize(filename)} for errors.`,
         );
+      }
+
+      const { name, attributes, relationships } = modelSchema;
+
+      if (relationships !== undefined) {
+        relationshipMap.set(name, relationships);
+      }
+      attributeMap.set(name, attributes);
+
+      const tableName = camelToSnakeCase(simplize(name));
+
+      if (tables.get(tableName) !== undefined) {
+        console.log(`${tableName}: Updating`);
+        await updateAndDeployTable(
+          tableName,
+          attributes,
+          tables.get(tableName),
+        );
+        console.log(`${tableName}: Updated`);
+      } else {
+        console.log(`${tableName}: Creating`);
+        await createAndDeployTable(tableName, attributes);
+        console.log(`${tableName}: Created`);
       }
     }
     // Alter tables to add foreign key constraints
@@ -80,6 +82,10 @@ export const deployDb = async (filename: string) => {
       attributeMap,
     );
     console.log("Finished Deploying Foreign Key Constraints and Indexes");
+
+    console.log("Drop removed columns");
+    await dropRemovedColumns(attributeMap);
+    console.log("Finished dropping columns");
   } catch (e) {
     if (e instanceof Error) {
       console.log(e.message);
@@ -365,7 +371,7 @@ const getDeployedForeginKeysForTable = async (tableName: string) => {
   }' AND TABLE_NAME = '${camelToSnakeCase(simplize(tableName))}'`;
   const connection = await getConnection();
   const executeQuery = makeExecuteQuery(connection);
-  console.log(tableName);
+
   const foreignKeys = (await executeQuery(checkDeployedForeignKeysQuery)) as {
     CONSTRAINT_NAME: string;
   }[];
@@ -422,4 +428,68 @@ const getFiles = (fileName: string) => {
   const extension = ".ftd.json";
   if (fileName === "all") return findFilesWithExtension(srcPath, extension);
   return findFilesByName(srcPath, fileName + extension);
+};
+
+const dropRemovedColumns = async (attributeMap: Map<string, tAattributes>) => {
+  // Loop the attributeMap and run generateDropColumnStringForTable on each pass
+  // This will return an array of ALTER TABLE statements
+  // Join the array with ; and then execute the query
+  const querySet: string[] = [];
+  for (const [tableName, attributes] of attributeMap) {
+    const queryString = await generateDropColumnStringForTable(
+      tableName,
+      attributes,
+    );
+    if (queryString !== "") {
+      querySet.push(
+        await generateDropColumnStringForTable(tableName, attributes),
+      );
+    }
+  }
+  if (querySet.length > 0) {
+    const connection = await getAdminConnection();
+    const executeQuery = makeExecuteMultipleQueries(connection);
+    await executeQuery(querySet.join(";"));
+    connection.destroy();
+  }
+};
+
+const generateDropColumnStringForTable = async (
+  tableName: string,
+  attributes: tAattributes,
+) => {
+  // Get the column names that exist in the table
+  // Check with the attribute map
+  // Check if a column name exist in the table and not in the attribute map
+  // If not exist the generate a drop statement for the column
+  // This should return something like
+  /*
+  'ALTER TABLE TABLE_NAME DROP COLUMNS A, DROP COULMN B'
+   */
+  const checkDeployedColumns = `DESCRIBE ${camelToSnakeCase(
+    simplize(tableName),
+  )}`;
+  const dropColumnArray: string[] = [];
+  const connection = await getConnection();
+  const executeQuery = makeExecuteQuery(connection);
+
+  const deployedColumns = (await executeQuery(checkDeployedColumns)) as {
+    Field: string;
+  }[];
+  connection.release();
+
+  deployedColumns.forEach(({ Field }) => {
+    // Ignore base columns, Id, CreatedAt, UpdatedAt
+    if (Field === "ID" || Field === "CREATED_AT" || Field === "UPDATED_AT")
+      return;
+    if (attributes[capitalize(snakeToCamel(Field))] === undefined) {
+      dropColumnArray.push(`DROP ${Field}`);
+    }
+  });
+
+  if (dropColumnArray.length === 0) return "";
+
+  return `ALTER TABLE ${camelToSnakeCase(
+    simplize(tableName),
+  )} ${dropColumnArray.join(",")}`;
 };
