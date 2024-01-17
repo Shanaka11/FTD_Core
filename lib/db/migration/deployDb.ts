@@ -13,6 +13,7 @@ import {
   camelToSnakeCase,
   createStringFromTemplate,
   simplize,
+  snakeToCamel,
 } from "../../codeGen/textUtils.js";
 import { baseModelColumns } from "../../common/baseModelColumns.js";
 import {
@@ -109,7 +110,7 @@ export const createAndDeployTable = async (
   tableName: string,
   columns: tAattributes,
 ) => {
-  const queryTemplate = `CREATE TABLE {TABLE_NAME} (\n{COLUMNS},\nPRIMARY KEY(ID),\n{INDEX})`;
+  const queryTemplate = `CREATE TABLE {TABLE_NAME} (\n{COLUMNS},\nPRIMARY KEY(ID)\n{INDEX})`;
   const fullAttSet = Object.assign(baseModelColumns, columns);
 
   const columnText = Object.entries(fullAttSet)
@@ -121,12 +122,12 @@ export const createAndDeployTable = async (
     .join(`,\n`);
 
   // Model Key
-  const index = `${createModelKeyIndex(columns, false)}`;
+  const index = `${await createModelKeyIndex(tableName, columns, false)}`;
 
   const query = createStringFromTemplate(
     {
       TABLE_NAME: tableName,
-      COLUMNS: columnText,
+      COLUMNS: columnText + (index !== "" ? "," : ""),
       INDEX: index,
     },
     queryTemplate,
@@ -142,7 +143,7 @@ export const updateAndDeployTable = async (
   deployedColumns?: Set<string>,
 ) => {
   // For now we do not allow to drop columns
-  const queryTemplate = `ALTER TABLE {TABLE_NAME}\n{COLUMNS},\n{INDEX}`;
+  const queryTemplate = `ALTER TABLE {TABLE_NAME}\n{COLUMNS}\n{INDEX}`;
   // When modifiying tables we do not change the base columns
   //   const fullAttSet = Object.assign(baseModelColumns, columns);
 
@@ -162,12 +163,12 @@ export const updateAndDeployTable = async (
     .join(`,\n`);
 
   // Model Key
-  const index = `${createModelKeyIndex(columns, true)}`;
+  const index = `${await createModelKeyIndex(tableName, columns, true)}`;
 
   const query = createStringFromTemplate(
     {
       TABLE_NAME: tableName,
-      COLUMNS: columnText,
+      COLUMNS: columnText + (index !== "" ? "," : ""),
       INDEX: index,
     },
     queryTemplate,
@@ -207,7 +208,11 @@ const generateColumnAttString = (attribute: tAttributeItem) => {
   return attString;
 };
 
-const createModelKeyIndex = (columns: tAattributes, update: boolean) => {
+const createModelKeyIndex = async (
+  tableName: string,
+  columns: tAattributes,
+  update: boolean,
+) => {
   const keyString = Object.entries(columns).reduce((acc, [key, value]) => {
     if (value.flags === "KMI-") {
       if (acc === ``) {
@@ -219,6 +224,19 @@ const createModelKeyIndex = (columns: tAattributes, update: boolean) => {
     return acc;
   }, ``);
 
+  // When there are no user defined keys
+  if (keyString === ``) {
+    // IF updating and a constraint exist then drop it
+    if (update) {
+      const deployedModelKeys = await getDeployedForeginKeysForTable(
+        snakeToCamel(tableName),
+      );
+      if (deployedModelKeys.has("MODEL_KEYS_IDX")) {
+        return `DROP CONSTRAINT MODEL_KEYS_IDX`;
+      }
+    }
+    return ``;
+  }
   // When updating we should drop the existing modelKey constraint and create it again with the new fields
   if (update) {
     return `DROP CONSTRAINT MODEL_KEYS_IDX,\nADD CONSTRAINT MODEL_KEYS_IDX UNIQUE (${keyString})`;
@@ -339,11 +357,12 @@ const getDeployedIndexForTable = async (tableName: string) => {
 };
 
 const getDeployedForeginKeysForTable = async (tableName: string) => {
-  const checkDeployedForeignKeysQuery = `SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE REFERENCED_TABLE_SCHEMA = '${
+  const checkDeployedForeignKeysQuery = `SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE CONSTRAINT_SCHEMA = '${
     process.env.DB_NAME
   }' AND TABLE_NAME = '${camelToSnakeCase(simplize(tableName))}'`;
   const connection = await getConnection();
   const executeQuery = makeExecuteQuery(connection);
+  console.log(tableName);
   const foreignKeys = (await executeQuery(checkDeployedForeignKeysQuery)) as {
     CONSTRAINT_NAME: string;
   }[];

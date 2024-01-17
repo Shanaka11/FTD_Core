@@ -68,19 +68,19 @@ export const getAdminConnection = () => {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     multipleStatements: true,
-    timezone: "utc",
+    timezone: "+00:00",
   });
 
-  connection.on("connection", async (connection) => {
-    await connection.query('SET time_zone="+00:00";', (err: unknown) => {
-      if (!!err && err instanceof Error) {
-        throw new Error(err.message);
-      }
-      return new Error(
-        "There was an error when setting the db connection timezone.",
-      );
-    });
-  });
+  // connection.on("connection", async (connection) => {
+  //   await connection.query('SET time_zone="+00:00";', (err: unknown) => {
+  //     if (!!err && err instanceof Error) {
+  //       throw new Error(err.message);
+  //     }
+  //     return new Error(
+  //       "There was an error when setting the db connection timezone.",
+  //     );
+  //   });
+  // });
 
   return connection.getConnection();
 };
