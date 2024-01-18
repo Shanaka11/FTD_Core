@@ -42,70 +42,67 @@ const generateCoreFiles_ = (dirPath: string, generate: boolean = true) => {
   generateFolderStructure(result);
   // Try making this async
   result.forEach((filePath) => {
-    if (generate) {
-      try {
-        const data: string = fs.readFileSync(filePath, "utf-8");
-        const modelData: unknown = JSON.parse(data);
-        if (isTModel(modelData)) {
-          const directory = path.dirname(filePath);
-          // Model
-          const modelCode = generateModel(modelData);
+    if (!generate) return;
+    try {
+      const data: string = fs.readFileSync(filePath, "utf-8");
+      const modelData: unknown = JSON.parse(data);
+      if (isTModel(modelData)) {
+        const directory = path.dirname(filePath);
+        // Model
+        const modelCode = generateModel(modelData);
 
-          writeFileSync(
-            `${directory}/gen/${simplize(modelData.name)}.gen.ts`,
-            modelCode,
-          );
-          console.log(
-            `${simplize(modelData.name)}.gen.ts Created successfully.`,
-          );
+        writeFileSync(
+          `${directory}/gen/${simplize(modelData.name)}.gen.ts`,
+          modelCode,
+        );
+        console.log(`${simplize(modelData.name)}.gen.ts Created successfully.`);
 
-          // Usecases
-          const useCaseCode = generateUseCase(modelData);
-          writeFileSync(
-            `${directory}/gen/${simplize(modelData.name)}BaseUseCases.gen.ts`,
-            useCaseCode,
-          );
+        // Usecases
+        const useCaseCode = generateUseCase(modelData);
+        writeFileSync(
+          `${directory}/gen/${simplize(modelData.name)}BaseUseCases.gen.ts`,
+          useCaseCode,
+        );
+        console.log(
+          `${simplize(
+            modelData.name,
+          )}BaseUseCases.gen.ts Created successfully.`,
+        );
+
+        // Usecase stubs
+        // Check if a file exists if so do not overwright it
+        const stubExists = fs.existsSync(
+          `${directory}/useCases/${simplize(modelData.name)}UseCases.ts`,
+        );
+        if (stubExists) {
           console.log(
             `${simplize(
               modelData.name,
-            )}BaseUseCases.gen.ts Created successfully.`,
+            )}UseCases.ts Already exists, no file was generated.`,
           );
-
-          // Usecase stubs
-          // Check if a file exists if so do not overwright it
-          const stubExists = fs.existsSync(
+        } else {
+          const useCaseStubCode = generateUseCaseStubs(modelData);
+          writeFileSync(
             `${directory}/useCases/${simplize(modelData.name)}UseCases.ts`,
+            useCaseStubCode,
           );
-          if (stubExists) {
-            console.log(
-              `${simplize(
-                modelData.name,
-              )}UseCases.ts Already exists, no file was generated.`,
-            );
-          } else {
-            const useCaseStubCode = generateUseCaseStubs(modelData);
-            writeFileSync(
-              `${directory}/useCases/${simplize(modelData.name)}UseCases.ts`,
-              useCaseStubCode,
-            );
-            console.log(
-              `${simplize(modelData.name)}UseCases.ts Created successfully.`,
-            );
-          }
-        } else {
-          const filename = filePath.replace(/^.*[\\/]/, "");
-          throw new Error(
-            `Schema error, Please check ${simplize(filename)} for errors.`,
+          console.log(
+            `${simplize(modelData.name)}UseCases.ts Created successfully.`,
           );
         }
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          // e is narrowed to Error!
-          const filename = filePath.replace(/^.*[\\/]/, "");
-          console.error(`${filename} has errors: ${err.message}`);
-        } else {
-          console.error(err);
-        }
+      } else {
+        const filename = filePath.replace(/^.*[\\/]/, "");
+        throw new Error(
+          `Schema error, Please check ${simplize(filename)} for errors.`,
+        );
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        // e is narrowed to Error!
+        const filename = filePath.replace(/^.*[\\/]/, "");
+        console.error(`${filename} has errors: ${err.message}`);
+      } else {
+        console.error(err);
       }
     }
   });
