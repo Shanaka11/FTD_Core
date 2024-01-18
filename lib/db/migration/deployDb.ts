@@ -11,7 +11,6 @@ import {
 import { isTModel } from "../../../types/validateSchemaType.js";
 import {
   camelToSnakeCase,
-  capitalize,
   createStringFromTemplate,
   simplize,
   snakeToCamel,
@@ -482,7 +481,7 @@ const generateDropColumnStringForTable = async (
     // Ignore base columns, Id, CreatedAt, UpdatedAt
     if (Field === "ID" || Field === "CREATED_AT" || Field === "UPDATED_AT")
       return;
-    if (attributes[capitalize(snakeToCamel(Field))] === undefined) {
+    if (attributes[snakeToCamel(Field)] === undefined) {
       dropColumnArray.push(`DROP ${Field}`);
     }
   });
