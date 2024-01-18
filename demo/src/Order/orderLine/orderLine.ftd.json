@@ -12,8 +12,8 @@
       "model": "CustomerOrder",
       "relationship": "ONE_TO_ONE",
       "mapping": {
-        "from": ["OrderNo"],
-        "to": ["OrderNo"]
+        "from": ["orderNo"],
+        "to": ["orderNo"]
       },
       "onDelete": "CASCADE"
     }

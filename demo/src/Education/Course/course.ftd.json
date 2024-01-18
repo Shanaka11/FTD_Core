@@ -1,8 +1,8 @@
 {
   "name": "Course",
   "attributes": {
-    "CourseName": { "type": "String", "maxLength": 20, "flags": "KMI-" },
-    "Description": { "type": "Text", "flags": "A-IU" },
+    "courseName": { "type": "String", "maxLength": 20, "flags": "KMI-" },
+    "description": { "type": "Text", "flags": "A-IU" },
     "link": { "type": "Url", "flags": "A-I-" },
     "email": { "type": "Email", "flags": "A-I-" },
     "expired": { "type": "Enum", "enum": ["true", "false"], "flags": "A-I-" }
