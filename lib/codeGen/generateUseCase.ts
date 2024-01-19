@@ -108,7 +108,7 @@ const resolveRelationships = (
     const importString = generateImportString(
       sourceFilePath,
       targetFilePath,
-      `${modelName}BaseUseCases.gen.js`,
+      `${modelName}BaseUseCases.gen`,
       `check${moldeNameCapitalized}Exist_`,
     );
     importStringArray.push(importString);

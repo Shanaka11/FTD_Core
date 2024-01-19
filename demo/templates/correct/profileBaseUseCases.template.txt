@@ -8,11 +8,11 @@ import {
   TGetModelUseCase,
   TMakeGetModelUseCase,
   TModelKey,
-} from "@five12days/core";
+} from "@five12days/core/dist/public";
 
 
-import { readProfileUseCase_ } from "../useCases/profileUseCases.js";
-import { makeProfile, TProfile } from "./profile.gen.js";
+import { readProfileUseCase_ } from "../useCases/profileUseCases";
+import { makeProfile, TProfile } from "./profile.gen";
 
 export type TProfileKey = {
   profileId: number;

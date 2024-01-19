@@ -9,16 +9,16 @@ import {
   TGetModelUseCase,
   TRawData,
   validateModel,
-} from "@five12days/core";
+} from "@five12days/core/dist/public";
 
-import { customerOrderSchema, TCustomerOrder } from "../gen/customerOrder.gen.js";
+import { customerOrderSchema, TCustomerOrder } from "../gen/customerOrder.gen";
 import {
   makeCreateCustomerOrderBaseUseCase,
   makeDeleteCustomerOrderBaseUseCase,
   makeReadCustomerOrderBaseUseCase,
   makeUpdateCustomerOrderBaseUseCase,
   TCustomerOrderKey,
-} from "../gen/customerOrderBaseUseCases.gen.js";
+} from "../gen/customerOrderBaseUseCases.gen";
 
 const validateCustomerOrderModel = (data: TRawData) => {
   return validateModel<TCustomerOrder>(customerOrderSchema, data);

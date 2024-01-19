@@ -1,5 +1,5 @@
 export const MAKE_CREATE_MODEL_TEMPLATE = `// Generated Code, Do not modify
-import { makeModelParams, TRawData } from "@five12days/core";
+import { makeModelParams, TRawData } from "@five12days/core/dist/public";
 import { z } from "zod";
 
 export const {MODELVAR}Schema = z.object({

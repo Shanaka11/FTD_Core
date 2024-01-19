@@ -16,11 +16,11 @@ import {
   TGetModelUseCase,
   TMakeGetModelUseCase,
   TModelKey,
-} from "@five12days/core";
+} from "@five12days/core/dist/public";
 
 {IMPORTS}
-import { read{MODEL}UseCase_ } from "../useCases/{MODELVAR}UseCases.js";
-import { make{MODEL}, {TNAME} } from "./{MODELVAR}.gen.js";
+import { read{MODEL}UseCase_ } from "../useCases/{MODELVAR}UseCases";
+import { make{MODEL}, {TNAME} } from "./{MODELVAR}.gen";
 
 export {MODELTYPE}
 
