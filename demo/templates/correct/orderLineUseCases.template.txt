@@ -9,16 +9,16 @@ import {
   TGetModelUseCase,
   TRawData,
   validateModel,
-} from "@five12days/core";
+} from "@five12days/core/dist/public";
 
-import { orderLineSchema, TOrderLine } from "../gen/orderLine.gen.js";
+import { orderLineSchema, TOrderLine } from "../gen/orderLine.gen";
 import {
   makeCreateOrderLineBaseUseCase,
   makeDeleteOrderLineBaseUseCase,
   makeReadOrderLineBaseUseCase,
   makeUpdateOrderLineBaseUseCase,
   TOrderLineKey,
-} from "../gen/orderLineBaseUseCases.gen.js";
+} from "../gen/orderLineBaseUseCases.gen";
 
 const validateOrderLineModel = (data: TRawData) => {
   return validateModel<TOrderLine>(orderLineSchema, data);

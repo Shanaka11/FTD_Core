@@ -9,16 +9,16 @@ export const CRUD_USECASE_STUB_TEMPLATE = `import {
   TGetModelUseCase,
   TRawData,
   validateModel,
-} from "@five12days/core";
+} from "@five12days/core/dist/public";
 
-import { {MODELVAR}Schema, {TNAME} } from "../gen/{MODELVAR}.gen.js";
+import { {MODELVAR}Schema, {TNAME} } from "../gen/{MODELVAR}.gen";
 import {
   makeCreate{MODEL}BaseUseCase,
   makeDelete{MODEL}BaseUseCase,
   makeRead{MODEL}BaseUseCase,
   makeUpdate{MODEL}BaseUseCase,
   {TNAME}Key,
-} from "../gen/{MODELVAR}BaseUseCases.gen.js";
+} from "../gen/{MODELVAR}BaseUseCases.gen";
 
 const validate{MODEL}Model = (data: TRawData) => {
   return validateModel<{TNAME}>({MODELVAR}Schema, data);
