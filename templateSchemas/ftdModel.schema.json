@@ -6,7 +6,8 @@
   "type": "object",
   "properties": {
     "name": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^[a-z][A-Za-z]*$"
     },
     "attributes": {
       "type": "object",
