@@ -31,6 +31,7 @@ export type TRepository<T> = {
 
 export type TExecuteQuery = (
   query: string,
+  isReadQuery: boolean,
   params?: string[],
 ) => Promise<TExecuteQueryResponse>;
 

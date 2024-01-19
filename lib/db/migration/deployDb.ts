@@ -98,7 +98,7 @@ const getDeployedTables = async () => {
   const connection = await getConnection();
   const executeQuery = makeExecuteQuery(connection);
   const query = `SELECT TABLE_NAME, COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '${process.env.DB_NAME}'`;
-  const dbTables = (await executeQuery(query)) as RowDataPacket[];
+  const dbTables = (await executeQuery(query, true)) as RowDataPacket[];
 
   dbTables.forEach((table) => {
     const tableName = table["TABLE_NAME"] as string;
@@ -142,7 +142,7 @@ export const createAndDeployTable = async (
   );
   // Foreign Key constraints (One to One, One to Many, on_Delete behaviour)
   const executeQuery = makeExecuteQuery(await getConnection());
-  await executeQuery(query);
+  await executeQuery(query, false);
 };
 
 export const updateAndDeployTable = async (
@@ -184,7 +184,7 @@ export const updateAndDeployTable = async (
 
   // Foreign Key constraints (One to One, One to Many, on_Delete behaviour)
   const executeQuery = makeExecuteQuery(await getConnection());
-  await executeQuery(query);
+  await executeQuery(query, false);
 };
 
 const generateColumnAttString = (attribute: tAttributeItem) => {
@@ -358,7 +358,7 @@ const getDeployedIndexForTable = async (tableName: string) => {
   const executeQuery = makeExecuteQuery(connection);
   const indexSet = new Set<string>();
 
-  const indexes = (await executeQuery(query)) as { Key_name: string }[];
+  const indexes = (await executeQuery(query, true)) as { Key_name: string }[];
   indexes.forEach((index) => indexSet.add(index.Key_name));
   connection.release();
   return indexSet;
@@ -371,7 +371,10 @@ const getDeployedForeginKeysForTable = async (tableName: string) => {
   const connection = await getConnection();
   const executeQuery = makeExecuteQuery(connection);
 
-  const foreignKeys = (await executeQuery(checkDeployedForeignKeysQuery)) as {
+  const foreignKeys = (await executeQuery(
+    checkDeployedForeignKeysQuery,
+    true,
+  )) as {
     CONSTRAINT_NAME: string;
   }[];
   connection.release();
@@ -472,7 +475,7 @@ const generateDropColumnStringForTable = async (
   const connection = await getConnection();
   const executeQuery = makeExecuteQuery(connection);
 
-  const deployedColumns = (await executeQuery(checkDeployedColumns)) as {
+  const deployedColumns = (await executeQuery(checkDeployedColumns, true)) as {
     Field: string;
   }[];
   connection.release();

@@ -21,6 +21,6 @@ export const makeUpdateModel =
       values,
       where,
     );
-    await executeQuery(queryString);
+    await executeQuery(queryString, false);
     return true;
   };
