@@ -1,6 +1,3 @@
-import camelcaseKeys from "camelcase-keys";
-import type { RowDataPacket } from "mysql2";
-
 import { TRawData } from "../../../types/makeModelParams.js";
 import { TExecuteQuery } from "../../../types/repositoryTypes.js";
 import {
@@ -71,7 +68,5 @@ export const makeReadModel =
       page,
       pageSize,
     );
-    return camelcaseKeys(
-      (await executeQuery(queryString, params)) as RowDataPacket[],
-    ) as T[];
+    return (await executeQuery(queryString, true, params)) as T[];
   };

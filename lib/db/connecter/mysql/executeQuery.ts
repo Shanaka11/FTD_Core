@@ -1,13 +1,17 @@
-import mysql from "mysql2/promise";
+import camelcaseKeys from "camelcase-keys";
+import mysql, { RowDataPacket } from "mysql2/promise";
 
 export const makeExecuteQuery =
   (connection: mysql.PoolConnection) =>
-  async (query: string, parameters?: string[]) => {
+  async (query: string, isReadQuery: boolean, parameters?: string[]) => {
     try {
       const result = await connection.execute(
         query,
         parameters ? parameters : [],
       );
+      if (isReadQuery) {
+        return camelcaseKeys(result[0] as RowDataPacket[]);
+      }
       return result[0];
     } catch (e) {
       // await pool.releas

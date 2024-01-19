@@ -12,6 +12,6 @@ export const makeDeleteModel =
   async ({ model, key }: DeleteModelParams) => {
     const where = `WHERE ID = '${key}'`;
     const queryString = generateDeleteQueryString(model, where);
-    await executeQuery(queryString);
+    await executeQuery(queryString, false);
     return true;
   };
