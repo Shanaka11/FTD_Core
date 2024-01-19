@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.5](https://github.com/Shanaka11/FTD_Core/compare/v1.4.4...v1.4.5) (2024-01-19)
+
+
+### Bug Fixes
+
+* **migration:** Fixed issues with migration and model schema definition ([#87](https://github.com/Shanaka11/FTD_Core/issues/87)) ([48a3344](https://github.com/Shanaka11/FTD_Core/commit/48a3344af03f8b3eeeb765f8421ccca8c473ccec))
+
 ## [1.4.4](https://github.com/Shanaka11/FTD_Core/compare/v1.4.3...v1.4.4) (2024-01-18)
 
 
