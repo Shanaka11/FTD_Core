@@ -200,13 +200,13 @@ const validateRelationships_ = async (
   // Check the children
   const orderLines = await readOrderLineUseCase_(
     {
-      filter: "OrderNo eq " + orderLine.orderNo
+      filter: "orderNo eq " + orderLine.orderNo
     },
     executeQuery,
   );
   if (orderLines.length > 0) {
     throw new Error(
-      "orderLine with the " + "OrderNo = " + orderLine.orderNo + " already exist",
+      "orderLine with the " + "orderNo = " + orderLine.orderNo + " already exist",
     );
   }
   

@@ -6,11 +6,11 @@ export const orderLineSchema = z.object({
   id: z.string({ required_error: "Id cannot be null" }),
   createdAt: z.string({ required_error: "CreatedAt cannot be null" }).max(30),
   updatedAt: z.string({ required_error: "UpdatedAt cannot be null" }).max(30),
-  orderNo: z.number({ required_error: "OrderNo cannot be null" }),
-  lineNo: z.number({ required_error: "LineNo cannot be null" }),
-  itemNo: z.string({ required_error: "ItemNo cannot be null" }).max(20),
+  orderNo: z.number({ required_error: "orderNo cannot be null" }),
+  lineNo: z.number({ required_error: "lineNo cannot be null" }),
+  itemNo: z.string({ required_error: "itemNo cannot be null" }).max(20),
   itemDescription: z.string().max(100).optional(),
-  amount: z.number({ required_error: "Amount cannot be null" }),
+  amount: z.number({ required_error: "amount cannot be null" }),
 });
 
 export type TOrderLine = z.infer<typeof orderLineSchema>;
