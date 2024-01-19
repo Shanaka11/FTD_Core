@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.7](https://github.com/Shanaka11/FTD_Core/compare/v1.4.6...v1.4.7) (2024-01-19)
+
+
+### Bug Fixes
+
+* **CODEGEN:** Remove .js when importing files in next js ([#92](https://github.com/Shanaka11/FTD_Core/issues/92)) ([11d4fc7](https://github.com/Shanaka11/FTD_Core/commit/11d4fc793fd592492e1b4ba078a8489156ee56bb))
+
 ## [1.4.6](https://github.com/Shanaka11/FTD_Core/compare/v1.4.5...v1.4.6) (2024-01-19)
 
 
