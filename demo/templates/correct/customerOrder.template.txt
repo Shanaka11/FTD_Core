@@ -6,8 +6,8 @@ export const customerOrderSchema = z.object({
   id: z.string({ required_error: "Id cannot be null" }),
   createdAt: z.string({ required_error: "CreatedAt cannot be null" }).max(30),
   updatedAt: z.string({ required_error: "UpdatedAt cannot be null" }).max(30),
-  orderNo: z.number({ required_error: "OrderNo cannot be null" }),
-  totalAmount: z.number({ required_error: "TotalAmount cannot be null" }),
+  orderNo: z.number({ required_error: "orderNo cannot be null" }),
+  totalAmount: z.number({ required_error: "totalAmount cannot be null" }),
   date: z.date().optional(),
 });
 

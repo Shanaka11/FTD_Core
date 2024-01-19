@@ -6,13 +6,15 @@
   "type": "object",
   "properties": {
     "name": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^[a-z][A-Za-z]*$"
     },
     "attributes": {
       "type": "object",
       "minProperties": 1,
+      "additionalProperties": false,
       "patternProperties": {
-        "^[a-zA-Z0-9]+$": {
+        "^[a-z]": {
           "type": "object",
           "required": ["flags", "type"],
           "properties": {
@@ -106,13 +108,15 @@
     "relationships": {
       "type": "object",
       "minProperties": 1,
+      "additionalProperties": false,
       "patternProperties": {
-        "^[a-zA-Z0-9]+$": {
+        "^[a-z][A-Za-z]*$": {
           "type": "object",
           "required": ["model", "relationship", "mapping", "onDelete"],
           "properties": {
             "model": {
-              "type": "string"
+              "type": "string",
+              "pattern": "^[a-z][A-Za-z]*$"
             },
             "relationship": {
               "type": "string",
@@ -125,13 +129,15 @@
                 "from": {
                   "type": "array",
                   "items": {
-                    "type": "string"
+                    "type": "string",
+                    "pattern": "^[a-z][A-Za-z]*$"
                   }
                 },
                 "to": {
                   "type": "array",
                   "items": {
-                    "type": "string"
+                    "type": "string",
+                    "pattern": "^[a-z][A-Za-z]*$"
                   }
                 }
               }

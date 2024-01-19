@@ -1,25 +1,25 @@
 {
   "name": "Enrolment",
   "attributes": {
-    "StudentId": { "type": "String", "maxLength": 100, "flags": "KMI-" },
-    "CourseName": { "type": "String", "maxLength": 20, "flags": "KMI-" }
+    "studentId": { "type": "String", "maxLength": 100, "flags": "KMI-" },
+    "courseName": { "type": "String", "maxLength": 20, "flags": "KMI-" }
   },
   "relationships": {
-    "StudentRef": {
+    "studentRef": {
       "model": "Student",
       "relationship": "ONE_TO_MANY",
       "mapping": {
-        "from": ["StudentId"],
-        "to": ["Id"]
+        "from": ["studentId"],
+        "to": ["id"]
       },
       "onDelete": "CASCADE"
     },
-    "CourseRef": {
+    "courseRef": {
       "model": "Course",
       "relationship": "ONE_TO_MANY",
       "mapping": {
-        "from": ["CourseName"],
-        "to": ["CourseName"]
+        "from": ["courseName"],
+        "to": ["courseName"]
       },
       "onDelete": "CASCADE"
     }

@@ -6,7 +6,7 @@ export const profileSchema = z.object({
   id: z.string({ required_error: "Id cannot be null" }),
   createdAt: z.string({ required_error: "CreatedAt cannot be null" }).max(30),
   updatedAt: z.string({ required_error: "UpdatedAt cannot be null" }).max(30),
-  profileId: z.number({ required_error: "ProfileId cannot be null" }),
+  profileId: z.number({ required_error: "profileId cannot be null" }),
   dateOfBirth: z.date().optional(),
 });
 

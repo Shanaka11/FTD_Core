@@ -1,19 +1,19 @@
 {
   "name": "OrderLine",
   "attributes": {
-    "OrderNo": { "type": "Number", "flags": "KMI-" },
-    "LineNo": { "type": "Number", "flags": "KMI-" },
-    "ItemNo": { "type": "String", "maxLength": 20, "flags": "AMIU" },
-    "ItemDescription": { "type": "String", "maxLength": 100, "flags": "A-IU" },
-    "Amount": { "type": "Number", "flags": "AMIU" }
+    "orderNo": { "type": "Number", "flags": "KMI-" },
+    "lineNo": { "type": "Number", "flags": "KMI-" },
+    "itemNo": { "type": "String", "maxLength": 20, "flags": "AMIU" },
+    "itemDescription": { "type": "String", "maxLength": 100, "flags": "A-IU" },
+    "amount": { "type": "Number", "flags": "AMIU" }
   },
   "relationships": {
-    "OrderRef": {
+    "orderRef": {
       "model": "CustomerOrder",
       "relationship": "ONE_TO_ONE",
       "mapping": {
-        "from": ["OrderNo"],
-        "to": ["OrderNo"]
+        "from": ["orderNo"],
+        "to": ["orderNo"]
       },
       "onDelete": "CASCADE"
     }
