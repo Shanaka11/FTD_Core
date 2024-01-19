@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.6](https://github.com/Shanaka11/FTD_Core/compare/v1.4.5...v1.4.6) (2024-01-19)
+
+
+### Bug Fixes
+
+* **codegen:** Updated execute query to make it esier to use it in custom queries ([#90](https://github.com/Shanaka11/FTD_Core/issues/90)) ([8bfbc70](https://github.com/Shanaka11/FTD_Core/commit/8bfbc7047f47d46ad230bbcd4ce64e3ab5d50001))
+
 ## [1.4.5](https://github.com/Shanaka11/FTD_Core/compare/v1.4.4...v1.4.5) (2024-01-19)
 
 
