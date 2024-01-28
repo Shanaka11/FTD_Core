@@ -4,7 +4,7 @@ export const CREATE_MODEL_USECASE_TEMPLATE = `export const makeCreate{MODEL}Base
   repository,
   executeQuery,
 }: TBaseUseCase<{TNAME}>) => {
-  return (modelData: Partial<{TNAME}>) => {
+  return async (modelData: Partial<{TNAME}>) => {
     if (repository.createModel === undefined) {
       throw new Error(
         "Repository method of createModel was not defined in {MODELVAR} usecase",
@@ -32,7 +32,7 @@ export const CREATE_MODEL_USECASE_TEMPLATE = `export const makeCreate{MODEL}Base
     // Other validation, such as max, min, length, mandatory checks will be handled by zod
     const {MODELVAR} = create{MODEL}(modelData);
 
-    validateRelationships_({MODELVAR}, executeQuery, "INSERT");
+    await validateRelationships_({MODELVAR}, executeQuery, "INSERT");
 
     return repository.createModel({
       model: "{MODELVAR}",

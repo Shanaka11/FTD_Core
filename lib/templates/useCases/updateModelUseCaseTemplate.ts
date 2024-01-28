@@ -23,7 +23,7 @@ export const UPDATE_MODEL_USECASE_TEMPLATE = `export const makeUpdate{MODEL}Base
       executeQuery,
     });
 
-    validateRelationships_({MODELVAR}, executeQuery, "MODIFY");
+    await validateRelationships_({MODELVAR}, executeQuery, "MODIFY");
 
     // Set UpdatedAt
     const sysDate = new Date();
