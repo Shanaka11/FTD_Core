@@ -9,10 +9,7 @@ export const getColumnsAndValuesFromModelData = (modelData: TRawData) => {
   Object.entries(modelData).forEach(([key, value]) => {
     columns.push(key);
     if (value instanceof Date) {
-      //convert to server timezone
-      values.push(`'${formatDateToSqlString(value)}'`);
-    } else if (typeof value === "string") {
-      values.push(`'${value}'`);
+      values.push(formatDateToSqlString(value));
     } else {
       values.push(value);
     }
