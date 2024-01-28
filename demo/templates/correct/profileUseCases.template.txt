@@ -100,7 +100,7 @@ export const createProfileUseCase = async (data: Partial<TProfile>) => {
     if(retData) {
       return { message: "Profile created"};
     }
-    return { message: "Unable to create Profile, please try again"};
+    return { error: "Unable to create Profile, please try again"};
 
   } catch (e:unknown) {
     if( e instanceof(Error) ){
@@ -144,7 +144,7 @@ export const updateProfileUseCase = async (data: TProfile) => {
     if(retData) {
       return { message: "Profile updated"};
     }
-    return { message: "Unable to update Profile, please try again"};
+    return { error: "Unable to update Profile, please try again"};
 
   } catch (e:unknown) {
 
@@ -190,7 +190,7 @@ export const deleteProfileUseCase = async (data: TProfile) => {
     if(retData) {
       return { message: "Profile deleted"};
     }
-    return { message: "Unable to delete Profile, please try again"};
+    return { error: "Unable to delete Profile, please try again"};
 
   } catch (e:unknown) {
 

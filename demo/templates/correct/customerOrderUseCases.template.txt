@@ -100,7 +100,7 @@ export const createCustomerOrderUseCase = async (data: Partial<TCustomerOrder>) 
     if(retData) {
       return { message: "CustomerOrder created"};
     }
-    return { message: "Unable to create CustomerOrder, please try again"};
+    return { error: "Unable to create CustomerOrder, please try again"};
 
   } catch (e:unknown) {
     if( e instanceof(Error) ){
@@ -144,7 +144,7 @@ export const updateCustomerOrderUseCase = async (data: TCustomerOrder) => {
     if(retData) {
       return { message: "CustomerOrder updated"};
     }
-    return { message: "Unable to update CustomerOrder, please try again"};
+    return { error: "Unable to update CustomerOrder, please try again"};
 
   } catch (e:unknown) {
 
@@ -190,7 +190,7 @@ export const deleteCustomerOrderUseCase = async (data: TCustomerOrder) => {
     if(retData) {
       return { message: "CustomerOrder deleted"};
     }
-    return { message: "Unable to delete CustomerOrder, please try again"};
+    return { error: "Unable to delete CustomerOrder, please try again"};
 
   } catch (e:unknown) {
 

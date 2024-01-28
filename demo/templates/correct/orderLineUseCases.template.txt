@@ -100,7 +100,7 @@ export const createOrderLineUseCase = async (data: Partial<TOrderLine>) => {
     if(retData) {
       return { message: "OrderLine created"};
     }
-    return { message: "Unable to create OrderLine, please try again"};
+    return { error: "Unable to create OrderLine, please try again"};
 
   } catch (e:unknown) {
     if( e instanceof(Error) ){
@@ -144,7 +144,7 @@ export const updateOrderLineUseCase = async (data: TOrderLine) => {
     if(retData) {
       return { message: "OrderLine updated"};
     }
-    return { message: "Unable to update OrderLine, please try again"};
+    return { error: "Unable to update OrderLine, please try again"};
 
   } catch (e:unknown) {
 
@@ -190,7 +190,7 @@ export const deleteOrderLineUseCase = async (data: TOrderLine) => {
     if(retData) {
       return { message: "OrderLine deleted"};
     }
-    return { message: "Unable to delete OrderLine, please try again"};
+    return { error: "Unable to delete OrderLine, please try again"};
 
   } catch (e:unknown) {
 
