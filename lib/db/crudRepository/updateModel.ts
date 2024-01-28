@@ -14,7 +14,10 @@ export const makeUpdateModel =
   (executeQuery: TExecuteQuery) =>
   async ({ model, key, modelData }: UpdateModelParams) => {
     const where = `WHERE ID = ?`;
-    const { columns, values } = getColumnsAndValuesFromModelData(modelData);
+    const { columns, values } = getColumnsAndValuesFromModelData(
+      modelData,
+      true,
+    );
     const queryString = generateUpdateQueryString(model, columns, where);
     const paramList = values.map((value) => {
       if (value === undefined) return "NULL";
@@ -22,6 +25,6 @@ export const makeUpdateModel =
       return value;
     });
     // TODO: Use parameterized queries here
-    await executeQuery(queryString, false, [key, ...paramList] as string[]);
+    await executeQuery(queryString, false, [...paramList, key] as string[]);
     return true;
   };
