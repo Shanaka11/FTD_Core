@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.2](https://github.com/Shanaka11/FTD_Core/compare/v1.5.1...v1.5.2) (2024-01-28)
+
+
+### Bug Fixes
+
+* **DB:** Fixed update repository issues ([#99](https://github.com/Shanaka11/FTD_Core/issues/99)) ([33e0617](https://github.com/Shanaka11/FTD_Core/commit/33e0617b169781fc4e7398fc3bcc0cd68f52f59e))
+
 ## [1.5.1](https://github.com/Shanaka11/FTD_Core/compare/v1.5.0...v1.5.1) (2024-01-28)
 
 
