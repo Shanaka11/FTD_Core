@@ -48,11 +48,23 @@ export const read{MODEL}UseCase_ = async (
 };
 
 export const read{MODEL}UseCase = async (data: TGetModelUseCase<{TNAME}Key>) => {
-  const retData = await executeTransaction<
-    TGetModelUseCase<{TNAME}Key>,
-    {TNAME}[]
-  >(data, read{MODEL}UseCase_);
-  return retData;
+  try{
+
+    const retData = await executeTransaction<
+      TGetModelUseCase<{TNAME}Key>,
+      {TNAME}[]
+    >(data, read{MODEL}UseCase_);
+    return retData;
+
+  } catch (e:unknown) {
+
+    if( e instanceof(Error) ){
+      console.error(e.message);
+      return { error: e.message };
+    };
+    throw e;
+
+  }
 };
 
 // CREATE
@@ -78,12 +90,25 @@ export const create{MODEL}UseCase_ = async (
 };
 
 export const create{MODEL}UseCase = async (data: Partial<{TNAME}>) => {
-  const retData = await executeTransaction<Partial<{TNAME}>, boolean>(
-    data,
-    create{MODEL}UseCase_,
-  );
+  try{
 
-  return retData;
+    const retData = await executeTransaction<Partial<{TNAME}>, boolean>(
+      data,
+      create{MODEL}UseCase_,
+    );
+  
+    if(retData) {
+      return { message: "{MODEL} created"};
+    }
+    return { message: "Unable to create {MODEL}, please try again"};
+
+  } catch (e:unknown) {
+    if( e instanceof(Error) ){
+      console.error(e.message);
+      return { error: e.message };
+    };
+    throw e;
+  }
 };
 
 // UPDATE
@@ -109,12 +134,27 @@ export const update{MODEL}UseCase_ = async (
 };
 
 export const update{MODEL}UseCase = async (data: {TNAME}) => {
-  const retData = await executeTransaction<{TNAME}, boolean>(
-    data,
-    update{MODEL}UseCase_,
-  );
+  try{
 
-  return retData;
+    const retData = await executeTransaction<{TNAME}, boolean>(
+      data,
+      update{MODEL}UseCase_,
+    );
+  
+    if(retData) {
+      return { message: "{MODEL} updated"};
+    }
+    return { message: "Unable to update {MODEL}, please try again"};
+
+  } catch (e:unknown) {
+
+    if( e instanceof(Error) ){
+      console.error(e.message);
+      return { error: e.message };
+    };
+    throw e;
+
+  }
 };
 
 // DELETE
@@ -140,12 +180,27 @@ export const delete{MODEL}UseCase_ = async (
 };
 
 export const delete{MODEL}UseCase = async (data: {TNAME}) => {
-  const retData = await executeTransaction<{TNAME}, boolean>(
-    data,
-    delete{MODEL}UseCase_,
-  );
+  try{
 
-  return retData;
+    const retData = await executeTransaction<{TNAME}, boolean>(
+      data,
+      delete{MODEL}UseCase_,
+    );
+  
+    if(retData) {
+      return { message: "{MODEL} deleted"};
+    }
+    return { message: "Unable to delete {MODEL}, please try again"};
+
+  } catch (e:unknown) {
+
+    if( e instanceof(Error) ){
+      console.error(e.message);
+      return { error: e.message };
+    };
+    throw e;
+
+  }
 };
 `;
 /*
