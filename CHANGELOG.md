@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/Shanaka11/FTD_Core/compare/v1.4.7...v1.5.0) (2024-01-28)
+
+
+### Features
+
+* **CORE-72, CORE-85, CORE-88, CORE-83, CORE-87:** Fixed issues and added features. ([#94](https://github.com/Shanaka11/FTD_Core/issues/94)) ([c6bf00e](https://github.com/Shanaka11/FTD_Core/commit/c6bf00ec0b200836c2bb6899982ad94182c7e84b))
+
 ## [1.4.7](https://github.com/Shanaka11/FTD_Core/compare/v1.4.6...v1.4.7) (2024-01-19)
 
 
