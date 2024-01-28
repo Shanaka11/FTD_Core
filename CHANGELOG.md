@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.1](https://github.com/Shanaka11/FTD_Core/compare/v1.5.0...v1.5.1) (2024-01-28)
+
+
+### Bug Fixes
+
+* **codegen:** Changed exception handling ([#98](https://github.com/Shanaka11/FTD_Core/issues/98)) ([41a7d92](https://github.com/Shanaka11/FTD_Core/commit/41a7d921f200af70d043ba91531c41e0b9fc51bd))
+* **DB:** Added parameterized quries to repository methods ([#96](https://github.com/Shanaka11/FTD_Core/issues/96)) ([de45ca4](https://github.com/Shanaka11/FTD_Core/commit/de45ca42220afded68e0cc7fc6026c0b26de5b21))
+
 ## [1.5.0](https://github.com/Shanaka11/FTD_Core/compare/v1.4.7...v1.5.0) (2024-01-28)
 
 
