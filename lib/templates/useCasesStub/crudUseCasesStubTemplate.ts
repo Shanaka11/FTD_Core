@@ -100,7 +100,7 @@ export const create{MODEL}UseCase = async (data: Partial<{TNAME}>) => {
     if(retData) {
       return { message: "{MODEL} created"};
     }
-    return { message: "Unable to create {MODEL}, please try again"};
+    return { error: "Unable to create {MODEL}, please try again"};
 
   } catch (e:unknown) {
     if( e instanceof(Error) ){
@@ -144,7 +144,7 @@ export const update{MODEL}UseCase = async (data: {TNAME}) => {
     if(retData) {
       return { message: "{MODEL} updated"};
     }
-    return { message: "Unable to update {MODEL}, please try again"};
+    return { error: "Unable to update {MODEL}, please try again"};
 
   } catch (e:unknown) {
 
@@ -190,7 +190,7 @@ export const delete{MODEL}UseCase = async (data: {TNAME}) => {
     if(retData) {
       return { message: "{MODEL} deleted"};
     }
-    return { message: "Unable to delete {MODEL}, please try again"};
+    return { error: "Unable to delete {MODEL}, please try again"};
 
   } catch (e:unknown) {
 
