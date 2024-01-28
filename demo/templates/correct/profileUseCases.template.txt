@@ -48,11 +48,23 @@ export const readProfileUseCase_ = async (
 };
 
 export const readProfileUseCase = async (data: TGetModelUseCase<TProfileKey>) => {
-  const retData = await executeTransaction<
-    TGetModelUseCase<TProfileKey>,
-    TProfile[]
-  >(data, readProfileUseCase_);
-  return retData;
+  try{
+
+    const retData = await executeTransaction<
+      TGetModelUseCase<TProfileKey>,
+      TProfile[]
+    >(data, readProfileUseCase_);
+    return retData;
+
+  } catch (e:unknown) {
+
+    if( e instanceof(Error) ){
+      console.error(e.message);
+      return { error: e.message };
+    };
+    throw e;
+
+  }
 };
 
 // CREATE
@@ -78,12 +90,25 @@ export const createProfileUseCase_ = async (
 };
 
 export const createProfileUseCase = async (data: Partial<TProfile>) => {
-  const retData = await executeTransaction<Partial<TProfile>, boolean>(
-    data,
-    createProfileUseCase_,
-  );
+  try{
 
-  return retData;
+    const retData = await executeTransaction<Partial<TProfile>, boolean>(
+      data,
+      createProfileUseCase_,
+    );
+  
+    if(retData) {
+      return { message: "Profile created"};
+    }
+    return { message: "Unable to create Profile, please try again"};
+
+  } catch (e:unknown) {
+    if( e instanceof(Error) ){
+      console.error(e.message);
+      return { error: e.message };
+    };
+    throw e;
+  }
 };
 
 // UPDATE
@@ -109,12 +134,27 @@ export const updateProfileUseCase_ = async (
 };
 
 export const updateProfileUseCase = async (data: TProfile) => {
-  const retData = await executeTransaction<TProfile, boolean>(
-    data,
-    updateProfileUseCase_,
-  );
+  try{
 
-  return retData;
+    const retData = await executeTransaction<TProfile, boolean>(
+      data,
+      updateProfileUseCase_,
+    );
+  
+    if(retData) {
+      return { message: "Profile updated"};
+    }
+    return { message: "Unable to update Profile, please try again"};
+
+  } catch (e:unknown) {
+
+    if( e instanceof(Error) ){
+      console.error(e.message);
+      return { error: e.message };
+    };
+    throw e;
+
+  }
 };
 
 // DELETE
@@ -140,10 +180,25 @@ export const deleteProfileUseCase_ = async (
 };
 
 export const deleteProfileUseCase = async (data: TProfile) => {
-  const retData = await executeTransaction<TProfile, boolean>(
-    data,
-    deleteProfileUseCase_,
-  );
+  try{
 
-  return retData;
+    const retData = await executeTransaction<TProfile, boolean>(
+      data,
+      deleteProfileUseCase_,
+    );
+  
+    if(retData) {
+      return { message: "Profile deleted"};
+    }
+    return { message: "Unable to delete Profile, please try again"};
+
+  } catch (e:unknown) {
+
+    if( e instanceof(Error) ){
+      console.error(e.message);
+      return { error: e.message };
+    };
+    throw e;
+
+  }
 };

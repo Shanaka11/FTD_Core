@@ -46,7 +46,7 @@ export const makeCreateCustomerOrderBaseUseCase = ({
   repository,
   executeQuery,
 }: TBaseUseCase<TCustomerOrder>) => {
-  return (modelData: Partial<TCustomerOrder>) => {
+  return async (modelData: Partial<TCustomerOrder>) => {
     if (repository.createModel === undefined) {
       throw new Error(
         "Repository method of createModel was not defined in customerOrder usecase",
@@ -74,7 +74,7 @@ export const makeCreateCustomerOrderBaseUseCase = ({
     // Other validation, such as max, min, length, mandatory checks will be handled by zod
     const customerOrder = createCustomerOrder(modelData);
 
-    validateRelationships_(customerOrder, executeQuery, "INSERT");
+    await validateRelationships_(customerOrder, executeQuery, "INSERT");
 
     return repository.createModel({
       model: "customerOrder",
@@ -108,7 +108,7 @@ export const makeUpdateCustomerOrderBaseUseCase = ({
       executeQuery,
     });
 
-    validateRelationships_(customerOrder, executeQuery, "MODIFY");
+    await validateRelationships_(customerOrder, executeQuery, "MODIFY");
 
     // Set UpdatedAt
     const sysDate = new Date();

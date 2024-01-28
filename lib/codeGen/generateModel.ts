@@ -106,6 +106,13 @@ export const generateZodSchema = (attributes: tAattributes) => {
 
       if (value.type === "String") {
         retString += `.max(${value.maxLength})`;
+        if (
+          value.flags === "AMI-" ||
+          value.flags === "AMIU" ||
+          value.flags === "KMI-"
+        ) {
+          retString += `.min(1, { message: "${key} cannot be empty."})`;
+        }
       }
 
       if (!required) retString += `.optional()`;
