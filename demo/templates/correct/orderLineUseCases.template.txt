@@ -48,11 +48,23 @@ export const readOrderLineUseCase_ = async (
 };
 
 export const readOrderLineUseCase = async (data: TGetModelUseCase<TOrderLineKey>) => {
-  const retData = await executeTransaction<
-    TGetModelUseCase<TOrderLineKey>,
-    TOrderLine[]
-  >(data, readOrderLineUseCase_);
-  return retData;
+  try{
+
+    const retData = await executeTransaction<
+      TGetModelUseCase<TOrderLineKey>,
+      TOrderLine[]
+    >(data, readOrderLineUseCase_);
+    return retData;
+
+  } catch (e:unknown) {
+
+    if( e instanceof(Error) ){
+      console.error(e.message);
+      return { error: e.message };
+    };
+    throw e;
+
+  }
 };
 
 // CREATE
@@ -78,12 +90,25 @@ export const createOrderLineUseCase_ = async (
 };
 
 export const createOrderLineUseCase = async (data: Partial<TOrderLine>) => {
-  const retData = await executeTransaction<Partial<TOrderLine>, boolean>(
-    data,
-    createOrderLineUseCase_,
-  );
+  try{
 
-  return retData;
+    const retData = await executeTransaction<Partial<TOrderLine>, boolean>(
+      data,
+      createOrderLineUseCase_,
+    );
+  
+    if(retData) {
+      return { message: "OrderLine created"};
+    }
+    return { message: "Unable to create OrderLine, please try again"};
+
+  } catch (e:unknown) {
+    if( e instanceof(Error) ){
+      console.error(e.message);
+      return { error: e.message };
+    };
+    throw e;
+  }
 };
 
 // UPDATE
@@ -109,12 +134,27 @@ export const updateOrderLineUseCase_ = async (
 };
 
 export const updateOrderLineUseCase = async (data: TOrderLine) => {
-  const retData = await executeTransaction<TOrderLine, boolean>(
-    data,
-    updateOrderLineUseCase_,
-  );
+  try{
 
-  return retData;
+    const retData = await executeTransaction<TOrderLine, boolean>(
+      data,
+      updateOrderLineUseCase_,
+    );
+  
+    if(retData) {
+      return { message: "OrderLine updated"};
+    }
+    return { message: "Unable to update OrderLine, please try again"};
+
+  } catch (e:unknown) {
+
+    if( e instanceof(Error) ){
+      console.error(e.message);
+      return { error: e.message };
+    };
+    throw e;
+
+  }
 };
 
 // DELETE
@@ -140,10 +180,25 @@ export const deleteOrderLineUseCase_ = async (
 };
 
 export const deleteOrderLineUseCase = async (data: TOrderLine) => {
-  const retData = await executeTransaction<TOrderLine, boolean>(
-    data,
-    deleteOrderLineUseCase_,
-  );
+  try{
 
-  return retData;
+    const retData = await executeTransaction<TOrderLine, boolean>(
+      data,
+      deleteOrderLineUseCase_,
+    );
+  
+    if(retData) {
+      return { message: "OrderLine deleted"};
+    }
+    return { message: "Unable to delete OrderLine, please try again"};
+
+  } catch (e:unknown) {
+
+    if( e instanceof(Error) ){
+      console.error(e.message);
+      return { error: e.message };
+    };
+    throw e;
+
+  }
 };

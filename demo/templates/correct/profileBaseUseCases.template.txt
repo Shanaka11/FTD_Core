@@ -46,7 +46,7 @@ export const makeCreateProfileBaseUseCase = ({
   repository,
   executeQuery,
 }: TBaseUseCase<TProfile>) => {
-  return (modelData: Partial<TProfile>) => {
+  return async (modelData: Partial<TProfile>) => {
     if (repository.createModel === undefined) {
       throw new Error(
         "Repository method of createModel was not defined in profile usecase",
@@ -74,7 +74,7 @@ export const makeCreateProfileBaseUseCase = ({
     // Other validation, such as max, min, length, mandatory checks will be handled by zod
     const profile = createProfile(modelData);
 
-    validateRelationships_(profile, executeQuery, "INSERT");
+    await validateRelationships_(profile, executeQuery, "INSERT");
 
     return repository.createModel({
       model: "profile",
@@ -108,7 +108,7 @@ export const makeUpdateProfileBaseUseCase = ({
       executeQuery,
     });
 
-    validateRelationships_(profile, executeQuery, "MODIFY");
+    await validateRelationships_(profile, executeQuery, "MODIFY");
 
     // Set UpdatedAt
     const sysDate = new Date();

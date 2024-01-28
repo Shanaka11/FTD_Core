@@ -47,7 +47,7 @@ export const makeCreateOrderLineBaseUseCase = ({
   repository,
   executeQuery,
 }: TBaseUseCase<TOrderLine>) => {
-  return (modelData: Partial<TOrderLine>) => {
+  return async (modelData: Partial<TOrderLine>) => {
     if (repository.createModel === undefined) {
       throw new Error(
         "Repository method of createModel was not defined in orderLine usecase",
@@ -75,7 +75,7 @@ export const makeCreateOrderLineBaseUseCase = ({
     // Other validation, such as max, min, length, mandatory checks will be handled by zod
     const orderLine = createOrderLine(modelData);
 
-    validateRelationships_(orderLine, executeQuery, "INSERT");
+    await validateRelationships_(orderLine, executeQuery, "INSERT");
 
     return repository.createModel({
       model: "orderLine",
@@ -109,7 +109,7 @@ export const makeUpdateOrderLineBaseUseCase = ({
       executeQuery,
     });
 
-    validateRelationships_(orderLine, executeQuery, "MODIFY");
+    await validateRelationships_(orderLine, executeQuery, "MODIFY");
 
     // Set UpdatedAt
     const sysDate = new Date();

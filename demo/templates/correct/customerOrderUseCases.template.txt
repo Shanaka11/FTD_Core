@@ -48,11 +48,23 @@ export const readCustomerOrderUseCase_ = async (
 };
 
 export const readCustomerOrderUseCase = async (data: TGetModelUseCase<TCustomerOrderKey>) => {
-  const retData = await executeTransaction<
-    TGetModelUseCase<TCustomerOrderKey>,
-    TCustomerOrder[]
-  >(data, readCustomerOrderUseCase_);
-  return retData;
+  try{
+
+    const retData = await executeTransaction<
+      TGetModelUseCase<TCustomerOrderKey>,
+      TCustomerOrder[]
+    >(data, readCustomerOrderUseCase_);
+    return retData;
+
+  } catch (e:unknown) {
+
+    if( e instanceof(Error) ){
+      console.error(e.message);
+      return { error: e.message };
+    };
+    throw e;
+
+  }
 };
 
 // CREATE
@@ -78,12 +90,25 @@ export const createCustomerOrderUseCase_ = async (
 };
 
 export const createCustomerOrderUseCase = async (data: Partial<TCustomerOrder>) => {
-  const retData = await executeTransaction<Partial<TCustomerOrder>, boolean>(
-    data,
-    createCustomerOrderUseCase_,
-  );
+  try{
 
-  return retData;
+    const retData = await executeTransaction<Partial<TCustomerOrder>, boolean>(
+      data,
+      createCustomerOrderUseCase_,
+    );
+  
+    if(retData) {
+      return { message: "CustomerOrder created"};
+    }
+    return { message: "Unable to create CustomerOrder, please try again"};
+
+  } catch (e:unknown) {
+    if( e instanceof(Error) ){
+      console.error(e.message);
+      return { error: e.message };
+    };
+    throw e;
+  }
 };
 
 // UPDATE
@@ -109,12 +134,27 @@ export const updateCustomerOrderUseCase_ = async (
 };
 
 export const updateCustomerOrderUseCase = async (data: TCustomerOrder) => {
-  const retData = await executeTransaction<TCustomerOrder, boolean>(
-    data,
-    updateCustomerOrderUseCase_,
-  );
+  try{
 
-  return retData;
+    const retData = await executeTransaction<TCustomerOrder, boolean>(
+      data,
+      updateCustomerOrderUseCase_,
+    );
+  
+    if(retData) {
+      return { message: "CustomerOrder updated"};
+    }
+    return { message: "Unable to update CustomerOrder, please try again"};
+
+  } catch (e:unknown) {
+
+    if( e instanceof(Error) ){
+      console.error(e.message);
+      return { error: e.message };
+    };
+    throw e;
+
+  }
 };
 
 // DELETE
@@ -140,10 +180,25 @@ export const deleteCustomerOrderUseCase_ = async (
 };
 
 export const deleteCustomerOrderUseCase = async (data: TCustomerOrder) => {
-  const retData = await executeTransaction<TCustomerOrder, boolean>(
-    data,
-    deleteCustomerOrderUseCase_,
-  );
+  try{
 
-  return retData;
+    const retData = await executeTransaction<TCustomerOrder, boolean>(
+      data,
+      deleteCustomerOrderUseCase_,
+    );
+  
+    if(retData) {
+      return { message: "CustomerOrder deleted"};
+    }
+    return { message: "Unable to delete CustomerOrder, please try again"};
+
+  } catch (e:unknown) {
+
+    if( e instanceof(Error) ){
+      console.error(e.message);
+      return { error: e.message };
+    };
+    throw e;
+
+  }
 };
