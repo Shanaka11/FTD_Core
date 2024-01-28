@@ -10,8 +10,8 @@ export type DeleteModelParams = {
 export const makeDeleteModel =
   (executeQuery: TExecuteQuery) =>
   async ({ model, key }: DeleteModelParams) => {
-    const where = `WHERE ID = '${key}'`;
+    const where = `WHERE ID = ?`;
     const queryString = generateDeleteQueryString(model, where);
-    await executeQuery(queryString, false);
+    await executeQuery(queryString, false, [key]);
     return true;
   };

@@ -1,6 +1,5 @@
 import { TValue } from "../../types/repositoryTypes.js";
 import {
-  arrayToCommaSeparatedString,
   camelToSnakeCase,
   createStringFromTemplate,
 } from "../codeGen/textUtils.js";
@@ -39,7 +38,7 @@ export const generateCreateQueryString = (
   const mappingValues = {
     TABLE_NAME: camelToSnakeCase(table),
     COLUMNS: generateSqlColumnString(columns),
-    VALUES: arrayToCommaSeparatedString(values),
+    VALUES: values.map(() => "?").join(", "),
   };
   return createStringFromTemplate(mappingValues, CREATE_QUERY_TEMPLATE);
 };
@@ -47,12 +46,11 @@ export const generateCreateQueryString = (
 export const generateUpdateQueryString = (
   table: string,
   columns: string[],
-  values: TValue[],
   where: string,
 ) => {
   const mappingValues = {
     TABLE_NAME: camelToSnakeCase(table),
-    COLUMNS: generateSqlColValuePair(columns, values),
+    COLUMNS: generateSqlColValuePair(columns),
     WHERE: where,
   };
   return createStringFromTemplate(mappingValues, UPDATE_QUERY_TEMPLATE);
@@ -70,17 +68,10 @@ const generateSqlColumnString = (columns?: string[]) => {
   return columns.map((column) => `${camelToSnakeCase(column)}`).join(", ");
 };
 
-const generateSqlColValuePair = (columns: string[], values: TValue[]) => {
+const generateSqlColValuePair = (columns: string[]) => {
   return columns
-    .map((column, index) => {
-      const value = values[index];
-      if (value === undefined) {
-        return `'${camelToSnakeCase(column)}' = NULL`;
-      }
-      if (value instanceof Date) {
-        return `${camelToSnakeCase(column)} = '${value.toISOString()}'`;
-      }
-      return `${camelToSnakeCase(column)} = '${value}'`;
+    .map((column) => {
+      return `${camelToSnakeCase(column)} = ?`;
     })
     .join(", ");
 };
