@@ -222,7 +222,7 @@ const createModelKeyIndex = async (
   update: boolean,
 ) => {
   const keyString = Object.entries(columns).reduce((acc, [key, value]) => {
-    if (value.flags === "KMI-") {
+    if (value.flags === "KMI-" && key !== "Id") {
       if (acc === ``) {
         acc = camelToSnakeCase(simplize(key));
       } else {
