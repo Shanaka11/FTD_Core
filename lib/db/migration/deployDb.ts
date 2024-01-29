@@ -101,8 +101,8 @@ const getDeployedTables = async () => {
   const dbTables = (await executeQuery(query, true)) as RowDataPacket[];
 
   dbTables.forEach((table) => {
-    const tableName = table["TABLE_NAME"] as string;
-    const columnName = table["COLUMN_NAME"] as string;
+    const tableName = table["tableName"] as string;
+    const columnName = table["columnName"] as string;
     const columns = tables.get(tableName);
 
     if (columns === undefined) {
@@ -375,13 +375,13 @@ const getDeployedForeginKeysForTable = async (tableName: string) => {
     checkDeployedForeignKeysQuery,
     true,
   )) as {
-    CONSTRAINT_NAME: string;
+    constraintName: string;
   }[];
   connection.release();
   const foreignKeySet = new Set<string>();
 
   foreignKeys.forEach((foreignKey) =>
-    foreignKeySet.add(foreignKey.CONSTRAINT_NAME),
+    foreignKeySet.add(foreignKey.constraintName),
   );
   return foreignKeySet;
 };
@@ -476,16 +476,16 @@ const generateDropColumnStringForTable = async (
   const executeQuery = makeExecuteQuery(connection);
 
   const deployedColumns = (await executeQuery(checkDeployedColumns, true)) as {
-    Field: string;
+    field: string;
   }[];
   connection.release();
 
-  deployedColumns.forEach(({ Field }) => {
+  deployedColumns.forEach(({ field }) => {
     // Ignore base columns, Id, CreatedAt, UpdatedAt
-    if (Field === "ID" || Field === "CREATED_AT" || Field === "UPDATED_AT")
+    if (field === "ID" || field === "CREATED_AT" || field === "UPDATED_AT")
       return;
-    if (attributes[snakeToCamel(Field)] === undefined) {
-      dropColumnArray.push(`DROP ${Field}`);
+    if (attributes[snakeToCamel(field)] === undefined) {
+      dropColumnArray.push(`DROP ${field}`);
     }
   });
 
